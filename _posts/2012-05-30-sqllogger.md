@@ -7,7 +7,7 @@ tags: [symfony2, doctrine2, php, memoryleak]
 ---
 {% include JB/setup %}
 
-Or they seem like to cause one -- I noted while I was testing the latest [ComPPI][1] build. As it turned out, the continuously
+...or they seem like to cause one -- I noticed while I was testing the latest [ComPPI][1] build. As it turned out, the continuously
 increasing memory consumption was caused by the built in logger component. The following snippet takes care of it:
 
 {% highlight php linenos %}

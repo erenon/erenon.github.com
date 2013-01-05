@@ -8,7 +8,7 @@ tags: [Morgan Stanley, internship]
 {% include JB/setup %}
 
 I've finally got the approval to publish my summer internship report done at Morgan Stanley this year. I've enjoyed every minutes of it.
-The paper is about the _deadlock hunter_ software I've developed. Because of the [university regulations][1] it's utterly long -- a perfect fairy tale
+The paper is mainly about the _deadlock hunter_ software I've developed from scratch. Because of the [university regulations][1] it's utterly long -- a perfect fairy tale
 for your little brother to fell asleep faster than ever.
 
 Check out the [report][2] at scribid. (It's in hungarian)
