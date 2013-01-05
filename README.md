@@ -1,4 +1,3 @@
-erenon.github.com
-=================
+Check it out: [erenon.hu][1]
 
-blog
+[1]: http://erenon.hu
