@@ -40,6 +40,15 @@ module JB
   end #Path
 end #JB
 
+# Usage: rake help
+desc "Print usage"
+task :help do
+  puts "New post:"
+  puts '    rake post title="Post title" [date="2013-04-03"]'
+  puts "New page:"
+  puts '    rake page name="about.html"'
+end # task :help
+
 # Usage: rake post title="A Title" [date="2012-02-09"]
 desc "Begin a new post in #{CONFIG['posts']}"
 task :post do
