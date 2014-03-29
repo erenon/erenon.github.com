@@ -47,6 +47,8 @@ task :help do
   puts '    rake post title="Post title" [date="2013-04-03"]'
   puts "New page:"
   puts '    rake page name="about.html"'
+  puts "Preview:"
+  puts '    rake preview'
 end # task :help
 
 # Usage: rake post title="A Title" [date="2012-02-09"]
