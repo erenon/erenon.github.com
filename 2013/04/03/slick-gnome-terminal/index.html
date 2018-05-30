@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Slick Gnome Terminal</title>
+	<meta name="author" content="erenon">
+	<meta name="generator" content="jekyll jb" />
+	<link href='/assets/themes/the-minimum/css/style.css' rel="stylesheet" media="all">
+	<link href="/atom.xml" rel="alternate" title="Slick Gnome Terminal" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<p class="logo"><a href="/">erenon</a></p>
+				<nav class="nav-global">
+					<ul>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="cv"><a href="http://careers.stackoverflow.com/erenon">CV</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Slick Gnome Terminal</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>So, you want me to belive, the default gnome-terminal in ubuntu doesn&#8217;t look <em>that</em> good. Here it is:</p>
+<img alt='gnome-terminal default look and feel in Ubuntu 12.10' src='https://lh5.googleusercontent.com/-smSXpT9_WQU/UV9LWIz8soI/AAAAAAAAAm0/I6yZEBqDgL4/s696/01.png' style='margin: 1em auto;' title='gnome-terminal default look and feel in Ubuntu 12.10' />
+<p>I aggree. Fortunately, there is a way to make it look more <em>slick</em>.</p>
+
+<h1 id='remove_window_borders'>Remove window borders</h1>
+
+<p>To remove window borders, install (if not yet installed) and launch <abbr title='Compiz Config Settings Manager'>ccsm</abbr>.</p>
+<div class='highlight'><pre><code class='bash'><span class='lineno'>1</span> <span class='nv'>$ </span>sudo apt-get install compizconfig-settings-manager
+<span class='lineno'>2</span> <span class='nv'>$ </span>ccsm &amp;
+</code></pre>
+</div>
+<p>In <strong>ccsm</strong>, open the <code>window decorations</code> settings window and set <code>Decoration windows:</code> preference to:</p>
+<div class='highlight'><pre><code class='bash'><span class='o'>(</span>any<span class='o'>)</span> &amp; !<span class='o'>(</span><span class='nv'>class</span><span class='o'>=</span>Gnome-terminal<span class='o'>)</span>
+</code></pre>
+</div>
+<p>This will remove window decorations (e.g: window borders) from all gnome-terminal windows. Here is how it looks now:</p>
+<img alt='gnome-terminal without borders' src='https://lh3.googleusercontent.com/-_qtLqny_YyE/UV9LWSRh2dI/AAAAAAAAAm4/jteGIWJQimQ/s696/02.png' style='margin: 1em auto;' title='gnome-terminal without borders' />
+<h1 id='adjust_colors'>Adjust colors</h1>
+
+<p>Finally change the color theme and add a bit of transparency. Create a new gnome-terminal profile (<code>edit</code> / <code>Profiles...</code>) and tailor it to your needs. Find a sample setting below:</p>
+<img alt='transparent gnome-terminal without borders and settings window' src='https://lh4.googleusercontent.com/-AYiacF9Rc6k/UV9LcDdTjzI/AAAAAAAAAnI/FWt3iVcWOPU/s696/03.png' style='margin: 1em auto;' title='transparent gnome-terminal without borders and settings window' />
+<p>Such a nice terminal deserves a colored promt. Edit your <code>~/.bashrc</code> file, locate the colored <code>PS1</code> definition and change it to something more cool:</p>
+<div class='highlight'><pre><code class='bash'><span class='nv'>PS1</span><span class='o'>=</span><span class='s1'>&#39;${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#39;</span>
+</code></pre>
+</div>
+<p>Final version:</p>
+<img alt='transparent gnome-terminal without borders, with colored promt' src='https://lh5.googleusercontent.com/-IpSKVCkWilA/UV9Lbmk-DaI/AAAAAAAAAnA/cDZkRjTaNxc/s696/04.png' style='margin: 1em auto;' title='transparent gnome-terminal without borders, with colored promt' />
+<p>By the end of all this tweaks, you might change that <del>ugly</del> default wallpaper as well.</p>
+					<div class="meta">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2013-04-03T00:00:00+02:00" datetime="2013-04-03T00:00:00+02:00" pubdate>
+							<span class="month"><abbr>April</abbr></span>
+							<span class="day">03</span>,
+							<span class="year">2013</span>.
+							</date>
+						</p>
+						
+						
+						
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+                            <li><div class="g-plusone" data-size="medium" data-annotation="none"></div></li>
+                            <li><a href="https://twitter.com/share" class="twitter-share-button" data-via="erenon" data-count="none">Tweet</a></li>
+						</ul>
+					</div>
+					
+					
+				</div><!-- misc-content -->
+				
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/2013/03/07/call-virtual-method-runtime" title="View Call pure virtual method runtime">&laquo; Call pure virtual method runtime</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/2013/11/23/bs-thesis-deadlock-prediction" title="View B.S. Thesis: deadlock prediction">B.S. Thesis: deadlock prediction &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+<!-- Google plusone button -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
+<!-- Twitter button -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Benedek Thaler</span> - <span class="fn email">thaler@thaler.hu</span></address></li>
+						<li class="github"><a href="https://github.com/erenon/" rel="me">Fork me at GitHub</a></li>
+						<li class="stackoverflow"><a href="http://stackoverflow.com/users/116273/erenon" rel="me">Upvote me on StackOverflow</a></li>
+						<li class="twitter"><a href="http://twitter.com/erenon/" rel="me">Follow me on Twitter</a></li>
+						<li class="rss"><a href="atom.xml" rel="alternate">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-10943667-7']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

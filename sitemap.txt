@@ -1,8 +1,21 @@
----
-# Remember to set production_url in your _config.yml file!
-title : Sitemap
----
-{% for page in site.pages %}
-{{site.production_url}}{{ page.url }}{% endfor %}
-{% for post in site.posts %}
-{{site.production_url}}{{ post.url }}{% endfor %}
+
+http://erenon.hu/categories.html
+http://erenon.hu/sitemap.txt
+http://erenon.hu/index.html
+http://erenon.hu/archive.html
+http://erenon.hu/atom.xml
+http://erenon.hu/tags.html
+http://erenon.hu/pages.html
+
+http://erenon.hu/2018/05/30/how-to-share-a-calendar-entry
+http://erenon.hu/2014/03/29/the-sorcerers-frog
+http://erenon.hu/2013/11/23/bs-thesis-deadlock-prediction
+http://erenon.hu/2013/04/03/slick-gnome-terminal
+http://erenon.hu/2013/03/07/call-virtual-method-runtime
+http://erenon.hu/2013/03/02/bootstrap-typeahead-submit-on-select
+http://erenon.hu/2013/01/29/toastmasters-award
+http://erenon.hu/2013/01/22/neptun-keepalive
+http://erenon.hu/2013/01/05/blog-online
+http://erenon.hu/2012/11/25/imprisoned-toroid-raytrace-on-cuda
+http://erenon.hu/2012/11/21/internship-report
+http://erenon.hu/2012/05/30/sqllogger
