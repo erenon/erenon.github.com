@@ -4,7 +4,7 @@
  <title>erenon</title>
  <link href="http://erenon.hu/atom.xml" rel="self"/>
  <link href="http://erenon.hu"/>
- <updated>2018-05-30T21:52:26+02:00</updated>
+ <updated>2019-04-28T17:22:50+02:00</updated>
  <id>http://erenon.hu</id>
  <author>
    <name>Benedek Thaler</name>
@@ -17,77 +17,108 @@
    <link href="http://erenon.hu/2018/05/30/how-to-share-a-calendar-entry"/>
    <updated>2018-05-30T00:00:00+02:00</updated>
    <id>http://erenon.hu/2018/05/30/how-to-share-a-calendar-entry</id>
-   <content type="html">&lt;p&gt;Suppose you&amp;#8217;d like to share a calendar event over the internet, e.g: on your website. The goal is to be support as many platforms as possible:&lt;/p&gt;
+   <content type="html">
+&lt;p&gt;Suppose you’d like to share a calendar event over the internet,
+e.g: on your website. The goal is to be support as many platforms as possible:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Desktop calendars (Thunderbird, macOS iCal, Outlook)&lt;/li&gt;
-
-&lt;li&gt;Web applications (Google Calendar)&lt;/li&gt;
-
-&lt;li&gt;Smartphone applications (Google Calendar App, iOS iCal)&lt;/li&gt;
+  &lt;li&gt;Desktop calendars (Thunderbird, macOS iCal, Outlook)&lt;/li&gt;
+  &lt;li&gt;Web applications (Google Calendar)&lt;/li&gt;
+  &lt;li&gt;Smartphone applications (Google Calendar App, iOS iCal)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The most intuitive way is to create the event in your calendar of choice, and send the invites in the native way provided by the application. However, such methods tend to work only if the recipient uses the same system, which isn&amp;#8217;t a plausible assumption &amp;#8211; we need something platform independent.&lt;/p&gt;
+&lt;p&gt;The most intuitive way is to create the event in your calendar of
+choice, and send the invites in the native way provided by the application.
+However, such methods tend to work only if the recipient uses the same
+system, which isn’t a plausible assumption – we need something platform independent.&lt;/p&gt;
 
-&lt;h3 id='using_icalendar'&gt;Using iCalendar&lt;/h3&gt;
+&lt;h3 id=&quot;using-icalendar&quot;&gt;Using iCalendar&lt;/h3&gt;
 
-&lt;p&gt;Wikipedia indicates that &lt;a href='https://en.wikipedia.org/wiki/ICalendar'&gt;iCalendar&lt;/a&gt; is well supported format, which &lt;em&gt;allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.&lt;/em&gt; &amp;#8211; exactly what we are looking for. Let&amp;#8217;s create an &lt;code&gt;.ics&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='properties'&gt;&lt;span class='na'&gt;BEGIN&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;VCALENDAR&lt;/span&gt;
-&lt;span class='na'&gt;VERSION&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;2.0&lt;/span&gt;
-&lt;span class='na'&gt;METHOD&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;PUBLISH&lt;/span&gt;
-&lt;span class='na'&gt;X-WR-TIMEZONE&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;Europe/Budapest&lt;/span&gt;
-&lt;span class='na'&gt;BEGIN&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;VEVENT&lt;/span&gt;
-&lt;span class='na'&gt;UID&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;your_eventname@yourdomain.com&lt;/span&gt;
-&lt;span class='na'&gt;DTSTART&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;20180530T130000Z&lt;/span&gt;
-&lt;span class='na'&gt;DTEND&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;20180530T143000Z&lt;/span&gt;
-&lt;span class='na'&gt;DESCRIPTION&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;The description of your event&lt;/span&gt;
-&lt;span class='na'&gt;LOCATION&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;The location of your event&lt;/span&gt;
-&lt;span class='na'&gt;SEQUENCE&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;0&lt;/span&gt;
-&lt;span class='na'&gt;SUMMARY&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;The summary of your event&lt;/span&gt;
-&lt;span class='na'&gt;END&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;VEVENT&lt;/span&gt;
-&lt;span class='na'&gt;END&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='s'&gt;VCALENDAR&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;There are &lt;a href='https://tools.ietf.org/html/rfc5545'&gt;other fields&lt;/a&gt;. The fields are mostly self describing. In free form text values, &lt;code&gt;,&lt;/code&gt; and &lt;code&gt;;&lt;/code&gt; characters must be escaped by a backslash. The &lt;code&gt;tzselect&lt;/code&gt; command can be used to get the name of your timezone. The &lt;code&gt;DTSTART&lt;/code&gt; and &lt;code&gt;DTEND&lt;/code&gt; fields are in &lt;a href='https://en.wikipedia.org/wiki/Coordinated_Universal_Time'&gt;UTC&lt;/a&gt;, 20180530T130000 is 2018. 05. 30, 13:00:00. If all this sound difficult, create your event in a suitable calendar application and export it to &lt;code&gt;.ics&lt;/code&gt; from there.&lt;/p&gt;
+&lt;p&gt;Wikipedia indicates that &lt;a href=&quot;https://en.wikipedia.org/wiki/ICalendar&quot;&gt;iCalendar&lt;/a&gt; is well supported format, which
+&lt;em&gt;allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.&lt;/em&gt;
+– exactly what we are looking for. Let’s create an &lt;code&gt;.ics&lt;/code&gt; file:&lt;/p&gt;
 
-&lt;p&gt;Sharing this file will cover desktop calendars associated with the ics extension and the iOS calendar. It probably will not work with the Google Calendar website, and &amp;#8211; surprisingly &amp;#8211; it will not work on Android as expected.&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-properties&quot; data-lang=&quot;properties&quot;&gt;BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+X-WR-TIMEZONE:Europe/Budapest
+BEGIN:VEVENT
+UID:your_eventname@yourdomain.com
+DTSTART:20180530T130000Z
+DTEND:20180530T143000Z
+DESCRIPTION:The description of your event
+LOCATION:The location of your event
+SEQUENCE:0
+SUMMARY:The summary of your event
+END:VEVENT
+END:VCALENDAR&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h3 id='fixing_android'&gt;Fixing Android&lt;/h3&gt;
+&lt;p&gt;There are &lt;a href=&quot;https://tools.ietf.org/html/rfc5545&quot;&gt;other fields&lt;/a&gt;.
+The fields are mostly self describing.
+In free form text values, &lt;code&gt;,&lt;/code&gt; and &lt;code&gt;;&lt;/code&gt; characters must be escaped by a backslash.
+The &lt;code&gt;tzselect&lt;/code&gt; command can be used to get the name of your timezone.
+The &lt;code&gt;DTSTART&lt;/code&gt; and &lt;code&gt;DTEND&lt;/code&gt; fields are in &lt;a href=&quot;https://en.wikipedia.org/wiki/Coordinated_Universal_Time&quot;&gt;UTC&lt;/a&gt;, 20180530T130000 is 2018. 05. 30, 13:00:00.
+If all this sound difficult, create your event in a suitable calendar application
+and export it to &lt;code&gt;.ics&lt;/code&gt; from there.&lt;/p&gt;
 
-&lt;p&gt;On Android, after download, a toast message will be shown, saying: &amp;#8220;Unable to launch event&amp;#8221;. Internet wisdom blames various components. On the phones I had access to, Logcat show that the Calendar app does not have permission to read downloaded files.&lt;/p&gt;
+&lt;p&gt;Sharing this file will cover desktop calendars associated with the ics extension
+and the iOS calendar. It probably will not work with the Google Calendar website,
+and – surprisingly – it will not work on Android as expected.&lt;/p&gt;
 
-&lt;p&gt;Fortunately, there&amp;#8217;s a way around: Android allows &lt;a href='https://stackoverflow.com/questions/42936576/open-android-calendar-with-intent-from-web-chrome'&gt;emitting intents by links&lt;/a&gt;, in some cases. The proper syntax and the allowed fields can be discovered by looking at the &lt;a href='https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml'&gt;source&lt;/a&gt;, or &lt;a href='https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation'&gt;StackOverflow&lt;/a&gt;. Here&amp;#8217;s an example:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;&lt;span class='nt'&gt;&amp;lt;a&lt;/span&gt; &lt;span class='na'&gt;href=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;https://www.google.com/calendar/event?action=TEMPLATE&amp;amp;text=your_event&amp;amp;dates=20180530T130000Z/20180530T143000Z&amp;amp;location=location of the event&amp;amp;sprop=yourdomain.com&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Calendar event&lt;span class='nt'&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;Values need to be &lt;a href='https://en.wikipedia.org/wiki/Percent-encoding'&gt;urlencoded&lt;/a&gt;. Clicking on this link on Android will open the Google Calendar application, if installed, with the specified event shown to be saved. Fortunately, this link will work for the browser based Google Calendar as well!&lt;/p&gt;
+&lt;h3 id=&quot;fixing-android&quot;&gt;Fixing Android&lt;/h3&gt;
 
-&lt;h3 id='solution'&gt;Solution&lt;/h3&gt;
+&lt;p&gt;On Android, after download, a toast message will be shown, saying:
+“Unable to launch event”. Internet wisdom blames various components.
+On the phones I had access to, Logcat show that the Calendar app does not
+have permission to read downloaded files.&lt;/p&gt;
 
-&lt;p&gt;Let&amp;#8217;s put all this together. By default, we should link to the &lt;code&gt;.ics&lt;/code&gt; file, as it works on most platforms. On Android, the link has to be changed:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;&lt;span class='nt'&gt;&amp;lt;a&lt;/span&gt; &lt;span class='na'&gt;href=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;event.ics&amp;quot;&lt;/span&gt; &lt;span class='na'&gt;data-gcal=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;https://www.google.com/calendar/event?...&amp;quot;&lt;/span&gt; &lt;span class='na'&gt;class=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;ics-link&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Calendar event&lt;span class='nt'&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='js'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;replaceIcs&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;as&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;$&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;.ics-link&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-  &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&lt;/span&gt; &lt;span class='nx'&gt;as&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;length&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='nx'&gt;as&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='p'&gt;].&lt;/span&gt;&lt;span class='nx'&gt;href&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;as&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='p'&gt;].&lt;/span&gt;&lt;span class='nx'&gt;getAttribute&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;data-gcal&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-  &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;span class='p'&gt;};&lt;/span&gt;
+&lt;p&gt;Fortunately, there’s a way around: Android allows &lt;a href=&quot;https://stackoverflow.com/questions/42936576/open-android-calendar-with-intent-from-web-chrome&quot;&gt;emitting intents by links&lt;/a&gt;, in some cases.
+The proper syntax and the allowed fields can be discovered by looking at the &lt;a href=&quot;https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml&quot;&gt;source&lt;/a&gt;,
+or &lt;a href=&quot;https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation&quot;&gt;StackOverflow&lt;/a&gt;.
+Here’s an example:&lt;/p&gt;
 
-&lt;span class='nb'&gt;document&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;addEventListener&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;DOMContentLoaded&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;e&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='c1'&gt;// NB: there are more robust ways to check for android&lt;/span&gt;
-  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;userAgent&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;navigator&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;userAgent&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;toLowerCase&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;userAgent&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;indexOf&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;android&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='nx'&gt;replaceIcs&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-  &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;span class='p'&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;What about desktop clients using the Google Calendar web application? It is difficult if possible to tell what kind of calendar solution such users would like to use. However, there&amp;#8217;s a hack, which detects if the &lt;a href='http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/'&gt;user is logged in to a google account&lt;/a&gt;. If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&amp;lt;a href=&amp;quot;https://www.google.com/calendar/event?action=TEMPLATE&amp;amp;text=your_event&amp;amp;dates=20180530T130000Z/20180530T143000Z&amp;amp;location=location of the event&amp;amp;sprop=yourdomain.com&amp;quot;&amp;gt;Calendar event&amp;lt;/a&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h3 id='summary'&gt;Summary&lt;/h3&gt;
+&lt;p&gt;Values need to be &lt;a href=&quot;https://en.wikipedia.org/wiki/Percent-encoding&quot;&gt;urlencoded&lt;/a&gt;.
+Clicking on this link on Android will open the Google Calendar application, if installed,
+with the specified event shown to be saved. Fortunately, this link will work for the
+browser based Google Calendar as well!&lt;/p&gt;
 
-&lt;p&gt;It is more difficult to share a calendar entry over the internet as expected. Application native ways do not interoperate, while some platforms are hard to target by standard solutions. While the solution shown above covers a large percentage of use-cases, it still might fail in others. A free web needs more support of open standards!&lt;/p&gt;</content>
+&lt;h3 id=&quot;solution&quot;&gt;Solution&lt;/h3&gt;
+
+&lt;p&gt;Let’s put all this together. By default, we should link to the &lt;code&gt;.ics&lt;/code&gt; file,
+as it works on most platforms. On Android, the link has to be changed:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&amp;lt;a href=&amp;quot;event.ics&amp;quot; data-gcal=&amp;quot;https://www.google.com/calendar/event?...&amp;quot; class=&amp;quot;ics-link&amp;quot;&amp;gt;Calendar event&amp;lt;/a&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;var replaceIcs = function() {
+  var as = $(&amp;#39;.ics-link&amp;#39;);
+  for (var i = 0; i &amp;lt; as.length; i++) {
+    as[i].href = as[i].getAttribute(&amp;#39;data-gcal&amp;#39;);
+  }
+};
+
+document.addEventListener(&amp;quot;DOMContentLoaded&amp;quot;, function(e) {
+  // NB: there are more robust ways to check for android
+  var userAgent = navigator.userAgent.toLowerCase();
+  if (userAgent.indexOf(&amp;quot;android&amp;quot;) &amp;gt;= 0) {
+    replaceIcs();
+  }
+});&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;What about desktop clients using the Google Calendar web application?
+It is difficult if possible to tell what kind of calendar solution such users would like to use.
+However, there’s a hack, which detects if the &lt;a href=&quot;http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/&quot;&gt;user is logged in to a google account&lt;/a&gt;.
+If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.&lt;/p&gt;
+
+&lt;h3 id=&quot;summary&quot;&gt;Summary&lt;/h3&gt;
+
+&lt;p&gt;It is more difficult to share a calendar entry over the internet as expected.
+Application native ways do not interoperate, while some platforms are hard to target by standard solutions.
+While the solution shown above covers a large percentage of use-cases, it still might fail in others.
+A free web needs more support of open standards!&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -95,13 +126,16 @@
    <link href="http://erenon.hu/2014/03/29/the-sorcerers-frog"/>
    <updated>2014-03-29T00:00:00+01:00</updated>
    <id>http://erenon.hu/2014/03/29/the-sorcerers-frog</id>
-   <content type="html">&lt;p&gt;Once there was a sorcerer who had the most shining gold. A simple and mild man came to him and wanted to buy this gold from him. The sorcerer said to the simple man: &lt;em&gt;&amp;#8220;You will not receive this gold, unless you give me better gold and in larger quantity.&amp;#8221;&lt;/em&gt; The man said: &lt;em&gt;&amp;#8220;I have such a great desire for your gold that I will give you what you want rather than losing it.&amp;#8221;&lt;/em&gt; He then gave the sorcerer better gold and in larger quantity and received the shining gold from him and put it in a casket, thinking of making himself a ring from it for his finger.&lt;/p&gt;
+   <content type="html">
+&lt;p&gt;Once there was a sorcerer who had the most shining gold. A simple and mild man came to him and wanted to buy this gold from him. The sorcerer said to the simple man: &lt;em&gt;“You will not receive this gold, unless you give me better gold and in larger quantity.”&lt;/em&gt; The man said: &lt;em&gt;“I have such a great desire for your gold that I will give you what you want rather than losing it.”&lt;/em&gt; He then gave the sorcerer better gold and in larger quantity and received the shining gold from him and put it in a casket, thinking of making himself a ring from it for his finger.&lt;/p&gt;
 
-&lt;p&gt;After a short time, the sorcerer approached that simple man and said: &lt;em&gt;&amp;#8220;The gold you bought from me and laid in your casket is not gold, as you thought, but the most ugly frog. It has been fostered in my chest and fed with my food. And in order for you to test and know that this is true, you may open the casket and you will see how the frog will jump to my chest where it was fostered.&amp;#8221;&lt;/em&gt; When the man wanted to open it and find out if it was true, the frog appeared in the casket. The cover of the casket was hanging on four hinges that were about to break and fall off soon. Immediately when the cover of the casket was opened, the frog saw the sorcerer and jumped into his chest.&lt;/p&gt;
+&lt;p&gt;After a short time, the sorcerer approached that simple man and said: &lt;em&gt;“The gold you bought from me and laid in your casket is not gold, as you thought, but the most ugly frog. It has been fostered in my chest and fed with my food. And in order for you to test and know that this is true, you may open the casket and you will see how the frog will jump to my chest where it was fostered.”&lt;/em&gt; When the man wanted to open it and find out if it was true, the frog appeared in the casket. The cover of the casket was hanging on four hinges that were about to break and fall off soon. Immediately when the cover of the casket was opened, the frog saw the sorcerer and jumped into his chest.&lt;/p&gt;
 
-&lt;p&gt;When the servants and friends of the simple man saw this, they said to him: &lt;em&gt;&amp;#8220;Lord, this most fine gold is in the frog, and if you want, you can easily get the gold.&amp;#8221;&lt;/em&gt; The man said: &lt;em&gt;&amp;#8220;How can I get it?&amp;#8221;&lt;/em&gt; They replied: &lt;em&gt;&amp;#8220;If someone took a sharp and heated spear and thrust it into the hollow part of the frog&amp;#8217;s back, he would quickly get the gold out. But if he cannot find any hollow in the frog, he should then, with the greatest force and effort, thrust his spear into it, and this is how you will get back the gold you bought.&amp;#8221;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;When the servants and friends of the simple man saw this, they said to him: &lt;em&gt;“Lord, this most fine gold is in the frog, and if you want, you can easily get the gold.”&lt;/em&gt; The man said: &lt;em&gt;“How can I get it?”&lt;/em&gt; They replied: &lt;em&gt;“If someone took a sharp and heated spear and thrust it into the hollow part of the frog’s back, he would quickly get the gold out. But if he cannot find any hollow in the frog, he should then, with the greatest force and effort, thrust his spear into it, and this is how you will get back the gold you bought.”&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;Celestial Revelations&lt;/em&gt;&lt;/p&gt;</content>
+&lt;p&gt;&lt;em&gt;Celestial Revelations&lt;/em&gt;&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -109,13 +143,17 @@
    <link href="http://erenon.hu/2013/11/23/bs-thesis-deadlock-prediction"/>
    <updated>2013-11-23T00:00:00+01:00</updated>
    <id>http://erenon.hu/2013/11/23/bs-thesis-deadlock-prediction</id>
-   <content type="html">&lt;p&gt;Please find my B.S. Thesis entitled &lt;a href='http://www.scribd.com/doc/186541968/BSc-Thesis-Dynamic-Codeanalysis-Based-Deadlock-Prediction'&gt;Dynamic Codeanalysis Based Deadlock Prediction&lt;/a&gt; online. It&amp;#8217;s hungarian, english abstract below.&lt;/p&gt;
+   <content type="html">
+&lt;p&gt;Please find my B.S. Thesis entitled &lt;a href=&quot;http://www.scribd.com/doc/186541968/BSc-Thesis-Dynamic-Codeanalysis-Based-Deadlock-Prediction&quot;&gt;Dynamic Codeanalysis Based Deadlock Prediction&lt;/a&gt; online.
+It’s hungarian, english abstract below.&lt;/p&gt;
 
-&lt;h2 id='abstract'&gt;Abstract&lt;/h2&gt;
+&lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
 
 &lt;p&gt;The widespread of multicore processor architectures facilitates and speeds up the development of concurrent software architectures and algorithms. Being a rather demanding challenge the design of such systems, failure to design or implement a concurrent application often implies serious maintenance costs later. This thesis describes the common pitfalls such as race condition and deadlock and enumerates several solutions which counteract and prevent them. The solutions make use of the brand new and highly anticipated features of the C++11 standard, like the synchronization primitives supporting concurrency, the atomic memory objects and methods which exposes the interesting capabilities of transactional memory and the move semantics.&lt;/p&gt;
 
-&lt;p&gt;The second chapter introduces an analyzer tool based on dynamic code analysis which is able to predict the deadlocks of a system. This tool successfully provides diagnostics even in cases where the other standard solutions would require excess refactoring or would cause significant performance degradation.&lt;/p&gt;</content>
+&lt;p&gt;The second chapter introduces an analyzer tool based on dynamic code analysis which is able to predict the deadlocks of a system. This tool successfully provides diagnostics even in cases where the other standard solutions would require excess refactoring or would cause significant performance degradation.&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -123,34 +161,44 @@
    <link href="http://erenon.hu/2013/04/03/slick-gnome-terminal"/>
    <updated>2013-04-03T00:00:00+02:00</updated>
    <id>http://erenon.hu/2013/04/03/slick-gnome-terminal</id>
-   <content type="html">&lt;p&gt;So, you want me to belive, the default gnome-terminal in ubuntu doesn&amp;#8217;t look &lt;em&gt;that&lt;/em&gt; good. Here it is:&lt;/p&gt;
-&lt;img alt='gnome-terminal default look and feel in Ubuntu 12.10' src='https://lh5.googleusercontent.com/-smSXpT9_WQU/UV9LWIz8soI/AAAAAAAAAm0/I6yZEBqDgL4/s696/01.png' style='margin: 1em auto;' title='gnome-terminal default look and feel in Ubuntu 12.10' /&gt;
+   <content type="html">
+&lt;p&gt;So, you want me to belive, the default gnome-terminal in ubuntu doesn’t look &lt;em&gt;that&lt;/em&gt; good. Here it is:&lt;/p&gt;
+
+&lt;p&gt;&lt;img style=&quot;margin: 1em auto;&quot; src=&quot;https://lh5.googleusercontent.com/-smSXpT9_WQU/UV9LWIz8soI/AAAAAAAAAm0/I6yZEBqDgL4/s696/01.png&quot; title=&quot;gnome-terminal default look and feel in Ubuntu 12.10&quot; alt=&quot;gnome-terminal default look and feel in Ubuntu 12.10&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;I aggree. Fortunately, there is a way to make it look more &lt;em&gt;slick&lt;/em&gt;.&lt;/p&gt;
 
-&lt;h1 id='remove_window_borders'&gt;Remove window borders&lt;/h1&gt;
+&lt;h1 id=&quot;remove-window-borders&quot;&gt;Remove window borders&lt;/h1&gt;
 
-&lt;p&gt;To remove window borders, install (if not yet installed) and launch &lt;abbr title='Compiz Config Settings Manager'&gt;ccsm&lt;/abbr&gt;.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;&lt;span class='lineno'&gt;1&lt;/span&gt; &lt;span class='nv'&gt;$ &lt;/span&gt;sudo apt-get install compizconfig-settings-manager
-&lt;span class='lineno'&gt;2&lt;/span&gt; &lt;span class='nv'&gt;$ &lt;/span&gt;ccsm &amp;amp;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;To remove window borders, install (if not yet installed) and launch &lt;abbr title=&quot;Compiz Config Settings Manager&quot;&gt;ccsm&lt;/abbr&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;$ sudo apt-get install compizconfig-settings-manager
+$ ccsm &amp;amp;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;In &lt;strong&gt;ccsm&lt;/strong&gt;, open the &lt;code&gt;window decorations&lt;/code&gt; settings window and set &lt;code&gt;Decoration windows:&lt;/code&gt; preference to:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;&lt;span class='o'&gt;(&lt;/span&gt;any&lt;span class='o'&gt;)&lt;/span&gt; &amp;amp; !&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='nv'&gt;class&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;Gnome-terminal&lt;span class='o'&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;(any) &amp;amp; !(class=Gnome-terminal)&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;This will remove window decorations (e.g: window borders) from all gnome-terminal windows. Here is how it looks now:&lt;/p&gt;
-&lt;img alt='gnome-terminal without borders' src='https://lh3.googleusercontent.com/-_qtLqny_YyE/UV9LWSRh2dI/AAAAAAAAAm4/jteGIWJQimQ/s696/02.png' style='margin: 1em auto;' title='gnome-terminal without borders' /&gt;
-&lt;h1 id='adjust_colors'&gt;Adjust colors&lt;/h1&gt;
+
+&lt;p&gt;&lt;img style=&quot;margin: 1em auto;&quot; src=&quot;https://lh3.googleusercontent.com/-_qtLqny_YyE/UV9LWSRh2dI/AAAAAAAAAm4/jteGIWJQimQ/s696/02.png&quot; title=&quot;gnome-terminal without borders&quot; alt=&quot;gnome-terminal without borders&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;adjust-colors&quot;&gt;Adjust colors&lt;/h1&gt;
 
 &lt;p&gt;Finally change the color theme and add a bit of transparency. Create a new gnome-terminal profile (&lt;code&gt;edit&lt;/code&gt; / &lt;code&gt;Profiles...&lt;/code&gt;) and tailor it to your needs. Find a sample setting below:&lt;/p&gt;
-&lt;img alt='transparent gnome-terminal without borders and settings window' src='https://lh4.googleusercontent.com/-AYiacF9Rc6k/UV9LcDdTjzI/AAAAAAAAAnI/FWt3iVcWOPU/s696/03.png' style='margin: 1em auto;' title='transparent gnome-terminal without borders and settings window' /&gt;
+
+&lt;p&gt;&lt;img style=&quot;margin: 1em auto;&quot; src=&quot;https://lh4.googleusercontent.com/-AYiacF9Rc6k/UV9LcDdTjzI/AAAAAAAAAnI/FWt3iVcWOPU/s696/03.png&quot; title=&quot;transparent gnome-terminal without borders and settings window&quot; alt=&quot;transparent gnome-terminal without borders and settings window&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;Such a nice terminal deserves a colored promt. Edit your &lt;code&gt;~/.bashrc&lt;/code&gt; file, locate the colored &lt;code&gt;PS1&lt;/code&gt; definition and change it to something more cool:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;&lt;span class='nv'&gt;PS1&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &amp;#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;PS1=&amp;#39;${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &amp;#39;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;Final version:&lt;/p&gt;
-&lt;img alt='transparent gnome-terminal without borders, with colored promt' src='https://lh5.googleusercontent.com/-IpSKVCkWilA/UV9Lbmk-DaI/AAAAAAAAAnA/cDZkRjTaNxc/s696/04.png' style='margin: 1em auto;' title='transparent gnome-terminal without borders, with colored promt' /&gt;
-&lt;p&gt;By the end of all this tweaks, you might change that &lt;del&gt;ugly&lt;/del&gt; default wallpaper as well.&lt;/p&gt;</content>
+
+&lt;p&gt;&lt;img style=&quot;margin: 1em auto;&quot; src=&quot;https://lh5.googleusercontent.com/-IpSKVCkWilA/UV9Lbmk-DaI/AAAAAAAAAnA/cDZkRjTaNxc/s696/04.png&quot; title=&quot;transparent gnome-terminal without borders, with colored promt&quot; alt=&quot;transparent gnome-terminal without borders, with colored promt&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;By the end of all this tweaks, you might change that &lt;del&gt;ugly&lt;/del&gt; default wallpaper as well.&lt;/p&gt;
+</content>
  </entry>
  
  <entry>
@@ -158,33 +206,35 @@
    <link href="http://erenon.hu/2013/03/07/call-virtual-method-runtime"/>
    <updated>2013-03-07T00:00:00+01:00</updated>
    <id>http://erenon.hu/2013/03/07/call-virtual-method-runtime</id>
-   <content type="html">&lt;p&gt;I was wondering if there is a way to write a C++ program which compiles successfully but crashes runtime because of a call to a pure virtual method. Even if we don&amp;#8217;t take ugly memory handling errors into account, there is:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='c'&gt;&lt;span class='k'&gt;struct&lt;/span&gt; &lt;span class='n'&gt;Base&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;Base&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt; &lt;span class='n'&gt;init&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt; &lt;span class='p'&gt;}&lt;/span&gt;
-    &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='n'&gt;init&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt; &lt;span class='n'&gt;init2&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt; &lt;span class='p'&gt;}&lt;/span&gt;
-    &lt;span class='n'&gt;virtual&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='n'&gt;init2&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='p'&gt;};&lt;/span&gt;
+   <content type="html">
+&lt;p&gt;I was wondering if there is a way to write a  C++ program which compiles successfully but crashes runtime because of a call to a pure virtual method. Even if we don’t take ugly memory handling errors into account, there is:&lt;/p&gt;
 
-&lt;span class='k'&gt;struct&lt;/span&gt; &lt;span class='n'&gt;Derived&lt;/span&gt; &lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='n'&gt;public&lt;/span&gt; &lt;span class='n'&gt;Base&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;virtual&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='n'&gt;init2&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{}&lt;/span&gt;
-&lt;span class='p'&gt;};&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c--&quot; data-lang=&quot;c++&quot;&gt;struct Base {
+    Base() { init(); }
+    void init() { init2(); }
+    virtual void init2() = 0;
+};
 
-&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='nf'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;Derived&lt;/span&gt; &lt;span class='n'&gt;d&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+struct Derived :public Base {
+    virtual void init2() {}
+};
+
+int main() {
+    Derived d;
+    return 0;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;And it compiles and crashes like a &lt;del&gt;charm&lt;/del&gt; vase:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;&lt;span class='lineno'&gt;1&lt;/span&gt; &lt;span class='nv'&gt;$ &lt;/span&gt;g++ -Wall virtual.cpp 
-&lt;span class='lineno'&gt;2&lt;/span&gt; &lt;span class='nv'&gt;$ &lt;/span&gt;./a.out 
-&lt;span class='lineno'&gt;3&lt;/span&gt; pure virtual method called
-&lt;span class='lineno'&gt;4&lt;/span&gt; terminate called without an active exception
-&lt;span class='lineno'&gt;5&lt;/span&gt; Aborted &lt;span class='o'&gt;(&lt;/span&gt;core dumped&lt;span class='o'&gt;)&lt;/span&gt;
-&lt;span class='lineno'&gt;6&lt;/span&gt; &lt;span class='nv'&gt;$ &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;The committed deadly sin was &lt;em&gt;calling a virtual method in the constructor&lt;/em&gt; in a sneaky form.&lt;/p&gt;</content>
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;$ g++ -Wall virtual.cpp 
+$ ./a.out 
+pure virtual method called
+terminate called without an active exception
+Aborted (core dumped)
+$&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The committed deadly sin was &lt;em&gt;calling a virtual method in the constructor&lt;/em&gt; in a sneaky form.&lt;/p&gt;
+</content>
  </entry>
  
  <entry>
@@ -192,19 +242,22 @@
    <link href="http://erenon.hu/2013/03/02/bootstrap-typeahead-submit-on-select"/>
    <updated>2013-03-02T00:00:00+01:00</updated>
    <id>http://erenon.hu/2013/03/02/bootstrap-typeahead-submit-on-select</id>
-   <content type="html">&lt;p&gt;The &lt;a href='http://twitter.github.com/bootstrap/index.html'&gt;Twitter Bootstrap&lt;/a&gt;s &lt;a href='http://twitter.github.com/bootstrap/javascript.html#typeahead'&gt;Typeahead&lt;/a&gt; is a very nice way to provide autocomplete functionality on your text inputs. However, the default configuration might be a bit confusing. When the user clicks on a suggestion in the dropdown menu, the utility populates the input but doesn&amp;#8217;t submit the form. It&amp;#8217;s usually ok, but sometimes (e.g: search boxes) it&amp;#8217;s frustrating. Here&amp;#8217;s how to change it:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='js'&gt;&lt;span class='lineno'&gt;1&lt;/span&gt; &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;input&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;$&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;#your-input-box&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='lineno'&gt;2&lt;/span&gt; &lt;span class='nx'&gt;input&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;typeahead&lt;/span&gt;&lt;span class='p'&gt;({&lt;/span&gt;
-&lt;span class='lineno'&gt;3&lt;/span&gt;     &lt;span class='s1'&gt;&amp;#39;source&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s1'&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s1'&gt;&amp;#39;baz&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-&lt;span class='lineno'&gt;4&lt;/span&gt;     &lt;span class='s1'&gt;&amp;#39;updater&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;item&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-&lt;span class='lineno'&gt;5&lt;/span&gt;         &lt;span class='k'&gt;this&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;$element&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;].&lt;/span&gt;&lt;span class='nx'&gt;value&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;item&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='lineno'&gt;6&lt;/span&gt;         &lt;span class='k'&gt;this&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;$element&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;].&lt;/span&gt;&lt;span class='nx'&gt;form&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;submit&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-&lt;span class='lineno'&gt;7&lt;/span&gt;         &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;item&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='lineno'&gt;8&lt;/span&gt;     &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;span class='lineno'&gt;9&lt;/span&gt; &lt;span class='p'&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;This snippet autosubmits the form if the user clicks on a suggestion or selects it by keyboard.&lt;/p&gt;</content>
+   <content type="html">
+&lt;p&gt;The &lt;a href=&quot;http://twitter.github.com/bootstrap/index.html&quot;&gt;Twitter Bootstrap&lt;/a&gt;s &lt;a href=&quot;http://twitter.github.com/bootstrap/javascript.html#typeahead&quot;&gt;Typeahead&lt;/a&gt; is a very nice way to provide autocomplete functionality on your text inputs. However, the default configuration might be a bit confusing. When the user clicks on a suggestion in the dropdown menu, the utility populates the input but doesn’t submit the form. It’s usually ok, but sometimes (e.g: search boxes) it’s frustrating. Here’s how to change it:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;var input = $(&amp;#39;#your-input-box&amp;#39;);
+input.typeahead({
+    &amp;#39;source&amp;#39; : [&amp;#39;foo&amp;#39;, &amp;#39;bar&amp;#39;, &amp;#39;baz&amp;#39;],
+    &amp;#39;updater&amp;#39; : function(item) {
+        this.$element[0].value = item;
+        this.$element[0].form.submit();
+        return item;
+    }
+});&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This snippet autosubmits the form if the user clicks on a suggestion or selects it by keyboard.&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -212,10 +265,14 @@
    <link href="http://erenon.hu/2013/01/29/toastmasters-award"/>
    <updated>2013-01-29T00:00:00+01:00</updated>
    <id>http://erenon.hu/2013/01/29/toastmasters-award</id>
-   <content type="html">&lt;img alt='Best Tabletopic Speaker -- Morgan Stanley Budapest Toastmasters award received' height='417' src='https://lh3.googleusercontent.com/-IuyVAqU9zO8/UQgBbI_TD7I/AAAAAAAAAjc/HmqHgGn7zZI/s834/IMG_20130129_163917.jpg' style='margin: 1em auto;' title='Best Tabletopic Speaker -- Morgan Stanley Budapest Toastmasters award received' width='313' /&gt;
-&lt;p&gt;I was lucky enough (I&amp;#8217;m looking at you, fortune cookie master) to recieve this nice &lt;em&gt;Best Tabletopic Speaker&lt;/em&gt; trophy at Morgan Stanley Budapest Toastmasters by giving a short improvised speach.&lt;/p&gt;
+   <content type="html">
+&lt;p&gt;&lt;img style=&quot;margin: 1em auto;&quot; width=&quot;313&quot; height=&quot;417&quot; src=&quot;https://lh3.googleusercontent.com/-IuyVAqU9zO8/UQgBbI_TD7I/AAAAAAAAAjc/HmqHgGn7zZI/s834/IMG_20130129_163917.jpg&quot; title=&quot;Best Tabletopic Speaker -- Morgan Stanley Budapest Toastmasters award received&quot; alt=&quot;Best Tabletopic Speaker -- Morgan Stanley Budapest Toastmasters award received&quot; /&gt;
+I was lucky enough (I’m looking at you, fortune cookie master) to recieve this nice &lt;em&gt;Best Tabletopic Speaker&lt;/em&gt; trophy
+at Morgan Stanley Budapest Toastmasters by giving a short improvised speach.&lt;/p&gt;
 
-&lt;p&gt;I&amp;#8217;d like to say thanks to my fellow toastmasters, and special thanks goes to Steve D. Nelson who was patient enough to teach me.&lt;/p&gt;</content>
+&lt;p&gt;I’d like to say thanks to my fellow toastmasters, and special thanks goes to Steve D. Nelson who was patient enough to teach me.&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -223,33 +280,35 @@
    <link href="http://erenon.hu/2013/01/22/neptun-keepalive"/>
    <updated>2013-01-22T00:00:00+01:00</updated>
    <id>http://erenon.hu/2013/01/22/neptun-keepalive</id>
-   <content type="html">&lt;p&gt;Közeleg a tárgyfelvétel, és senkinek nincs ideje órákat az F5-ön ülni. Egy lehetséges megoldás, hogy fenntartsuk a sessiont, ha a kezdés előtt néhány órával sikerül bejelentkezni:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='js'&gt;&lt;span class='lineno'&gt; 1&lt;/span&gt; &lt;span class='nx'&gt;javascript&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
-&lt;span class='lineno'&gt; 2&lt;/span&gt;   &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(){&lt;/span&gt;
-&lt;span class='lineno'&gt; 3&lt;/span&gt;       &lt;span class='nb'&gt;window&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;setInterval&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
-&lt;span class='lineno'&gt; 4&lt;/span&gt;           &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(){&lt;/span&gt;
-&lt;span class='lineno'&gt; 5&lt;/span&gt;             &lt;span class='nx'&gt;$&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;#upBoxes_upRSS_gdgRSS_gdgRSS_RefreshBtn&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;span class='lineno'&gt; 6&lt;/span&gt;             &lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;click&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-&lt;span class='lineno'&gt; 7&lt;/span&gt;           &lt;span class='p'&gt;},&lt;/span&gt; 
-&lt;span class='lineno'&gt; 8&lt;/span&gt;           &lt;span class='mi'&gt;20000&lt;/span&gt;
-&lt;span class='lineno'&gt; 9&lt;/span&gt;       &lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='lineno'&gt;10&lt;/span&gt;   &lt;span class='p'&gt;}()&lt;/span&gt;
-&lt;span class='lineno'&gt;11&lt;/span&gt; &lt;span class='p'&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;h1 id='how_to_use'&gt;How to use&lt;/h1&gt;
+   <content type="html">
+&lt;p&gt;Közeleg a tárgyfelvétel, és senkinek nincs ideje órákat az F5-ön ülni. Egy lehetséges megoldás,
+hogy fenntartsuk a sessiont, ha a kezdés előtt néhány órával sikerül bejelentkezni:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;javascript:(
+  function(){
+      window.setInterval(
+          function(){
+            $(&amp;#39;#upBoxes_upRSS_gdgRSS_gdgRSS_RefreshBtn&amp;#39;)
+            .click();
+          }, 
+          20000
+      );
+  }()
+);&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;how-to-use&quot;&gt;How to use&lt;/h1&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Bookmarkoljuk a &lt;a href='javascript:(function(){window.setInterval(function(){$(&amp;apos;#upBoxes_upRSS_gdgRSS_gdgRSS_RefreshBtn&amp;apos;).click();},20000);}());'&gt;Keep Alive&lt;/a&gt; bookmarkletet.&lt;/li&gt;
-
-&lt;li&gt;Jelentkezzünk be a neptunba&lt;/li&gt;
-
-&lt;li&gt;Kattintsunk az előbb felvett könyvjelzőre&lt;/li&gt;
+  &lt;li&gt;Bookmarkoljuk a &lt;a href=&quot;javascript:(function(){window.setInterval(function(){$(&#39;#upBoxes_upRSS_gdgRSS_gdgRSS_RefreshBtn&#39;).click();},20000);}());&quot;&gt;Keep Alive&lt;/a&gt; bookmarkletet.&lt;/li&gt;
+  &lt;li&gt;Jelentkezzünk be a neptunba&lt;/li&gt;
+  &lt;li&gt;Kattintsunk az előbb felvett könyvjelzőre&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;A script 20 másodpercenként megnyom egy gombot, ami a tétlenségi idő újraindulását eredményezi.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;Korlátozott körökben terjesztendő&lt;/em&gt;&lt;/p&gt;</content>
+&lt;p&gt;&lt;em&gt;Korlátozott körökben terjesztendő&lt;/em&gt;&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -257,7 +316,9 @@
    <link href="http://erenon.hu/2013/01/05/blog-online"/>
    <updated>2013-01-05T00:00:00+01:00</updated>
    <id>http://erenon.hu/2013/01/05/blog-online</id>
-   <content type="html">&lt;p&gt;As of this very day, the blog is accessible online to the public. Previously private (or protected&amp;#8230;) posts may follow.&lt;/p&gt;</content>
+   <content type="html">
+&lt;p&gt;As of this very day, the blog is accessible online to the public. Previously private (or protected…) posts may follow.&lt;/p&gt;
+</content>
  </entry>
  
  <entry>
@@ -265,12 +326,18 @@
    <link href="http://erenon.hu/2012/11/25/imprisoned-toroid-raytrace-on-cuda"/>
    <updated>2012-11-25T00:00:00+01:00</updated>
    <id>http://erenon.hu/2012/11/25/imprisoned-toroid-raytrace-on-cuda</id>
-   <content type="html">&lt;p&gt;The following video is created by a C++/CUDA program using the theory of raytracing which was the most interesting piece of knowledge I learned on the university this semester.&lt;/p&gt;
+   <content type="html">
+&lt;p&gt;The following video is created by a C++/CUDA program using the theory of raytracing
+which was the most interesting piece of knowledge I learned on the university this semester.&lt;/p&gt;
 
-&lt;p&gt;Because of its as-good-as-it-should-be quality of the source, I can&amp;#8217;t opensource it at this precise moment. Meanwhile, take a look at &lt;a href='https://developer.nvidia.com/optix'&gt;OptiX&lt;/a&gt;, which I found a month later I had completed this.&lt;/p&gt;
+&lt;p&gt;Because of its as-good-as-it-should-be quality of the source, I can’t opensource it at this precise moment.
+Meanwhile, take a look at &lt;a href=&quot;https://developer.nvidia.com/optix&quot;&gt;OptiX&lt;/a&gt;, which I found a month later I had completed this.&lt;/p&gt;
 
 &lt;p&gt;The video was rendered at 24 FPS, render time appr. 3 hours.&lt;/p&gt;
-&lt;iframe frameborder='0' height='360' src='http://www.youtube.com/embed/oYdYEcjz7_4' width='480'&gt; &lt;/iframe&gt;</content>
+
+&lt;iframe width=&quot;480&quot; height=&quot;360&quot; src=&quot;http://www.youtube.com/embed/oYdYEcjz7_4&quot; frameborder=&quot;0&quot;&gt; &lt;/iframe&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -278,9 +345,14 @@
    <link href="http://erenon.hu/2012/11/21/internship-report"/>
    <updated>2012-11-21T00:00:00+01:00</updated>
    <id>http://erenon.hu/2012/11/21/internship-report</id>
-   <content type="html">&lt;p&gt;I&amp;#8217;ve finally got the approval to publish my summer internship report done at Morgan Stanley this year. I&amp;#8217;ve enjoyed every minutes of it. The paper is mainly about the &lt;em&gt;deadlock hunter&lt;/em&gt; software I&amp;#8217;ve developed from scratch. Because of the &lt;a href='https://www.vik.bme.hu/kepzes/gyakorlat/442.html'&gt;university regulations&lt;/a&gt; it&amp;#8217;s utterly long &amp;#8211; a perfect fairy tale for your little brother to fell asleep faster than ever.&lt;/p&gt;
+   <content type="html">
+&lt;p&gt;I’ve finally got the approval to publish my summer internship report done at Morgan Stanley this year. I’ve enjoyed every minutes of it.
+The paper is mainly about the &lt;em&gt;deadlock hunter&lt;/em&gt; software I’ve developed from scratch. Because of the &lt;a href=&quot;https://www.vik.bme.hu/kepzes/gyakorlat/442.html&quot;&gt;university regulations&lt;/a&gt; it’s utterly long – a perfect fairy tale
+for your little brother to fell asleep faster than ever.&lt;/p&gt;
 
-&lt;p&gt;Check out the &lt;a href='http://www.scribd.com/doc/119067656'&gt;report&lt;/a&gt; at scribid. (It&amp;#8217;s in hungarian)&lt;/p&gt;</content>
+&lt;p&gt;Check out the &lt;a href=&quot;http://www.scribd.com/doc/119067656&quot;&gt;report&lt;/a&gt; at scribid. (It’s in hungarian)&lt;/p&gt;
+
+</content>
  </entry>
  
  <entry>
@@ -288,20 +360,23 @@
    <link href="http://erenon.hu/2012/05/30/sqllogger"/>
    <updated>2012-05-30T00:00:00+02:00</updated>
    <id>http://erenon.hu/2012/05/30/sqllogger</id>
-   <content type="html">&lt;p&gt;&amp;#8230;or they seem like to cause one &amp;#8211; I noticed while I was testing the latest &lt;a href='https://github.com/erenon/ComPPI'&gt;ComPPI&lt;/a&gt; build. As it turned out, the continuously increasing memory consumption was caused by the built in logger component. The following snippet takes care of it:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='php'&gt;&lt;span class='lineno'&gt; 1&lt;/span&gt; &lt;span class='cp'&gt;&amp;lt;?php&lt;/span&gt;
-&lt;span class='lineno'&gt; 2&lt;/span&gt; &lt;span class='k'&gt;use&lt;/span&gt; &lt;span class='nx'&gt;Doctrine\ORM\EntityManager&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='lineno'&gt; 3&lt;/span&gt; 
-&lt;span class='lineno'&gt; 4&lt;/span&gt; &lt;span class='sd'&gt;/**&lt;/span&gt;
-&lt;span class='lineno'&gt; 5&lt;/span&gt; &lt;span class='sd'&gt; * Disables SQL logging.&lt;/span&gt;
-&lt;span class='lineno'&gt; 6&lt;/span&gt; &lt;span class='sd'&gt; *&lt;/span&gt;
-&lt;span class='lineno'&gt; 7&lt;/span&gt; &lt;span class='sd'&gt; * Call this before the first large transaction&lt;/span&gt;
-&lt;span class='lineno'&gt; 8&lt;/span&gt; &lt;span class='sd'&gt; */&lt;/span&gt;
-&lt;span class='lineno'&gt; 9&lt;/span&gt; &lt;span class='k'&gt;function&lt;/span&gt; &lt;span class='nf'&gt;initEntityManager&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;EntityManager&lt;/span&gt; &lt;span class='nv'&gt;$em&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-&lt;span class='lineno'&gt;10&lt;/span&gt;     &lt;span class='nv'&gt;$em&lt;/span&gt;&lt;span class='o'&gt;-&amp;gt;&lt;/span&gt;&lt;span class='na'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;-&amp;gt;&lt;/span&gt;&lt;span class='na'&gt;getConfiguration&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;&lt;span class='o'&gt;-&amp;gt;&lt;/span&gt;&lt;span class='na'&gt;setSQLLogger&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;null&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='lineno'&gt;11&lt;/span&gt; &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content>
+   <content type="html">
+&lt;p&gt;…or they seem like to cause one – I noticed while I was testing the latest &lt;a href=&quot;https://github.com/erenon/ComPPI&quot;&gt;ComPPI&lt;/a&gt; build. As it turned out, the continuously
+increasing memory consumption was caused by the built in logger component. The following snippet takes care of it:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&amp;lt;?php
+use Doctrine\ORM\EntityManager;
+
+/**
+ * Disables SQL logging.
+ *
+ * Call this before the first large transaction
+ */
+function initEntityManager(EntityManager $em) {
+    $em-&amp;gt;connection-&amp;gt;getConfiguration()-&amp;gt;setSQLLogger(null);
+}&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+</content>
  </entry>
  
  

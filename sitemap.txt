@@ -1,11 +1,11 @@
 
-http://erenon.hu/categories.html
-http://erenon.hu/sitemap.txt
-http://erenon.hu/index.html
-http://erenon.hu/archive.html
+http://erenon.hu/archive
 http://erenon.hu/atom.xml
-http://erenon.hu/tags.html
-http://erenon.hu/pages.html
+http://erenon.hu/categories
+http://erenon.hu/
+http://erenon.hu/pages
+http://erenon.hu/sitemap.txt
+http://erenon.hu/tags
 
 http://erenon.hu/2018/05/30/how-to-share-a-calendar-entry
 http://erenon.hu/2014/03/29/the-sorcerers-frog
