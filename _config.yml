@@ -3,8 +3,7 @@
 permalink: /:year/:month/:day/:title 
 
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md", "assets/themes/the-minimum/readme.markdown"]
-auto: true
-pygments: true
+highlighter: true
 safe: true
 
 # Themes are encouraged to use these universal variables 
