@@ -4,13 +4,32 @@
  <title>erenon</title>
  <link href="http://erenon.hu/atom.xml" rel="self"/>
  <link href="http://erenon.hu"/>
- <updated>2019-04-28T17:22:50+02:00</updated>
+ <updated>2019-04-28T17:26:54+02:00</updated>
  <id>http://erenon.hu</id>
  <author>
    <name>Benedek Thaler</name>
    <email>thaler@thaler.hu</email>
  </author>
 
+ 
+ <entry>
+   <title>Applied Ephemeralization</title>
+   <link href="http://erenon.hu/2019/04/28/applied-ephemeralization"/>
+   <updated>2019-04-28T00:00:00+02:00</updated>
+   <id>http://erenon.hu/2019/04/28/applied-ephemeralization</id>
+   <content type="html">
+&lt;dl&gt;
+  &lt;dt&gt;Ephemeralization&lt;/dt&gt;
+  &lt;dd&gt;Do more and more with less and less until eventually you can do everything with nothing&lt;/dd&gt;
+
+  &lt;dt&gt;Ephemeralism&lt;/dt&gt;
+  &lt;dd&gt;Do more with less, until you can do everything with nothing&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;p&gt;Also see &lt;a href=&quot;https://en.wikipedia.org/wiki/Ephemeralization&quot;&gt;Wikipedia on Ephemeralization&lt;/a&gt;&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>How to share a calendar entry</title>

@@ -7,6 +7,7 @@ http://erenon.hu/pages
 http://erenon.hu/sitemap.txt
 http://erenon.hu/tags
 
+http://erenon.hu/2019/04/28/applied-ephemeralization
 http://erenon.hu/2018/05/30/how-to-share-a-calendar-entry
 http://erenon.hu/2014/03/29/the-sorcerers-frog
 http://erenon.hu/2013/11/23/bs-thesis-deadlock-prediction

@@ -45,7 +45,7 @@
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">How to share a calendar entry</h1>
+						<h1 class="h2 entry-title">Applied Ephemeralization</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
@@ -53,114 +53,24 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>Suppose you’d like to share a calendar event over the internet,
-e.g: on your website. The goal is to be support as many platforms as possible:</p>
+<dl>
+  <dt>Ephemeralization</dt>
+  <dd>Do more and more with less and less until eventually you can do everything with nothing</dd>
 
-<ul>
-  <li>Desktop calendars (Thunderbird, macOS iCal, Outlook)</li>
-  <li>Web applications (Google Calendar)</li>
-  <li>Smartphone applications (Google Calendar App, iOS iCal)</li>
-</ul>
+  <dt>Ephemeralism</dt>
+  <dd>Do more with less, until you can do everything with nothing</dd>
+</dl>
 
-<p>The most intuitive way is to create the event in your calendar of
-choice, and send the invites in the native way provided by the application.
-However, such methods tend to work only if the recipient uses the same
-system, which isn’t a plausible assumption – we need something platform independent.</p>
-
-<h3 id="using-icalendar">Using iCalendar</h3>
-
-<p>Wikipedia indicates that <a href="https://en.wikipedia.org/wiki/ICalendar">iCalendar</a> is well supported format, which
-<em>allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.</em>
-– exactly what we are looking for. Let’s create an <code>.ics</code> file:</p>
-
-<figure class="highlight"><pre><code class="language-properties" data-lang="properties">BEGIN:VCALENDAR
-VERSION:2.0
-METHOD:PUBLISH
-X-WR-TIMEZONE:Europe/Budapest
-BEGIN:VEVENT
-UID:your_eventname@yourdomain.com
-DTSTART:20180530T130000Z
-DTEND:20180530T143000Z
-DESCRIPTION:The description of your event
-LOCATION:The location of your event
-SEQUENCE:0
-SUMMARY:The summary of your event
-END:VEVENT
-END:VCALENDAR</code></pre></figure>
-
-<p>There are <a href="https://tools.ietf.org/html/rfc5545">other fields</a>.
-The fields are mostly self describing.
-In free form text values, <code>,</code> and <code>;</code> characters must be escaped by a backslash.
-The <code>tzselect</code> command can be used to get the name of your timezone.
-The <code>DTSTART</code> and <code>DTEND</code> fields are in <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>, 20180530T130000 is 2018. 05. 30, 13:00:00.
-If all this sound difficult, create your event in a suitable calendar application
-and export it to <code>.ics</code> from there.</p>
-
-<p>Sharing this file will cover desktop calendars associated with the ics extension
-and the iOS calendar. It probably will not work with the Google Calendar website,
-and – surprisingly – it will not work on Android as expected.</p>
-
-<h3 id="fixing-android">Fixing Android</h3>
-
-<p>On Android, after download, a toast message will be shown, saying:
-“Unable to launch event”. Internet wisdom blames various components.
-On the phones I had access to, Logcat show that the Calendar app does not
-have permission to read downloaded files.</p>
-
-<p>Fortunately, there’s a way around: Android allows <a href="https://stackoverflow.com/questions/42936576/open-android-calendar-with-intent-from-web-chrome">emitting intents by links</a>, in some cases.
-The proper syntax and the allowed fields can be discovered by looking at the <a href="https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml">source</a>,
-or <a href="https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation">StackOverflow</a>.
-Here’s an example:</p>
-
-<figure class="highlight"><pre><code class="language-html" data-lang="html">&lt;a href=&quot;https://www.google.com/calendar/event?action=TEMPLATE&amp;text=your_event&amp;dates=20180530T130000Z/20180530T143000Z&amp;location=location of the event&amp;sprop=yourdomain.com&quot;&gt;Calendar event&lt;/a&gt;</code></pre></figure>
-
-<p>Values need to be <a href="https://en.wikipedia.org/wiki/Percent-encoding">urlencoded</a>.
-Clicking on this link on Android will open the Google Calendar application, if installed,
-with the specified event shown to be saved. Fortunately, this link will work for the
-browser based Google Calendar as well!</p>
-
-<h3 id="solution">Solution</h3>
-
-<p>Let’s put all this together. By default, we should link to the <code>.ics</code> file,
-as it works on most platforms. On Android, the link has to be changed:</p>
-
-<figure class="highlight"><pre><code class="language-html" data-lang="html">&lt;a href=&quot;event.ics&quot; data-gcal=&quot;https://www.google.com/calendar/event?...&quot; class=&quot;ics-link&quot;&gt;Calendar event&lt;/a&gt;</code></pre></figure>
-
-<figure class="highlight"><pre><code class="language-js" data-lang="js">var replaceIcs = function() {
-  var as = $(&#39;.ics-link&#39;);
-  for (var i = 0; i &lt; as.length; i++) {
-    as[i].href = as[i].getAttribute(&#39;data-gcal&#39;);
-  }
-};
-
-document.addEventListener(&quot;DOMContentLoaded&quot;, function(e) {
-  // NB: there are more robust ways to check for android
-  var userAgent = navigator.userAgent.toLowerCase();
-  if (userAgent.indexOf(&quot;android&quot;) &gt;= 0) {
-    replaceIcs();
-  }
-});</code></pre></figure>
-
-<p>What about desktop clients using the Google Calendar web application?
-It is difficult if possible to tell what kind of calendar solution such users would like to use.
-However, there’s a hack, which detects if the <a href="http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/">user is logged in to a google account</a>.
-If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.</p>
-
-<h3 id="summary">Summary</h3>
-
-<p>It is more difficult to share a calendar entry over the internet as expected.
-Application native ways do not interoperate, while some platforms are hard to target by standard solutions.
-While the solution shown above covers a large percentage of use-cases, it still might fail in others.
-A free web needs more support of open standards!</p>
+<p>Also see <a href="https://en.wikipedia.org/wiki/Ephemeralization">Wikipedia on Ephemeralization</a></p>
 
 
 					<div class="meta">
 						<p class="date-publish">
 							Published: 
-							<date class="date-pub" title="2018-05-30T00:00:00+02:00" datetime="2018-05-30T00:00:00+02:00" pubdate>
-							<span class="month"><abbr>May</abbr></span>
-							<span class="day">30</span>,
-							<span class="year">2018</span>.
+							<date class="date-pub" title="2019-04-28T00:00:00+02:00" datetime="2019-04-28T00:00:00+02:00" pubdate>
+							<span class="month"><abbr>April</abbr></span>
+							<span class="day">28</span>,
+							<span class="year">2019</span>.
 							</date>
 						</p>
 						
@@ -185,7 +95,7 @@ A free web needs more support of open standards!</p>
 					<nav class="pagination">
 						<ul>
 							
-							<li class="prev"><a class="internal" rel="prev"  href="/2014/03/29/the-sorcerers-frog" title="View The sorcerers frog">&laquo; The sorcerers frog</a></li>
+							<li class="prev"><a class="internal" rel="prev"  href="/2018/05/30/how-to-share-a-calendar-entry" title="View How to share a calendar entry">&laquo; How to share a calendar entry</a></li>
 							
 							
 							
