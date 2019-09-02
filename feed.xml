@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>erenon.hu</title>
+    <description>Short thoughts on C++, Unix and in general, technology.
+</description>
+    <link>http://erenon.hu/</link>
+    <atom:link href="http://erenon.hu/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 02 Sep 2019 18:58:21 +0200</pubDate>
+    <lastBuildDate>Mon, 02 Sep 2019 18:58:21 +0200</lastBuildDate>
+    <generator>Jekyll v3.0.1</generator>
+    
+      <item>
+        <title>Applied Ephemeralization</title>
+        <description>&lt;dl&gt;
+  &lt;dt&gt;Ephemeralization&lt;/dt&gt;
+  &lt;dd&gt;Do more and more with less and less until eventually you can do everything with nothing&lt;/dd&gt;
+
+  &lt;dt&gt;Ephemeralism&lt;/dt&gt;
+  &lt;dd&gt;Do more with less, until you can do everything with nothing&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;p&gt;Also see &lt;a href=&quot;https://en.wikipedia.org/wiki/Ephemeralization&quot;&gt;Wikipedia on Ephemeralization&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 28 Apr 2019 00:00:00 +0200</pubDate>
+        <link>http://erenon.hu/blog/2019/04/28/applied-ephemeralization.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2019/04/28/applied-ephemeralization.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>How to share a calendar entry</title>
+        <description>&lt;p&gt;Suppose you’d like to share a calendar event over the internet,
+e.g: on your website. The goal is to be support as many platforms as possible:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Desktop calendars (Thunderbird, macOS iCal, Outlook)&lt;/li&gt;
+  &lt;li&gt;Web applications (Google Calendar)&lt;/li&gt;
+  &lt;li&gt;Smartphone applications (Google Calendar App, iOS iCal)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The most intuitive way is to create the event in your calendar of
+choice, and send the invites in the native way provided by the application.
+However, such methods tend to work only if the recipient uses the same
+system, which isn’t a plausible assumption – we need something platform independent.&lt;/p&gt;
+
+&lt;h3 id=&quot;using-icalendar&quot;&gt;Using iCalendar&lt;/h3&gt;
+
+&lt;p&gt;Wikipedia indicates that &lt;a href=&quot;https://en.wikipedia.org/wiki/ICalendar&quot;&gt;iCalendar&lt;/a&gt; is well supported format, which
+&lt;em&gt;allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.&lt;/em&gt;
+– exactly what we are looking for. Let’s create an &lt;code class=&quot;highlighter-rouge&quot;&gt;.ics&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-properties&quot; data-lang=&quot;properties&quot;&gt;&lt;span class=&quot;py&quot;&gt;BEGIN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;VCALENDAR&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2.0&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;METHOD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;PUBLISH&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;X-WR-&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;TIMEZONE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Europe/Budapest&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;BEGIN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;VEVENT&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;UID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;your_eventname@yourdomain.com&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;DTSTART&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;20180530T130000Z&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;DTEND&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;20180530T143000Z&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;DESCRIPTION&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The description of your event&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;LOCATION&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The location of your event&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;SEQUENCE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;SUMMARY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The summary of your event&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;VEVENT&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;VCALENDAR&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;There are &lt;a href=&quot;https://tools.ietf.org/html/rfc5545&quot;&gt;other fields&lt;/a&gt;.
+The fields are mostly self describing.
+In free form text values, &lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;;&lt;/code&gt; characters must be escaped by a backslash.
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;tzselect&lt;/code&gt; command can be used to get the name of your timezone.
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;DTSTART&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;DTEND&lt;/code&gt; fields are in &lt;a href=&quot;https://en.wikipedia.org/wiki/Coordinated_Universal_Time&quot;&gt;UTC&lt;/a&gt;, 20180530T130000 is 2018. 05. 30, 13:00:00.
+If all this sound difficult, create your event in a suitable calendar application
+and export it to &lt;code class=&quot;highlighter-rouge&quot;&gt;.ics&lt;/code&gt; from there.&lt;/p&gt;
+
+&lt;p&gt;Sharing this file will cover desktop calendars associated with the ics extension
+and the iOS calendar. It probably will not work with the Google Calendar website,
+and – surprisingly – it will not work on Android as expected.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixing-android&quot;&gt;Fixing Android&lt;/h3&gt;
+
+&lt;p&gt;On Android, after download, a toast message will be shown, saying:
+“Unable to launch event”. Internet wisdom blames various components.
+On the phones I had access to, Logcat show that the Calendar app does not
+have permission to read downloaded files.&lt;/p&gt;
+
+&lt;p&gt;Fortunately, there’s a way around: Android allows &lt;a href=&quot;https://stackoverflow.com/questions/42936576/open-android-calendar-with-intent-from-web-chrome&quot;&gt;emitting intents by links&lt;/a&gt;, in some cases.
+The proper syntax and the allowed fields can be discovered by looking at the &lt;a href=&quot;https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml&quot;&gt;source&lt;/a&gt;,
+or &lt;a href=&quot;https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation&quot;&gt;StackOverflow&lt;/a&gt;.
+Here’s an example:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.google.com/calendar/event?action=TEMPLATE&amp;amp;text=your_event&amp;amp;dates=20180530T130000Z/20180530T143000Z&amp;amp;location=location of the event&amp;amp;sprop=yourdomain.com&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Calendar event&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Values need to be &lt;a href=&quot;https://en.wikipedia.org/wiki/Percent-encoding&quot;&gt;urlencoded&lt;/a&gt;.
+Clicking on this link on Android will open the Google Calendar application, if installed,
+with the specified event shown to be saved. Fortunately, this link will work for the
+browser based Google Calendar as well!&lt;/p&gt;
+
+&lt;h3 id=&quot;solution&quot;&gt;Solution&lt;/h3&gt;
+
+&lt;p&gt;Let’s put all this together. By default, we should link to the &lt;code class=&quot;highlighter-rouge&quot;&gt;.ics&lt;/code&gt; file,
+as it works on most platforms. On Android, the link has to be changed:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;event.ics&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-gcal=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.google.com/calendar/event?...&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ics-link&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Calendar event&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;replaceIcs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;.ics-link&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;href&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;data-gcal&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOMContentLoaded&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// NB: there are more robust ways to check for android&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;userAgent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;navigator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;userAgent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toLowerCase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;userAgent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;indexOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;android&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;replaceIcs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;What about desktop clients using the Google Calendar web application?
+It is difficult if possible to tell what kind of calendar solution such users would like to use.
+However, there’s a hack, which detects if the &lt;a href=&quot;http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/&quot;&gt;user is logged in to a google account&lt;/a&gt;.
+If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.&lt;/p&gt;
+
+&lt;h3 id=&quot;summary&quot;&gt;Summary&lt;/h3&gt;
+
+&lt;p&gt;It is more difficult to share a calendar entry over the internet as expected.
+Application native ways do not interoperate, while some platforms are hard to target by standard solutions.
+While the solution shown above covers a large percentage of use-cases, it still might fail in others.
+A free web needs more support of open standards!&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 30 May 2018 00:00:00 +0200</pubDate>
+        <link>http://erenon.hu/development/2018/05/30/how-to-share-a-calendar-entry.html</link>
+        <guid isPermaLink="true">http://erenon.hu/development/2018/05/30/how-to-share-a-calendar-entry.html</guid>
+        
+        <category>javascript</category>
+        
+        <category>www</category>
+        
+        
+        <category>development</category>
+        
+      </item>
+    
+      <item>
+        <title>The sorcerers frog</title>
+        <description>&lt;p&gt;Once there was a sorcerer who had the most shining gold. A simple and mild man came to him and wanted to buy this gold from him. The sorcerer said to the simple man: &lt;em&gt;“You will not receive this gold, unless you give me better gold and in larger quantity.”&lt;/em&gt; The man said: &lt;em&gt;“I have such a great desire for your gold that I will give you what you want rather than losing it.”&lt;/em&gt; He then gave the sorcerer better gold and in larger quantity and received the shining gold from him and put it in a casket, thinking of making himself a ring from it for his finger.&lt;/p&gt;
+
+&lt;p&gt;After a short time, the sorcerer approached that simple man and said: &lt;em&gt;“The gold you bought from me and laid in your casket is not gold, as you thought, but the most ugly frog. It has been fostered in my chest and fed with my food. And in order for you to test and know that this is true, you may open the casket and you will see how the frog will jump to my chest where it was fostered.”&lt;/em&gt; When the man wanted to open it and find out if it was true, the frog appeared in the casket. The cover of the casket was hanging on four hinges that were about to break and fall off soon. Immediately when the cover of the casket was opened, the frog saw the sorcerer and jumped into his chest.&lt;/p&gt;
+
+&lt;p&gt;When the servants and friends of the simple man saw this, they said to him: &lt;em&gt;“Lord, this most fine gold is in the frog, and if you want, you can easily get the gold.”&lt;/em&gt; The man said: &lt;em&gt;“How can I get it?”&lt;/em&gt; They replied: &lt;em&gt;“If someone took a sharp and heated spear and thrust it into the hollow part of the frog’s back, he would quickly get the gold out. But if he cannot find any hollow in the frog, he should then, with the greatest force and effort, thrust his spear into it, and this is how you will get back the gold you bought.”&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Celestial Revelations&lt;/em&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 29 Mar 2014 00:00:00 +0100</pubDate>
+        <link>http://erenon.hu/theology/2014/03/29/the-sorcerers-frog.html</link>
+        <guid isPermaLink="true">http://erenon.hu/theology/2014/03/29/the-sorcerers-frog.html</guid>
+        
+        <category>celestial-revelations</category>
+        
+        
+        <category>theology</category>
+        
+      </item>
+    
+      <item>
+        <title>Bootstrap Typeahead submit on select</title>
+        <description>&lt;p&gt;The &lt;a href=&quot;http://twitter.github.com/bootstrap/index.html&quot;&gt;Twitter Bootstrap&lt;/a&gt;s &lt;a href=&quot;http://twitter.github.com/bootstrap/javascript.html#typeahead&quot;&gt;Typeahead&lt;/a&gt; is a very nice way to provide autocomplete functionality on your text inputs. However, the default configuration might be a bit confusing. When the user clicks on a suggestion in the dropdown menu, the utility populates the input but doesn’t submit the form. It’s usually ok, but sometimes (e.g: search boxes) it’s frustrating. Here’s how to change it:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;#your-input-box&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;typeahead&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&#39;source&#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;foo&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;baz&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&#39;updater&#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;submit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This snippet autosubmits the form if the user clicks on a suggestion or selects it by keyboard.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 02 Mar 2013 00:00:00 +0100</pubDate>
+        <link>http://erenon.hu/development/2013/03/02/bootstrap-typeahead-submit-on-select.html</link>
+        <guid isPermaLink="true">http://erenon.hu/development/2013/03/02/bootstrap-typeahead-submit-on-select.html</guid>
+        
+        <category>javascript</category>
+        
+        <category>bootstrap</category>
+        
+        
+        <category>development</category>
+        
+      </item>
+    
+      <item>
+        <title>Neptun Keepalive</title>
+        <description>&lt;p&gt;Közeleg a tárgyfelvétel, és senkinek nincs ideje órákat az F5-ön ülni. Egy lehetséges megoldás,
+hogy fenntartsuk a sessiont, ha a kezdés előtt néhány órával sikerül bejelentkezni:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nx&quot;&gt;javascript&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+          &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;#upBoxes_upRSS_gdgRSS_gdgRSS_RefreshBtn&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; 
+          &lt;span class=&quot;mi&quot;&gt;20000&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;how-to-use&quot;&gt;How to use&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Bookmarkoljuk a &lt;a href=&quot;javascript:(function(){window.setInterval(function(){$(&#39;#upBoxes_upRSS_gdgRSS_gdgRSS_RefreshBtn&#39;).click();},20000);}());&quot;&gt;Keep Alive&lt;/a&gt; bookmarkletet.&lt;/li&gt;
+  &lt;li&gt;Jelentkezzünk be a neptunba&lt;/li&gt;
+  &lt;li&gt;Kattintsunk az előbb felvett könyvjelzőre&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A script 20 másodpercenként megnyom egy gombot, ami a tétlenségi idő újraindulását eredményezi.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Korlátozott körökben terjesztendő&lt;/em&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 22 Jan 2013 00:00:00 +0100</pubDate>
+        <link>http://erenon.hu/hack/2013/01/22/neptun-keepalive.html</link>
+        <guid isPermaLink="true">http://erenon.hu/hack/2013/01/22/neptun-keepalive.html</guid>
+        
+        <category>neptun</category>
+        
+        <category>hack</category>
+        
+        
+        <category>hack</category>
+        
+      </item>
+    
+      <item>
+        <title>Imprisoned Toroid - Raytrace on CUDA</title>
+        <description>&lt;p&gt;The following video is created by a C++/CUDA program using the theory of raytracing
+which was the most interesting piece of knowledge I learned on the university this semester.&lt;/p&gt;
+
+&lt;p&gt;Because of its as-good-as-it-should-be quality of the source, I can’t opensource it at this precise moment.
+Meanwhile, take a look at &lt;a href=&quot;https://developer.nvidia.com/optix&quot;&gt;OptiX&lt;/a&gt;, which I found a month later I had completed this.&lt;/p&gt;
+
+&lt;p&gt;The video was rendered at 24 FPS, render time appr. 3 hours.&lt;/p&gt;
+
+&lt;iframe width=&quot;480&quot; height=&quot;360&quot; src=&quot;http://www.youtube.com/embed/oYdYEcjz7_4&quot; frameborder=&quot;0&quot;&gt; &lt;/iframe&gt;
+
+</description>
+        <pubDate>Sun, 25 Nov 2012 00:00:00 +0100</pubDate>
+        <link>http://erenon.hu/development/2012/11/25/imprisoned-toroid-raytrace-on-cuda.html</link>
+        <guid isPermaLink="true">http://erenon.hu/development/2012/11/25/imprisoned-toroid-raytrace-on-cuda.html</guid>
+        
+        <category>raytrace</category>
+        
+        <category>CUDA</category>
+        
+        <category>C++</category>
+        
+        <category>cg</category>
+        
+        
+        <category>development</category>
+        
+      </item>
+    
+  </channel>
+</rss>
