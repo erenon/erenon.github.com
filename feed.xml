@@ -6,8 +6,8 @@
 </description>
     <link>http://erenon.hu/</link>
     <atom:link href="http://erenon.hu/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 02 Sep 2019 18:58:21 +0200</pubDate>
-    <lastBuildDate>Mon, 02 Sep 2019 18:58:21 +0200</lastBuildDate>
+    <pubDate>Mon, 02 Sep 2019 19:07:57 +0200</pubDate>
+    <lastBuildDate>Mon, 02 Sep 2019 19:07:57 +0200</lastBuildDate>
     <generator>Jekyll v3.0.1</generator>
     
       <item>
@@ -136,15 +136,15 @@ A free web needs more support of open standards!&lt;/p&gt;
 
 </description>
         <pubDate>Wed, 30 May 2018 00:00:00 +0200</pubDate>
-        <link>http://erenon.hu/development/2018/05/30/how-to-share-a-calendar-entry.html</link>
-        <guid isPermaLink="true">http://erenon.hu/development/2018/05/30/how-to-share-a-calendar-entry.html</guid>
+        <link>http://erenon.hu/blog/2018/05/30/how-to-share-a-calendar-entry.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2018/05/30/how-to-share-a-calendar-entry.html</guid>
         
         <category>javascript</category>
         
         <category>www</category>
         
         
-        <category>development</category>
+        <category>blog</category>
         
       </item>
     
@@ -160,13 +160,13 @@ A free web needs more support of open standards!&lt;/p&gt;
 
 </description>
         <pubDate>Sat, 29 Mar 2014 00:00:00 +0100</pubDate>
-        <link>http://erenon.hu/theology/2014/03/29/the-sorcerers-frog.html</link>
-        <guid isPermaLink="true">http://erenon.hu/theology/2014/03/29/the-sorcerers-frog.html</guid>
+        <link>http://erenon.hu/blog/2014/03/29/the-sorcerers-frog.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2014/03/29/the-sorcerers-frog.html</guid>
         
         <category>celestial-revelations</category>
         
         
-        <category>theology</category>
+        <category>blog</category>
         
       </item>
     
@@ -197,15 +197,15 @@ A free web needs more support of open standards!&lt;/p&gt;
 
 </description>
         <pubDate>Sat, 02 Mar 2013 00:00:00 +0100</pubDate>
-        <link>http://erenon.hu/development/2013/03/02/bootstrap-typeahead-submit-on-select.html</link>
-        <guid isPermaLink="true">http://erenon.hu/development/2013/03/02/bootstrap-typeahead-submit-on-select.html</guid>
+        <link>http://erenon.hu/blog/2013/03/02/bootstrap-typeahead-submit-on-select.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2013/03/02/bootstrap-typeahead-submit-on-select.html</guid>
         
         <category>javascript</category>
         
         <category>bootstrap</category>
         
         
-        <category>development</category>
+        <category>blog</category>
         
       </item>
     
@@ -251,15 +251,15 @@ hogy fenntartsuk a sessiont, ha a kezdés előtt néhány órával sikerül beje
 
 </description>
         <pubDate>Tue, 22 Jan 2013 00:00:00 +0100</pubDate>
-        <link>http://erenon.hu/hack/2013/01/22/neptun-keepalive.html</link>
-        <guid isPermaLink="true">http://erenon.hu/hack/2013/01/22/neptun-keepalive.html</guid>
+        <link>http://erenon.hu/blog/2013/01/22/neptun-keepalive.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2013/01/22/neptun-keepalive.html</guid>
         
         <category>neptun</category>
         
         <category>hack</category>
         
         
-        <category>hack</category>
+        <category>blog</category>
         
       </item>
     
@@ -277,8 +277,8 @@ Meanwhile, take a look at &lt;a href=&quot;https://developer.nvidia.com/optix&qu
 
 </description>
         <pubDate>Sun, 25 Nov 2012 00:00:00 +0100</pubDate>
-        <link>http://erenon.hu/development/2012/11/25/imprisoned-toroid-raytrace-on-cuda.html</link>
-        <guid isPermaLink="true">http://erenon.hu/development/2012/11/25/imprisoned-toroid-raytrace-on-cuda.html</guid>
+        <link>http://erenon.hu/blog/2012/11/25/imprisoned-toroid-raytrace-on-cuda.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2012/11/25/imprisoned-toroid-raytrace-on-cuda.html</guid>
         
         <category>raytrace</category>
         
@@ -289,7 +289,7 @@ Meanwhile, take a look at &lt;a href=&quot;https://developer.nvidia.com/optix&qu
         <category>cg</category>
         
         
-        <category>development</category>
+        <category>blog</category>
         
       </item>
     
