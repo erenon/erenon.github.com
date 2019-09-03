@@ -2,10 +2,9 @@
 layout: post
 title: "The sorcerers frog"
 description: "Tale of the gold bought by better gold"
-category: theology
+category: blog
 tags: [celestial-revelations]
 ---
-{% include JB/setup %}
 
 Once there was a sorcerer who had the most shining gold. A simple and mild man came to him and wanted to buy this gold from him. The sorcerer said to the simple man: _"You will not receive this gold, unless you give me better gold and in larger quantity."_ The man said: _"I have such a great desire for your gold that I will give you what you want rather than losing it."_ He then gave the sorcerer better gold and in larger quantity and received the shining gold from him and put it in a casket, thinking of making himself a ring from it for his finger.
 

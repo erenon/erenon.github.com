@@ -2,10 +2,9 @@
 layout: post
 title: "Bootstrap Typeahead submit on select"
 description: "A javascript snippet on autosubmitting form using bootstrap typeahead"
-category: development
+category: blog
 tags: [javascript, bootstrap]
 ---
-{% include JB/setup %}
 
 The [Twitter Bootstrap][1]s [Typeahead][2] is a very nice way to provide autocomplete functionality on your text inputs. However, the default configuration might be a bit confusing. When the user clicks on a suggestion in the dropdown menu, the utility populates the input but doesn't submit the form. It's usually ok, but sometimes (e.g: search boxes) it's frustrating. Here's how to change it:
 

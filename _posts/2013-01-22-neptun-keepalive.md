@@ -2,10 +2,9 @@
 layout: post
 title: "Neptun Keepalive"
 description: "How to keep alive your neptun session"
-category: hack
+category: blog
 tags: [neptun, hack]
 ---
-{% include JB/setup %}
 
 Közeleg a tárgyfelvétel, és senkinek nincs ideje órákat az F5-ön ülni. Egy lehetséges megoldás,
 hogy fenntartsuk a sessiont, ha a kezdés előtt néhány órával sikerül bejelentkezni:

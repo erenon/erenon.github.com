@@ -1,0 +1,55 @@
+<footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+
+      {% if page.previous.url or page.next.url %}
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+        {% if page.previous.url %}
+          <li>
+            Previous post: <a class="prev" href="{{page.previous.url}}">{{page.previous.title}}</a>
+          </li>
+        {% endif %}
+        {% if page.next.url %}
+          <li>
+            Next post: <a class="next" href="{{page.next.url}}">{{page.next.title}}</a>
+          </li>
+        {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          {% if site.github_username %}
+          <li>
+            <a href="https://github.com/{{ site.github_username }}" class="username">GitHub</a>
+          </li>
+          {% endif %}
+
+          {% if site.stackoverflow_userid %}
+          <li>
+            <a href="https://stackoverflow.com/users/{{ site.stackoverflow_userid }}" class="username">StackOverflow</a>
+          </li>
+          {% endif %}
+
+          {% if site.twitter_username %}
+          <li>
+            <a href="https://twitter.com/{{ site.twitter_username }}" class="username">{{ site.twitter_username }}</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>

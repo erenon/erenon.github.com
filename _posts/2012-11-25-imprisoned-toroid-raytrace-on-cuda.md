@@ -2,10 +2,9 @@
 layout: post
 title: "Imprisoned Toroid - Raytrace on CUDA"
 description: ""
-category: development
+category: blog
 tags: [raytrace, CUDA, C++, cg]
 ---
-{% include JB/setup %}
 
 The following video is created by a C++/CUDA program using the theory of raytracing
 which was the most interesting piece of knowledge I learned on the university this semester.

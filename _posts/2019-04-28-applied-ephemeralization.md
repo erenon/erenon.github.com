@@ -5,7 +5,6 @@ description: ""
 category: blog
 tags: []
 ---
-{% include JB/setup %}
 
 <dl>
   <dt>Ephemeralization</dt>

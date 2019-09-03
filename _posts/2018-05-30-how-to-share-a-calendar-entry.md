@@ -2,10 +2,9 @@
 layout: post
 title: "How to share a calendar entry"
 description: "Sharing a calendar event over the internet in a platform agnostic way"
-category: development
+category: blog
 tags: [javascript, www]
 ---
-{% include JB/setup %}
 
 Suppose you'd like to share a calendar event over the internet,
 e.g: on your website. The goal is to be support as many platforms as possible:
