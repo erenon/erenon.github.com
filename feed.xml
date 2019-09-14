@@ -6,9 +6,135 @@
 </description>
     <link>http://erenon.hu/</link>
     <atom:link href="http://erenon.hu/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 02 Sep 2019 19:07:57 +0200</pubDate>
-    <lastBuildDate>Mon, 02 Sep 2019 19:07:57 +0200</lastBuildDate>
+    <pubDate>Sat, 14 Sep 2019 14:26:11 +0200</pubDate>
+    <lastBuildDate>Sat, 14 Sep 2019 14:26:11 +0200</lastBuildDate>
     <generator>Jekyll v3.0.1</generator>
+    
+      <item>
+        <title>Overloading by concept without concepts in C++</title>
+        <description>&lt;p&gt;Given the following function:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void f(int);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Suppose you want to make the behaviour of this function
+to depend on the argument type. A simple way to use overloading:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void f(int);
+void f(double);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;What if you want to define an overload for a set of types,
+which satisfy a given concept? As of C++20, concepts
+can be used for overloading. Before that, the function has to be
+converted to a template. However, since C++ does not allow
+specialization of function templates, first change the
+function into a type template with a single static member:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename&amp;gt; struct F; // default case undefined
+template &amp;lt;&amp;gt; struct F&amp;lt;int&amp;gt; { static void f(int); };
+template &amp;lt;&amp;gt; struct F&amp;lt;double&amp;gt; { static void f(double); };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is equivalent with the above, but now we can apply
+various kind of &lt;a href=&quot;https://en.cppreference.com/w/cpp/language/sfinae&quot;&gt;SFINAE&lt;/a&gt; magic to enable different specializations
+for different kind of types. Common techniques use &lt;code class=&quot;highlighter-rouge&quot;&gt;std::enable_if&lt;/code&gt;,
+expression SFINAE and others. Here a simple, yet powerful
+solution is presented, which is based on &lt;a href=&quot;https://en.cppreference.com/w/cpp/types/void_t&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;void_t&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;class... &amp;gt;
+using void_t = void;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This innocent looking type alias resolves to &lt;code class=&quot;highlighter-rouge&quot;&gt;void&lt;/code&gt;,
+if the template arguments are valid, otherwise it
+becomes a substitution failure.&lt;/p&gt;
+
+&lt;p&gt;To use it, add an extra, defaulted template argument to &lt;code class=&quot;highlighter-rouge&quot;&gt;F&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename, typename = void&amp;gt; struct F; // default case undefined
+template &amp;lt;&amp;gt; struct F&amp;lt;int, void&amp;gt; { static void f(int); };
+template &amp;lt;&amp;gt; struct F&amp;lt;double, void&amp;gt; { static void f(double); };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;So far, there’s no behavioural change. However, no we can easily
+add overloads which apply to a set of types, e.g:
+types which has a specific nested type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename Container&amp;gt;
+struct F&amp;lt;Container, void_t&amp;lt;typename Container::value_type&amp;gt;&amp;gt; {
+  static void f(Container const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A different example, specialize for types with a specific member:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename Lockable&amp;gt;
+struct F&amp;lt;Lockable, void_t&amp;lt;decltype(Lockable::lock)&amp;gt; {
+  static void f(Lockable const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This technique also integrates well with standard type predicates.
+First, define the following helper:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename Cond&amp;gt;
+using enable_spec_if = void_t&amp;lt;std::enable_if_t&amp;lt;Cond::value&amp;gt;&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Usage:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename Trivial&amp;gt;
+struct F&amp;lt;Trivial, enable_spec_if&amp;lt;std::is_trivial&amp;lt;Trivial&amp;gt;&amp;gt;&amp;gt; {
+  static void f(Trivial const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Given C++17 is available, a similar, slightly longer solution is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename Trivial&amp;gt;
+struct F&amp;lt;Trivial, std::enable_if_t&amp;lt;std::is_trivial_v&amp;lt;Trivial&amp;gt;, void&amp;gt;&amp;gt; {
+  static void f(Trivial const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A limitation of this technique (and also several others),
+that specializations must be mutually exclusive for the
+types they are used.&lt;/p&gt;
+
+&lt;p&gt;To make usage easier, we can add a function template,
+making it the only entry point of the operation,
+while hiding &lt;code class=&quot;highlighter-rouge&quot;&gt;F&lt;/code&gt; in the detail namespace:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;template &amp;lt;typename T&amp;gt;
+void f(const T&amp;amp; t) { detail::F&amp;lt;T&amp;gt;::f(t); }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In the next part, we’ll cover how to allow third parties to define
+additional specializations, without conflicting with built in ones.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 12 Sep 2019 00:00:00 +0200</pubDate>
+        <link>http://erenon.hu/blog/2019/09/12/concept-overloading.html</link>
+        <guid isPermaLink="true">http://erenon.hu/blog/2019/09/12/concept-overloading.html</guid>
+        
+        <category>c++</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Applied Ephemeralization</title>
