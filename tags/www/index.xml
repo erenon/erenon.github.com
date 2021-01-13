@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>www on erenon.hu</title>
+    <link>http://erenon.hu/tags/www/</link>
+    <description>Recent content in www on erenon.hu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 30 May 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/tags/www/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to share a calendar entry</title>
+      <link>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</link>
+      <pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</guid>
+      <description>Suppose you&amp;rsquo;d like to share a calendar event over the internet, e.g: on your website. The goal is to be support as many platforms as possible:
+ Desktop calendars (Thunderbird, macOS iCal, Outlook) Web applications (Google Calendar) Smartphone applications (Google Calendar App, iOS iCal)  The most intuitive way is to create the event in your calendar of choice, and send the invites in the native way provided by the application.</description>
+    </item>
+    
+  </channel>
+</rss>

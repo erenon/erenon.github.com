@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on erenon.hu</title>
+    <link>http://erenon.hu/posts/</link>
+    <description>Recent content in Posts on erenon.hu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 12 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overloading by concept without concepts in C&#43;&#43;</title>
+      <link>http://erenon.hu/posts/2019-09-12-concept-overloading/</link>
+      <pubDate>Thu, 12 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2019-09-12-concept-overloading/</guid>
+      <description>Given the following function:
+void f(int);  Suppose you want to make the behaviour of this function to depend on the argument type. A simple way to use overloading:
+void f(int); void f(double);  What if you want to define an overload for a set of types, which satisfy a given concept? As of C++20, concepts can be used for overloading. Before that, the function has to be converted to a template.</description>
+    </item>
+    
+    <item>
+      <title>Applied Ephemeralization</title>
+      <link>http://erenon.hu/posts/2019-04-28-applied-ephemeralization/</link>
+      <pubDate>Sun, 28 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2019-04-28-applied-ephemeralization/</guid>
+      <description>Ephemeralization Do more and more with less and less until eventually you can do everything with nothing Ephemeralism Do more with less, until you can do everything with nothing  Also see Wikipedia on Ephemeralization</description>
+    </item>
+    
+    <item>
+      <title>How to share a calendar entry</title>
+      <link>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</link>
+      <pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</guid>
+      <description>Suppose you&amp;rsquo;d like to share a calendar event over the internet, e.g: on your website. The goal is to be support as many platforms as possible:
+ Desktop calendars (Thunderbird, macOS iCal, Outlook) Web applications (Google Calendar) Smartphone applications (Google Calendar App, iOS iCal)  The most intuitive way is to create the event in your calendar of choice, and send the invites in the native way provided by the application.</description>
+    </item>
+    
+    <item>
+      <title>The sorcerers frog</title>
+      <link>http://erenon.hu/posts/2014-03-29-the-sorcerers-frog/</link>
+      <pubDate>Sat, 29 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2014-03-29-the-sorcerers-frog/</guid>
+      <description>Once there was a sorcerer who had the most shining gold. A simple and mild man came to him and wanted to buy this gold from him. The sorcerer said to the simple man: &amp;ldquo;You will not receive this gold, unless you give me better gold and in larger quantity.&amp;quot; The man said: &amp;ldquo;I have such a great desire for your gold that I will give you what you want rather than losing it.</description>
+    </item>
+    
+    <item>
+      <title>Bootstrap Typeahead submit on select</title>
+      <link>http://erenon.hu/posts/2013-03-02-bootstrap-typeahead-submit-on-select/</link>
+      <pubDate>Sat, 02 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2013-03-02-bootstrap-typeahead-submit-on-select/</guid>
+      <description>The Twitter Bootstraps Typeahead is a very nice way to provide autocomplete functionality on your text inputs. However, the default configuration might be a bit confusing. When the user clicks on a suggestion in the dropdown menu, the utility populates the input but doesn&amp;rsquo;t submit the form. It&amp;rsquo;s usually ok, but sometimes (e.g: search boxes) it&amp;rsquo;s frustrating. Here&amp;rsquo;s how to change it:
+var input = $(&amp;#39;#your-input-box&amp;#39;); input.typeahead({ &amp;#39;source&amp;#39; : [&amp;#39;foo&amp;#39;, &amp;#39;bar&amp;#39;, &amp;#39;baz&amp;#39;], &amp;#39;updater&amp;#39; : function(item) { this.</description>
+    </item>
+    
+    <item>
+      <title>Imprisoned Toroid - Raytrace on CUDA</title>
+      <link>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</link>
+      <pubDate>Sun, 25 Nov 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</guid>
+      <description>The following video is created by a C++/CUDA program using the theory of raytracing which was the most interesting piece of knowledge I learned on the university this semester.
+Because of its as-good-as-it-should-be quality of the source, I can&amp;rsquo;t opensource it at this precise moment. Meanwhile, take a look at OptiX, which I found a month later I had completed this.
+The video was rendered at 24 FPS, render time appr.</description>
+    </item>
+    
+  </channel>
+</rss>

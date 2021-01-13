@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">How to share a calendar entry</h1><time class="post-meta" datetime="2018-05-30">2018-05-30</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>Suppose you&rsquo;d like to share a calendar event over the internet,
+e.g: on your website. The goal is to be support as many platforms as possible:</p>
+<ul>
+<li>Desktop calendars (Thunderbird, macOS iCal, Outlook)</li>
+<li>Web applications (Google Calendar)</li>
+<li>Smartphone applications (Google Calendar App, iOS iCal)</li>
+</ul>
+<p>The most intuitive way is to create the event in your calendar of
+choice, and send the invites in the native way provided by the application.
+However, such methods tend to work only if the recipient uses the same
+system, which isn&rsquo;t a plausible assumption &ndash; we need something platform independent.</p>
+<h3 id="using-icalendar">Using iCalendar</h3>
+<p>Wikipedia indicates that <a href="https://en.wikipedia.org/wiki/ICalendar">iCalendar</a> is well supported format, which
+<em>allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.</em>
+&ndash; exactly what we are looking for. Let&rsquo;s create an <code>.ics</code> file:</p>
+<pre><code>BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+X-WR-TIMEZONE:Europe/Budapest
+BEGIN:VEVENT
+UID:your_eventname@yourdomain.com
+DTSTART:20180530T130000Z
+DTEND:20180530T143000Z
+DESCRIPTION:The description of your event
+LOCATION:The location of your event
+SEQUENCE:0
+SUMMARY:The summary of your event
+END:VEVENT
+END:VCALENDAR
+</code></pre><p>There are <a href="https://tools.ietf.org/html/rfc5545">other fields</a>.
+The fields are mostly self describing.
+In free form text values, <code>,</code> and <code>;</code> characters must be escaped by a backslash.
+The <code>tzselect</code> command can be used to get the name of your timezone.
+The <code>DTSTART</code> and <code>DTEND</code> fields are in <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>, 20180530T130000 is 2018. 05. 30, 13:00:00.
+If all this sound difficult, create your event in a suitable calendar application
+and export it to <code>.ics</code> from there.</p>
+<p>Sharing this file will cover desktop calendars associated with the ics extension
+and the iOS calendar. It probably will not work with the Google Calendar website,
+and &ndash; surprisingly &ndash; it will not work on Android as expected.</p>
+<h3 id="fixing-android">Fixing Android</h3>
+<p>On Android, after download, a toast message will be shown, saying:
+&ldquo;Unable to launch event&rdquo;. Internet wisdom blames various components.
+On the phones I had access to, Logcat show that the Calendar app does not
+have permission to read downloaded files.</p>
+<p>Fortunately, there&rsquo;s a way around: Android allows <a href="https://stackoverflow.com/questions/42936576/open-android-calendar-with-intent-from-web-chrome">emitting intents by links</a>, in some cases.
+The proper syntax and the allowed fields can be discovered by looking at the <a href="https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml">source</a>,
+or <a href="https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation">StackOverflow</a>.
+Here&rsquo;s an example:</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://www.google.com/calendar/event?action=TEMPLATE&amp;text=your_event&amp;dates=20180530T130000Z/20180530T143000Z&amp;location=location of the event&amp;sprop=yourdomain.com&#34;</span><span class="p">&gt;</span>Calendar event<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</code></pre></div><p>Values need to be <a href="https://en.wikipedia.org/wiki/Percent-encoding">urlencoded</a>.
+Clicking on this link on Android will open the Google Calendar application, if installed,
+with the specified event shown to be saved. Fortunately, this link will work for the
+browser based Google Calendar as well!</p>
+<h3 id="solution">Solution</h3>
+<p>Let&rsquo;s put all this together. By default, we should link to the <code>.ics</code> file,
+as it works on most platforms. On Android, the link has to be changed:</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;event.ics&#34;</span> <span class="na">data-gcal</span><span class="o">=</span><span class="s">&#34;https://www.google.com/calendar/event?...&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ics-link&#34;</span><span class="p">&gt;</span>Calendar event<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">replaceIcs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">as</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ics-link&#39;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">as</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">as</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">as</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;data-gcal&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;DOMContentLoaded&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// NB: there are more robust ways to check for android
+</span><span class="c1"></span>  <span class="kd">var</span> <span class="nx">userAgent</span> <span class="o">=</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&#34;android&#34;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">replaceIcs</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div><p>What about desktop clients using the Google Calendar web application?
+It is difficult if possible to tell what kind of calendar solution such users would like to use.
+However, there&rsquo;s a hack, which detects if the <a href="http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/">user is logged in to a google account</a>.
+If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.</p>
+<h3 id="summary">Summary</h3>
+<p>It is more difficult to share a calendar entry over the internet as expected.
+Application native ways do not interoperate, while some platforms are hard to target by standard solutions.
+While the solution shown above covers a large percentage of use-cases, it still might fail in others.
+A free web needs more support of open standards!</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2014-03-29-the-sorcerers-frog/">The sorcerers frog</a>
+          </li>
+          
+          
+          <li>
+            Next post: <a class="next" href="http://erenon.hu/posts/2019-04-28-applied-ephemeralization/">Applied Ephemeralization</a>
+          </li>
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>

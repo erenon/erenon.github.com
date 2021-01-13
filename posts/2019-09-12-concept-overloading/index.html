@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Overloading by concept without concepts in C&#43;&#43;</h1><time class="post-meta" datetime="2019-09-12">2019-09-12</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>Given the following function:</p>
+<pre><code>void f(int);
+</code></pre>
+<p>Suppose you want to make the behaviour of this function
+to depend on the argument type. A simple way to use overloading:</p>
+<pre><code>void f(int);
+void f(double);
+</code></pre>
+<p>What if you want to define an overload for a set of types,
+which satisfy a given concept? As of C++20, concepts
+can be used for overloading. Before that, the function has to be
+converted to a template. However, since C++ does not allow
+specialization of function templates, first change the
+function into a type template with a single static member:</p>
+<pre><code>template &lt;typename&gt; struct F; // default case undefined
+template &lt;&gt; struct F&lt;int&gt; { static void f(int); };
+template &lt;&gt; struct F&lt;double&gt; { static void f(double); };
+</code></pre>
+<p>This is equivalent with the above, but now we can apply
+various kind of <a href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a> magic to enable different specializations
+for different kind of types. Common techniques use <code>std::enable_if</code>,
+expression SFINAE and others. Here a simple, yet powerful
+solution is presented, which is based on <a href="https://en.cppreference.com/w/cpp/types/void_t"><code>void_t</code></a>:</p>
+<pre><code>template &lt;class... &gt;
+using void_t = void;
+</code></pre>
+<p>This innocent looking type alias resolves to <code>void</code>,
+if the template arguments are valid, otherwise it
+becomes a substitution failure.</p>
+<p>To use it, add an extra, defaulted template argument to <code>F</code>:</p>
+<pre><code>template &lt;typename, typename = void&gt; struct F; // default case undefined
+template &lt;&gt; struct F&lt;int, void&gt; { static void f(int); };
+template &lt;&gt; struct F&lt;double, void&gt; { static void f(double); };
+</code></pre>
+<p>So far, there&rsquo;s no behavioural change. However, no we can easily
+add overloads which apply to a set of types, e.g:
+types which has a specific nested type:</p>
+<pre><code>template &lt;typename Container&gt;
+struct F&lt;Container, void_t&lt;typename Container::value_type&gt;&gt; {
+  static void f(Container const&amp;);
+};
+</code></pre>
+<p>A different example, specialize for types with a specific member:</p>
+<pre><code>template &lt;typename Lockable&gt;
+struct F&lt;Lockable, void_t&lt;decltype(Lockable::lock)&gt; {
+  static void f(Lockable const&amp;);
+};
+</code></pre>
+<p>This technique also integrates well with standard type predicates.
+First, define the following helper:</p>
+<pre><code>template &lt;typename Cond&gt;
+using enable_spec_if = void_t&lt;std::enable_if_t&lt;Cond::value&gt;&gt;;
+</code></pre>
+<p>Usage:</p>
+<pre><code>template &lt;typename Trivial&gt;
+struct F&lt;Trivial, enable_spec_if&lt;std::is_trivial&lt;Trivial&gt;&gt;&gt; {
+  static void f(Trivial const&amp;);
+};
+</code></pre>
+<p>Given C++17 is available, a similar, slightly longer solution is:</p>
+<pre><code>template &lt;typename Trivial&gt;
+struct F&lt;Trivial, std::enable_if_t&lt;std::is_trivial_v&lt;Trivial&gt;, void&gt;&gt; {
+  static void f(Trivial const&amp;);
+};
+</code></pre>
+<p>A limitation of this technique (and also several others),
+that specializations must be mutually exclusive for the
+types they are used.</p>
+<p>To make usage easier, we can add a function template,
+making it the only entry point of the operation,
+while hiding <code>F</code> in the detail namespace:</p>
+<pre><code>template &lt;typename T&gt;
+void f(const T&amp; t) { detail::F&lt;T&gt;::f(t); }
+</code></pre>
+<p>In the next part, we&rsquo;ll cover how to allow third parties to define
+additional specializations, without conflicting with built in ones.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2019-04-28-applied-ephemeralization/">Applied Ephemeralization</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>

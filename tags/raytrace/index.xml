@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>raytrace on erenon.hu</title>
+    <link>http://erenon.hu/tags/raytrace/</link>
+    <description>Recent content in raytrace on erenon.hu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 Nov 2012 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/tags/raytrace/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Imprisoned Toroid - Raytrace on CUDA</title>
+      <link>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</link>
+      <pubDate>Sun, 25 Nov 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</guid>
+      <description>The following video is created by a C++/CUDA program using the theory of raytracing which was the most interesting piece of knowledge I learned on the university this semester.
+Because of its as-good-as-it-should-be quality of the source, I can&amp;rsquo;t opensource it at this precise moment. Meanwhile, take a look at OptiX, which I found a month later I had completed this.
+The video was rendered at 24 FPS, render time appr.</description>
+    </item>
+    
+  </channel>
+</rss>
