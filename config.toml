@@ -1,0 +1,10 @@
+baseURL = "http://erenon.hu/"
+languageCode = "en-us"
+title = "erenon.hu"
+
+theme = "erenon"
+
+[markup]
+[markup.highlight]
+style = "perldoc"
+noClasses = false

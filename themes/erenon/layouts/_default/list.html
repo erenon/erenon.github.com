@@ -1,0 +1,18 @@
+{{- define "main" }}
+
+{{ range $.Site.Home.Sections }}
+  {{ if .Section }}
+    <ul class="post-list">
+    {{ range .Pages }}
+      {{- $dateFormat := .Site.Params.dateFormat | default "2006-01-02" -}}
+      <li>
+      <time class="post-meta" datetime="{{ dateFormat "2006-01-02" .Date.UTC | safeHTML }}">{{ dateFormat $dateFormat .Date.Local }}</time>
+      <h2> <a class="post-link" href="{{ .RelPermalink }}">{{ .Title }}</a> </h2>
+      </a>
+      </li>
+    {{ end }}
+    </ul>
+  {{ end }}
+{{ end }}
+
+{{- end }}

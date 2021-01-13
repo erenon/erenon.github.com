@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+      {{- block "main" . }}{{- end }}
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      {{if or (.Prev) (.Next) }}
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          {{ with .PrevInSection }}
+          <li>
+            Previous post: <a class="prev" href="{{ .Permalink }}">{{ .Title }}</a>
+          </li>
+          {{ end }}
+          {{ with .NextInSection }}
+          <li>
+            Next post: <a class="next" href="{{ .Permalink }}">{{ .Title }}</a>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+      {{ end }}
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
