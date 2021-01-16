@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 12 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overloading by concept without concepts in C&#43;&#43; part II</title>
+      <link>http://erenon.hu/posts/2021-01-14-concept-overloading-2/</link>
+      <pubDate>Thu, 14 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2021-01-14-concept-overloading-2/</guid>
+      <description>In the previous post, we&amp;rsquo;ve seen how to select an overload from a set of functions based on concepts matching the arguments, without actual concept support in the C++ language. The described solution allows a library to define a single set of overloads.
+However, how to allow the client to override the library provided overload for a given concept? Simply adding a specialization would result in ambiguous function calls. If not today, probably later, when the library changes - making the solution hard to maintain.</description>
+    </item>
+    
     <item>
       <title>Overloading by concept without concepts in C&#43;&#43;</title>
       <link>http://erenon.hu/posts/2019-09-12-concept-overloading/</link>
