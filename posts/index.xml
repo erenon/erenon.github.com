@@ -6,7 +6,19 @@
     <description>Recent content in Posts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>http://erenon.hu/posts/2021-01-25-freerdp/</link>
+      <pubDate>Mon, 25 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2021-01-25-freerdp/</guid>
+      <description>I need to use RDP to connect to a Windows 10 machine. Equipped with a 4k display, on Arch Linux, with FreeRDP 2.2.0, the following combination of flags turned out to be the best: -grab-keyboard /gfx-h264:avc444 +gfx-progressive.
+To make it work, first make sure hardware acceleration is enabled. With AMD:
+$ sudo pacman -Sy xf86-video-amdgpu libva-mesa-driver freerdp Then add this .desktop file:
+$ cat .local/share/applications/xfreerdp.desktop [Desktop Entry] Name=XFreeRDP Comment=Connect to remote desktops using RDP Exec=xfreerdp %U -grab-keyboard /gfx-h264:avc444 +gfx-progressive Terminal=false Type=Application StartupNotify=false MimeType=application/x-rdp-type; Without /gfx-h264:avc444, certain UI elements (e.</description>
+    </item>
+    
     <item>
       <title>Overloading by concept without concepts in C&#43;&#43; part II</title>
       <link>http://erenon.hu/posts/2021-01-14-concept-overloading-2/</link>
