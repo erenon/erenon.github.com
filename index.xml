@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 08 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Store SSH key passphrase in password manager</title>
+      <link>http://erenon.hu/posts/2021-02-08-ssh-with-pass/</link>
+      <pubDate>Mon, 08 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2021-02-08-ssh-with-pass/</guid>
+      <description>The ssh-agent program can be used to manage unlocked SSH keys. The ssh-add program can be used to add keys to a running ssh-agent. By default, ssh-add uses TTY to ask for a password, if the selected key is password protected.
+The pass program is a password manager that follows the Unix philosophy. If you want to use pass together with ssh-add, first add the private key password to it:</description>
+    </item>
+    
     <item>
       <title>Useful FreeRDP flags for good performance</title>
       <link>http://erenon.hu/posts/2021-01-25-freerdp/</link>
