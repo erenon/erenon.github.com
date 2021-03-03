@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 08 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 03 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Automated, encrypted b2 backups with rclone</title>
+      <link>http://erenon.hu/posts/encrypted_backup_rclone/</link>
+      <pubDate>Wed, 03 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/encrypted_backup_rclone/</guid>
+      <description>Here&amp;rsquo;s how to create automated, secure backups on blackblaze using rclone and systemd.
+First, register a new blackblaze b2 account if you don&amp;rsquo;t have one already. Make sure you select the right region during sign-up - it cannot be changed later. Create a new bucket, name it after your hostname. Create a b2 rclone remote (see doc). Create a crypt overlay over the b2 remote (see doc). Generate long passwords.</description>
+    </item>
+    
     <item>
       <title>Store SSH key passphrase in password manager</title>
       <link>http://erenon.hu/posts/2021-02-08-ssh-with-pass/</link>

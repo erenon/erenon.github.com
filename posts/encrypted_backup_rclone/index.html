@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Automated, encrypted b2 backups with rclone</h1><time class="post-meta" datetime="2021-03-03">2021-03-03</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>Here&rsquo;s how to create automated, secure backups on <a href="http://blackblaze.com/">blackblaze</a> using <a href="https://rclone.org/">rclone</a> and systemd.</p>
+<p>First, <a href="https://www.backblaze.com/b2/sign-up.html">register</a> a new blackblaze b2 account if you don&rsquo;t have one already. Make sure you select the right
+region during sign-up - it cannot be changed later. Create a new bucket, name it after your hostname.
+Create a b2 rclone remote (see <a href="https://rclone.org/b2/">doc</a>).
+Create a crypt overlay over the b2 remote (see <a href="https://rclone.org/crypt/">doc</a>). Generate long passwords.</p>
+<p>The resulting config is something like this:</p>
+<pre><code>$ cat ~/.config/rclone/rclone.conf
+[b2]
+type = b2
+account = *redacted*
+key = *redacted*
+
+[b2_HOSTNAME_crypt]
+type = crypt
+remote = b2:HOSTNAME
+filename_encryption = standard
+directory_name_encryption = true
+password = *redacted*
+password2 = *redacted*
+</code></pre>
+<p>Try <code>rclone listremotes</code>, <code>rclone copy</code>, <code>rclone mount</code> to see if it works.
+Use the b2 online browser to verify that the uploaded data is encrypted.</p>
+<p>If you want to backup your home directory, chances are, you don&rsquo;t want to backup it all (e.g: ignore .cache).
+Create an rclone filter file that selects the files to sync:</p>
+<pre><code>$ cat ~/.config/rclone/filter.txt
+- .cache/**
++ **
+</code></pre>
+<p>Use <code>rclone ncdu --filter .config/rclone/filter.txt</code> to verify that the right files are selected.</p>
+<h2 id="automate-with-systemd">Automate with systemd</h2>
+<p>To sync the directory, use <code>rclone sync</code>. To avoid overwriting previous backups, use <code>--backup-directory</code>.
+The following <a href="https://www.freedesktop.org/software/systemd/man/systemd.service.html">systemd service</a> can be used:</p>
+<pre><code>$ cat ~/.config/systemd/user/rclone.service
+[Unit]
+Description=&quot;Sync selected parts of home directory to b2 encrypted remote storage&quot;
+
+[Service]
+Type=oneshot
+ExecStart=%s -c 'rclone sync --filter-from %E/rclone/filter.txt %h b2_%H_crypt:home --b2-hard-delete --fast-list --transfers 32 --backup-dir b2_%H_crypt:home-$$(date +%%u)'
+</code></pre>
+<p>This will keep 1 week worth of data without overwriting. A simple <a href="https://www.freedesktop.org/software/systemd/man/systemd.timer.html">systemd timer</a> can make it run daily:</p>
+<pre><code>$ cat ~/.config/systemd/user/rclone.timer
+[Unit]
+Description=&quot;Sync daily&quot;
+
+[Timer]
+OnCalendar=*-*-* 12:15:00
+FixedRandomDelay=true
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+</code></pre>
+<p>Enable and start the timer:</p>
+<pre><code>$ systemctl --user enable rclone.timer
+$ systemctl --user start rclone.timer
+</code></pre>
+<h2 id="backup-the-config">Backup the config</h2>
+<p>If the rclone encryption passwords are stored in the directory that is being backed up,
+in case of a local failure, the remote content cannot be restored.
+Therefore, the rclone config must be stored separately.
+The <a href="https://wiki.archlinux.org/index.php/Paperkey">Paperkey</a> page offers a couple of ideas.
+For example, to get a printable version of an encrypted config, do:</p>
+<pre><code>$ qrencode --8bit -t svg -lH -o config.svg &lt; encypted_config
+</code></pre>
+<p>To recover:</p>
+<pre><code>$ zbarcam -1 --raw -q -Sbinary
+</code></pre>
+<p>The encryption can happen with e.g: <code>gpg</code>, that requires a similar treatment of the private key.</p>
+<h2 id="note-about-browsers">Note about browsers</h2>
+<p>Browsers tend to write their persistent storage frequently, making it more difficult
+to create a consistent snapshot of them. To reduce the chance that a browser write
+conflicts with the sync action, use <a href="https://wiki.archlinux.org/index.php/profile-sync-daemon">Profile Sync Daemon</a>
+It will move the browser storage to memory, and sync it back periodically.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2021-02-08-ssh-with-pass/">Store SSH key passphrase in password manager</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
