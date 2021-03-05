@@ -38,3 +38,22 @@ prompt you to enter your password, then safely transmit the key
 passphrase to `ssh-add`, that will add the key to the running `ssh-agent`.
 
 [pass]: https://www.passwordstore.org/
+
+If git does pop up the gpg unlock dialog, but prints
+"gpg: decryption failed: No secret key" instead,
+make sure the [GPG_TTY environment variable][gpgtty] is exported:
+
+```shell
+export GPG_TTY=$TTY
+```
+
+If git still does not ask for a password, and no such error is printed:
+If the private key is not the default one (e.g: `.ssh/id_*`), the host-key association
+must be configured in `.ssh/config`, e.g:
+
+```
+Host github.com
+  IdentityFile ~/.ssh/your_nondefault_key
+```
+
+[gpgtty]: https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html
