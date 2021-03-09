@@ -36,7 +36,7 @@ Create an rclone filter file that selects the files to sync:
     - .cache/**
     + **
 
-Use `rclone ncdu --filter .config/rclone/filter.txt` to verify that the right files are selected.
+Use `rclone ncdu --filter-from .config/rclone/filter.txt .` to verify that the right files are selected.
 
 ## Automate with systemd
 
