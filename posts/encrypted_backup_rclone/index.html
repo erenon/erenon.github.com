@@ -58,7 +58,7 @@ Create an rclone filter file that selects the files to sync:</p>
 - .cache/**
 + **
 </code></pre>
-<p>Use <code>rclone ncdu --filter .config/rclone/filter.txt</code> to verify that the right files are selected.</p>
+<p>Use <code>rclone ncdu --filter-from .config/rclone/filter.txt .</code> to verify that the right files are selected.</p>
 <h2 id="automate-with-systemd">Automate with systemd</h2>
 <p>To sync the directory, use <code>rclone sync</code>. To avoid overwriting previous backups, use <code>--backup-directory</code>.
 The following <a href="https://www.freedesktop.org/software/systemd/man/systemd.service.html">systemd service</a> can be used:</p>
