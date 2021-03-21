@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Bootstrap aarch64 image on X86</h1><time class="post-meta" datetime="2021-03-21">2021-03-21</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>The current (2021-Feb-05) aarch64 <a href="https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4">Arch Linux ARM</a> image has <a href="https://archlinuxarm.org/forum/viewtopic.php?f=67&amp;t=15190">issues</a> on 8GB Raspberry Pi 4 models:
+It does not bring up the network interface, and the USB ports are not working,
+making any interactive fix difficult (without serial cable).</p>
+<p>A possible fix is to replace the default kernel with a Raspberry specific one.
+It still results in a 64bit system, only with a non-upstream kernel.
+If there&rsquo;s a different ARM system available, it is trivial to mount/boot the SD card there and apply the required changes.
+The solution below, however, only requires a single working, linux supported hardware, e.g: x86.
+This description is Arch Linux specific. For ubuntu, see <a href="https://disconnected.systems/blog/raspberry-pi-archlinuxarm-setup/">this blogpost on Disconnected Systems</a>.</p>
+<h2 id="install-qemu">Install Qemu</h2>
+<p>Qemu makes it possible to run arm binaries on x86 (and many more combinations).
+Install <a href="https://aur.archlinux.org/packages/qemu-user-static/">qemu-user-static</a> from AUR. To make the resulting package smaller,
+add <code>--target-list=aarch64-linux-user</code> to the configure invocation in the <code>PKGBUILD</code> file.
+This package requires glib-static and pcre-static, the former takes some time to build.
+Due to the number of dependencies, consider building in a <a href="https://wiki.archlinux.org/index.php/DeveloperWiki:Building_in_a_clean_chroot">clean chroot</a>.
+(Do not forget to <a href="https://wiki.archlinux.org/index.php/Makepkg">set <code>-j</code> in <code>MAKEFLAGS</code></a>)</p>
+<p>Install the built qemu-user-static package. Read the <a href="https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html">introduction of binfmt</a>,
+then setup the config accordingly:</p>
+<pre><code>$ cat /etc/binfmt.d/qemu-static.conf
+:qemu-aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:CF
+</code></pre>
+<p>Finally, restart the service that - if there&rsquo;s a config file - mounts the filesystem described by the doc above:</p>
+<pre><code>$ sudo systemctl restart systemd-binfmt
+</code></pre>
+<p>Now the system can run aarch64 binaries using qemu.</p>
+<h2 id="install-arch-linux-arm">Install Arch Linux ARM</h2>
+<p>Follow the <a href="https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4">install guide</a>. Use the <code>ArchLinuxARM-rpi-aarch64-latest.tar.gz</code> archive,
+but do not change <code>/etc/fstab</code>! Also, before unmounting root and boot, do:</p>
+<pre><code>$ sudo arch-chroot root
+</code></pre>
+<p>This will drop you into the installed ARM system. Add the alarm repos, and install the raspberry kernel:</p>
+<pre><code>$ pacman-key --init
+$ pacman-key --populate archlinuxarm
+$ pacman -S --needed linux-raspberrypi4 raspberrypi-bootloader raspberrypi-bootloader-x raspberrypi-firmware firmware-raspberrypi
+</code></pre>
+<p>This is a good time to also complete the official <a href="https://wiki.archlinux.org/index.php/installation_guide">Installation Guide</a>.
+After done, copy root/boot over boot again, and unmount the partitions.
+Again, do not modify <code>etc/fstab</code>, contrary to the alarm docs.</p>
+<p>With everything done correctly, using the patched image, the network and USB ports of the 8GB Raspberry Pi 4
+are fine again!</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/encrypted_backup_rclone/">Automated, encrypted b2 backups with rclone</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>

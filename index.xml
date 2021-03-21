@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 03 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bootstrap aarch64 image on X86</title>
+      <link>http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/</guid>
+      <description>The current (2021-Feb-05) aarch64 Arch Linux ARM image has issues on 8GB Raspberry Pi 4 models: It does not bring up the network interface, and the USB ports are not working, making any interactive fix difficult (without serial cable).
+A possible fix is to replace the default kernel with a Raspberry specific one. It still results in a 64bit system, only with a non-upstream kernel. If there&amp;rsquo;s a different ARM system available, it is trivial to mount/boot the SD card there and apply the required changes.</description>
+    </item>
+    
     <item>
       <title>Automated, encrypted b2 backups with rclone</title>
       <link>http://erenon.hu/posts/encrypted_backup_rclone/</link>
