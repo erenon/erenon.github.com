@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/</loc>
-    <lastmod>2021-03-21T00:00:00+00:00</lastmod>
+    <loc>http://erenon.hu/</loc>
+    <lastmod>2021-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://erenon.hu/</loc>
-    <lastmod>2021-03-21T00:00:00+00:00</lastmod>
+    <loc>http://erenon.hu/posts/2021-10-11-input-latency/</loc>
+    <lastmod>2021-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://erenon.hu/posts/</loc>
+    <lastmod>2021-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
   </url>
   

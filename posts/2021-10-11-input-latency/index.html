@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Input Latency</h1><time class="post-meta" datetime="2021-10-11">2021-10-11</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>This post was inspired by <a href="https://danluu.com/input-lag/">Dan Luu: Computer Latency</a>.
+I felt that my work setup (see below) is sluggish, even though I got used to it.
+I wanted to quantify how sluggish it really is.
+Also, VSCode was advertised to offer a lower latency experience (compared to ssh+vim),
+as it runs and renders on the local machine: I didn&rsquo;t feel it - I wanted to verify my observation,
+knowing that I use vim for too long to acknowledge its shortcomings.</p>
+<h2 id="results">Results</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Program</th>
+<th style="text-align:right">Latency (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">kitty</td>
+<td style="text-align:right">90</td>
+</tr>
+<tr>
+<td style="text-align:left">gvim</td>
+<td style="text-align:right">100</td>
+</tr>
+<tr>
+<td style="text-align:left">vscode</td>
+<td style="text-align:right">140</td>
+</tr>
+<tr>
+<td style="text-align:left">remote<sup>2</sup> vim</td>
+<td style="text-align:right">195</td>
+</tr>
+<tr>
+<td style="text-align:left">remote vscode</td>
+<td style="text-align:right">200</td>
+</tr>
+<tr>
+<td style="text-align:left">remote Visual Studio</td>
+<td style="text-align:right">210</td>
+</tr>
+</tbody>
+</table>
+<p>These are the test results of the latency between a keypress and the display of a character (see below for details).
+Results are rounded to the nearest <code>5 ms</code> to avoid the impression of false precision.</p>
+<p>The measurement confirms that typing on this particular remote setup is twice as bad as locally,
+and that the additional latency of vscode (compared to vim) is greater than the latency of ssh.</p>
+<h2 id="experimental-setup">Experimental setup</h2>
+<p>A local computer was filmed with a 240 FPS camera.
+Latency is defined as the time (number of frames) elapsed between a keyboard key starts moving,
+and the matching character appears on screen. The declared latency is a rounded average of several
+key presses, without much deviation. No particular care was taken to achieve the lowest latency possible
+(e.g: CPU pinning, interrupt pinning, reducing workload) &ndash; as that&rsquo;s not how I normally work &ndash;
+but the computers used were under no particular load in general.</p>
+<p>The <strong>local computer</strong> runs on a AMD FX 8320, with a standard HP KU-0316 keyboard attached via USB,
+and a 4K 60Hz AOC monitor attached via DisplayPort. The operating system is Linux 5.14.7,
+running the latest software from the ArchLinux distribution, including the i3 window manager.</p>
+<p>The <strong>remote computer</strong> is a dedicated machine, hosted in a datacenter, ~1500 kilometers away from
+the local computer, with a modern Intel CPU and plenty of RAM. It is accessed with xfreerdp,
+and runs Windows 10.</p>
+<p>The <strong>remote server</strong> is a server class Intel machine of unspecified details, runs Linux 3,
+and somewhat older versions of software. Regarding physical location, it is close to the remote computer described above.
+It is shared between different users, but during the test, no particular load was observed.</p>
+<h2 id="contenders">Contenders</h2>
+<p><a href="https://sw.kovidgoyal.net/kitty/">kitty</a> is a powerful terminal emulator, version 0.23.1 was used.
+Runs on the <strong>local computer</strong>.</p>
+<p><a href="https://www.vim.org/">gvim</a> is the GTK GUI version of the venerated editor, version 8.2.
+Runs on the <strong>local computer</strong>.</p>
+<p><a href="https://code.visualstudio.com/">vscode</a> is a recent Microsoft product, version 1.60.2.
+Runs on the <strong>local computer</strong>.</p>
+<p>remote <a href="https://code.visualstudio.com/">vscode</a> runs on the <strong>remote computer</strong>, version 1.53.2.</p>
+<p>remote <a href="https://visualstudio.com/">Visual Studio</a> runs on the <strong>remote computer</strong>, version 16.9.2.</p>
+<p>remote<sup>2</sup> <a href="https://www.vim.org/">vim</a> is version 8.2. It runs in a tmux instance on the <strong>remote server</strong>,
+accessed via PuTTY, that runs on the <strong>remote computer</strong> (that is accessed via xfreerdp, from the <strong>local computer</strong>),
+totalling to 2 logical hops in one direction.
+Contorted? Yes. Unrealistic? Well, that&rsquo;s how I have to work&hellip;</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/">Bootstrap aarch64 image on X86</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>

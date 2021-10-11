@@ -6,7 +6,16 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Input Latency</title>
+      <link>http://erenon.hu/posts/2021-10-11-input-latency/</link>
+      <pubDate>Mon, 11 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2021-10-11-input-latency/</guid>
+      <description>This post was inspired by Dan Luu: Computer Latency. I felt that my work setup (see below) is sluggish, even though I got used to it. I wanted to quantify how sluggish it really is. Also, VSCode was advertised to offer a lower latency experience (compared to ssh+vim), as it runs and renders on the local machine: I didn&amp;rsquo;t feel it - I wanted to verify my observation, knowing that I use vim for too long to acknowledge its shortcomings.</description>
+    </item>
+    
     <item>
       <title>Bootstrap aarch64 image on X86</title>
       <link>http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/</link>
