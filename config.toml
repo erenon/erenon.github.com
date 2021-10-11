@@ -8,3 +8,7 @@ theme = "erenon"
 [markup.highlight]
 style = "perldoc"
 noClasses = false
+
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
