@@ -6,7 +6,18 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Review of Thriving in a Crowded and Changing World</title>
+      <link>http://erenon.hu/posts/cpp_hopl_comments/</link>
+      <pubDate>Sun, 09 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/cpp_hopl_comments/</guid>
+      <description>Thriving in a Crowded and Changing World is a bulky paper written by C++ author Bjarne Stroustrup for the History of Programming Languages ACM conference. I collected a few quotes below that I found interesting.
+ I wanted that tool to write a version of the Unix kernel that could work on multiple processors connected through a local area network or a shared memory.
+ What happened to that vision?</description>
+    </item>
+    
     <item>
       <title>Nextcloud on RPi4 with Arch Linux</title>
       <link>http://erenon.hu/posts/2021-10-12-nextcloud-on-rpi/</link>

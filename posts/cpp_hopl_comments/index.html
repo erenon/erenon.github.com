@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Review of Thriving in a Crowded and Changing World</h1><time class="post-meta" datetime="2022-01-09">2022-01-09</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p><a href="https://dl.acm.org/doi/pdf/10.1145/3386320">Thriving in a Crowded and Changing World</a> is a bulky paper written by
+C++ author Bjarne Stroustrup for the <em>History of Programming Languages</em>
+ACM conference. I collected a few quotes below that I found interesting.</p>
+<blockquote>
+<p>I wanted that tool to write a version of the Unix kernel that could work on
+multiple processors connected through a local area network or a shared memory.</p>
+</blockquote>
+<p>What happened to that vision?</p>
+<blockquote>
+<p>In the late 1980s, the power of computers increased dramatically, I added Templates.</p>
+</blockquote>
+<p>This solved the too much computer power issue for a very long time.</p>
+<blockquote>
+<p>iostreams &ndash; an elaboration by Jerry Schwartz and the standards committee of my simple 1984
+streams library to handle a wide variety of character types, locales, and buffering strategies.</p>
+</blockquote>
+<p>I wonder what he means by &ldquo;elaboration&rdquo;&hellip;</p>
+<blockquote>
+<p>I was highly amused to find that representatives from Intel and IBM effectively
+vetoed that idea by pointing out that by adopting the Java memory model for C++
+we would slow down all JVMs by a factor of at least two. Consequently, to
+preserve the performance of Java, we had to adopt a far more complex model for
+C++. Ironically and predictably, C++ was then criticized for having a more
+complicated memory model than Java.</p>
+</blockquote>
+<p>Unfortunately, I couldn&rsquo;t find a reference for that.
+I admire tough that the committee has such high ethics.</p>
+<blockquote>
+<p>This is not just &ldquo;design by committee;&rdquo; it is &ldquo;design by a confederation of committees.&rdquo;</p>
+</blockquote>
+<blockquote>
+<p>I consider the threads-and-locks level of concurrency the worst model for application
+use of concurrency</p>
+</blockquote>
+<blockquote>
+<p>Why did we require that programmers should use <code>constexpr</code> to mark functions that can be
+executed at compile time? In principle, the compiler can figure out what can be computed at
+compile time, but without an annotation, users would be at the mercy of variations in cleverness of
+compilers and a compiler would need to keep bodies of all functions around &ldquo;forever&rdquo; in case they
+were needed for constant expression evaluation</p>
+</blockquote>
+<p>I always wondered, didn&rsquo;t know that. Unfortunately, I still do not really understand why.</p>
+<blockquote>
+<p>Unfortunately, beginners flock to examine the most horrendously specialized
+code and take great pride in explaining it (often erroneously) to others.
+Bloggers and speakers enhance their reputations by showing off hair-raising
+examples. This is a major source of C++’s reputation for complexity.</p>
+</blockquote>
+<p>I don&rsquo;t get what&rsquo;s wrong with <code>using swallow = int[]; (void)swallow{0, (f(t), int{})...};</code>.
+Rolls off the tongue.</p>
+<p>On exception specifications:</p>
+<blockquote>
+<p>As I feared, that led to maintenance problems, run-time overhead as an
+exception was repeatedly checked along the unwinding path, and bloated source
+code. For C++11, exception specifications were deprecated and for C++17, we
+finally removed them (unanimously).</p>
+</blockquote>
+<p>Thank you guys for using <code>using namespace std;</code>, forcing the committee to chose
+the technically correct names.</p>
+<blockquote>
+<p>They are called unordered (e.g., <code>unordered_map</code>) to distinguish them from
+the older, ordered, standard containers (e.g., <code>map</code>) and because the obvious
+names (e.g., <code>hash_map</code>) had been used extensively in other libraries before
+C++11.</p>
+</blockquote>
+<p>On digit separators:</p>
+<blockquote>
+<p>Many, including me, argued for using the underscore as a separator (as in
+several other languages). Unfortunately, people were using the underscore
+as part of user-defined literal suffixes</p>
+</blockquote>
+<p>Past forced mistakes:</p>
+<blockquote>
+<p>The prefix <code>template&lt;...&gt;</code> syntax was not my first choice when I designed
+templates. It was forced upon me by people worried that templates would be
+misused by less competent programmers, leading to confusion and errors. The
+heavy syntax for exception handling, <code>try { ... } catch( ... ) { ... }</code>, was a
+similar story.</p>
+</blockquote>
+<p>The bashing of C++17 is a recurring theme:</p>
+<blockquote>
+<p>I have not been able to identify any unifying themes for the C++17 features. These features
+look to be merely a set of &ldquo;bright ideas&rdquo; thrown into the language and standard library as voting
+majorities could be found.</p>
+</blockquote>
+<p>Now I understand why:</p>
+<pre><code>auto {x ,y ,z} = f (); // proposed
+auto [x ,y ,z] = f (); // accepted
+</code></pre><blockquote>
+<p>This is a minor change, but I think a mistake.</p>
+</blockquote>
+<p>Regarding optional/variant/any:</p>
+<blockquote>
+<p>I see these three variants of the idea of a discriminated union as a stop-gap measure. Functional-
+programming-style pattern matching is a far more elegant, general, and
+potentially more efficient solution to the problems with unions.</p>
+</blockquote>
+<blockquote>
+<p>I consider operator dot a prime example of the members of the committee lacking
+a shared view of what C++ is and what it should become. Thirty years, six proposals, many
+discussions, much design and implementation work, and we have nothing.</p>
+</blockquote>
+<blockquote>
+<p>In retrospect, I don’t think that the object-oriented notation (e.g., x.f(y)) should ever have
+been introduced. The traditional mathematical notation f(x,y) is sufficient. As a side benefit, the
+mathematical notation would naturally have given us multi-methods, thereby saving us from the
+visitor pattern workaround.</p>
+</blockquote>
+<p>Regarding the spaceship operator <code>&lt;=&gt;</code>:</p>
+<blockquote>
+<p>So, instead of a facility that made trivial examples work as expected for novices, we got an
+elaborate facility that allows experts to carefully craft subtle comparisons.</p>
+</blockquote>
+<p>Expectations:</p>
+<blockquote>
+<p>Coroutines - should be very fast and simple.</p>
+</blockquote>
+<p>At this point in the paper, you just know the final result:</p>
+<blockquote>
+<p>a complete explanation of the proposals
+written, presented, and discussed is beyond the scope of this paper. Here, I
+present only an outline. There are simply too many complex details for anything
+else; the papers alone run into many hundreds of pages</p>
+</blockquote>
+<blockquote>
+<p>The conclusion was that it might be
+possible to get the best of both approaches, but that would require serious study. That study took
+years, yielded no clear results, and in the meantime more proposals emerged.</p>
+</blockquote>
+<p>How dare you, Dennis:</p>
+<blockquote>
+<p>At the time, I heard the priceless comment: &ldquo;Dennis isn’t a C
+expert; he never comes to the meetings&rdquo;.</p>
+</blockquote>
+<blockquote>
+<p>The only thing that increases faster than hardware performance is human expectation.</p>
+</blockquote>
+<p>I don&rsquo;t think this is true. The perceived latency of computers just got worse
+in general in the past decades. I blame bloated software.
+Humans expect a fluent user interface.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2021-10-12-nextcloud-on-rpi/">Nextcloud on RPi4 with Arch Linux</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
