@@ -2,7 +2,7 @@
 
 To create a new blogpost:
 
-    $ hugo new posts/title.md
+    $ hugo new posts/YYY-MM-DD-title.md
 
 To test:
 
