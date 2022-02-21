@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 09 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Snapcast on Demand</title>
+      <link>http://erenon.hu/posts/2022-02-21-snapcast-on-demand/</link>
+      <pubDate>Mon, 21 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2022-02-21-snapcast-on-demand/</guid>
+      <description>Snapcast is a wonderful piece of software: a multiroom client-server audio player, where all clients are time synchronized with the server to play perfectly synced audio. It allows you to play the same music in different rooms, at the same time, using multiple devices.
+Normally, I listen to music on my desktop. Sometimes, however, I&amp;rsquo;d like to broadcast music to another room. In that room, there&amp;rsquo;s a raspberry pi connected to a set of speakers.</description>
+    </item>
+    
     <item>
       <title>Review of Thriving in a Crowded and Changing World</title>
       <link>http://erenon.hu/posts/cpp_hopl_comments/</link>

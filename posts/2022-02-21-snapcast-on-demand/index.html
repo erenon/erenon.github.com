@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Snapcast on Demand</h1><time class="post-meta" datetime="2022-02-21">2022-02-21</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p><a href="https://github.com/badaix/snapcast">Snapcast</a> is a wonderful piece of software: a multiroom client-server audio
+player, where all clients are time synchronized with the server to play
+perfectly synced audio. It allows you to play the same music
+in different rooms, at the same time, using multiple devices.</p>
+<p>Normally, I listen to music on my desktop. Sometimes, however,
+I&rsquo;d like to broadcast music to another room. In that room, there&rsquo;s
+a raspberry pi connected to a set of speakers.
+I wanted to make the switch between local and multiroom playback
+as easy as possible. This post describes my approach.</p>
+<p>Normally, my <a href="https://cmus.github.io/">music player</a> uses the pulse-audio interface
+to interact with the audio system (PipeWire, currently) that uses
+ALSA to talk to the actual device:</p>
+<pre><code>cmus -&gt; pulse -&gt; pipewire -&gt; alsa -&gt; device
+</code></pre><p>We are going to add a virtual sink to pulse audio, a file sink,
+where the Snapcast server will pick up the music from:</p>
+<pre><code>cmus -&gt; pulse -&gt; file -&gt; snapcast server -&gt; snapcast client -&gt; alsa -&gt; device
+</code></pre><p>To this chain, we can add multiple snapcast clients, to achieve a multiroom sound system.
+It is important that the snapcast client should not use the pulse audio interface,
+to avoid infinite loops. Read more about these pieces in this <a href="https://github.com/badaix/snapcast/issues/821#issuecomment-789538906">post from badaix</a>.
+By changing the active pulse sink, we can switch between local and multiroom audio.
+The advantage of this setup is that it is player agnostic: it works with
+every music player that can talk to pulse, and requires no additional player configuration.</p>
+<p>Theory aside, let&rsquo;s get to work.
+First, build snapcast from <a href="https://aur.archlinux.org/packages/snapcast">AUR</a>, with a change to minimize dependencies:</p>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gh">diff --git a/PKGBUILD b/PKGBUILD
+</span><span class="gh">index e5033a8..5efe228 100644
+</span><span class="gh"></span><span class="gd">--- a/PKGBUILD
+</span><span class="gd"></span><span class="gi">+++ b/PKGBUILD
+</span><span class="gi"></span><span class="gu">@@ -7,7 +7,7 @@ pkgdesc=&#34;Synchronous multi-room audio player&#34;
+</span><span class="gu"></span> arch=(&#39;x86_64&#39; &#39;armv6h&#39; &#39;armv7h&#39; &#39;aarch64&#39;)
+ url=&#34;https://github.com/badaix/snapcast&#34;
+ license=(&#39;GPL&#39;)
+<span class="gd">-depends=(alsa-lib avahi libvorbis flac opus expat libsoxr libpulse)
+</span><span class="gd"></span><span class="gi">+depends=(alsa-lib)
+</span><span class="gi"></span> makedepends=(cmake alsa-utils boost)
+ install=&#34;snapcast.install&#34;
+ backup=(&#39;etc/default/snapserver&#39; &#39;etc/default/snapclient&#39; &#39;etc/snapserver.conf&#39;)
+<span class="gu">@@ -25,6 +25,12 @@ build() {
+</span><span class="gu"></span>     cmake -B build -S . \
+           -DCMAKE_BUILD_TYPE=None \
+           -DCMAKE_INSTALL_PREFIX=/usr \
+<span class="gi">+          -DBUILD_WITH_FLAC=Off \
+</span><span class="gi">+          -DBUILD_WITH_VORBIS=Off \
+</span><span class="gi">+          -DBUILD_WITH_TREMOR=Off \
+</span><span class="gi">+          -DBUILD_WITH_OPUS=Off \
+</span><span class="gi">+          -DBUILD_WITH_AVAHI=Off \
+</span><span class="gi">+          -DBUILD_WITH_EXPAT=Off \
+</span><span class="gi"></span>           -Wno-dev
+     make -C build
+ }
+</code></pre></div><p>Create systemd units:</p>
+<div class="highlight"><pre class="chroma"><code class="language-SYSTEMD" data-lang="SYSTEMD"><span class="c"># .config/systemd/user/snapserver.service</span>
+<span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Snapcast server</span>
+<span class="na">Documentation</span><span class="o">=</span><span class="s">man:snapserver(1)</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network-online.target time-sync.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/snapserver --logging.sink=system --server.datadir=/tmp/ --stream.codec=pcm --http.enabled=false --tcp.enabled=false</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-SYSTEMD" data-lang="SYSTEMD"><span class="c"># .config/systemd/user/snapclient.service</span>
+<span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Snapcast client</span>
+<span class="na">Documentation</span><span class="o">=</span><span class="s">man:snapclient(1)</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network-online.target time-sync.target sound.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/snapclient --logsink=system -h my_desktop_hostname</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+</code></pre></div><p>Copy the snapclient service file to the raspberry pi.
+To allow running user services via ssh, <a href="https://bbs.archlinux.org/viewtopic.php?id=232424">enable PAM</a>:</p>
+<pre><code># /etc/ssh/sshd_config
+UsePAM yes
+</code></pre><p>Add the virtual pulse audio sink:</p>
+<pre><code># .config/pulse/default.pa
+load-module module-pipe-sink file=/tmp/snapfifo sink_name=Snapcast format=s16le rate=48000
+set-default-sink alsa_output.pci-0000_00_14.2.analog-stereo
+</code></pre><p>Create a script that switches to the virtual sink and starts the required services,
+then undoes everything on exit:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nb">set</span> -xeu
+
+<span class="nv">LOCAL_SINK</span><span class="o">=</span><span class="k">$(</span>pactl get-default-sink<span class="k">)</span>
+
+<span class="nb">trap</span> cleanup EXIT INT
+
+cleanup<span class="o">()</span> <span class="o">{</span>
+  ssh my_remote_host <span class="s1">&#39;systemctl --user stop snapclient.service&#39;</span>
+  systemctl stop --user snapserver.service snapclient.service
+  pactl set-default-sink <span class="nv">$LOCAL_SINK</span>
+<span class="o">}</span>
+
+systemctl start --user snapserver.service snapclient.service
+ssh my_remote_host <span class="s1">&#39;systemctl --user start snapclient.service&#39;</span>
+pactl set-default-sink Snapcast
+
+<span class="nb">read</span>
+</code></pre></div><p>I decided not to run snapclient on the pi all the time:
+if the server is down (i.e: I&rsquo;m not using it, or the desktop is powered off),
+it tries to reconnect every second, as expected, and I considered that a waste of resources.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/cpp_hopl_comments/">Review of Thriving in a Crowded and Changing World</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
