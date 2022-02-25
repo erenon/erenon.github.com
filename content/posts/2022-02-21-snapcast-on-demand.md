@@ -139,6 +139,13 @@ I decided not to run snapclient on the pi all the time:
 if the server is down (i.e: I'm not using it, or the desktop is powered off),
 it tries to reconnect every second, as expected, and I considered that a waste of resources.
 
+To avoid systemd stopping the remote service after ssh disconnects,
+on the remote machine, do:
+
+```sh
+$ sudo loginctl enable-linger $USER
+```
+
 
 [Snapcast]: https://github.com/badaix/snapcast
 [AUR]: https://aur.archlinux.org/packages/snapcast
