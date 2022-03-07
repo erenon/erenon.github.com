@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Preprocessor foreach compile time</title>
+      <link>http://erenon.hu/posts/2022-03-07-preprocessor_foreach_compile_time/</link>
+      <pubDate>Mon, 07 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2022-03-07-preprocessor_foreach_compile_time/</guid>
+      <description>Assume you want to create a preprocessor macro that takes a macro F and a variable number of arguments. When expanded, it invokes F with each argument:
+#define FOREACH(F, ...) //...  FOREACH(G, a, b, c) // expands to: G(a) G(b) G(c) Such a macro can be useful for example for a log library. There are several ways to implement it. Here, we compare three different implementations, with regard to complexity, ease of change, and compile time.</description>
+    </item>
+    
     <item>
       <title>Snapcast on Demand</title>
       <link>http://erenon.hu/posts/2022-02-21-snapcast-on-demand/</link>

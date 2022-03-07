@@ -131,7 +131,10 @@ pactl set-default-sink Snapcast
 </code></pre></div><p>I decided not to run snapclient on the pi all the time:
 if the server is down (i.e: I&rsquo;m not using it, or the desktop is powered off),
 it tries to reconnect every second, as expected, and I considered that a waste of resources.</p>
-
+<p>To avoid systemd stopping the remote service after ssh disconnects,
+on the remote machine, do:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ sudo loginctl enable-linger <span class="nv">$USER</span>
+</code></pre></div>
   </div>
 </article>
 
@@ -150,6 +153,10 @@ it tries to reconnect every second, as expected, and I considered that a waste o
             Previous post: <a class="prev" href="http://erenon.hu/posts/cpp_hopl_comments/">Review of Thriving in a Crowded and Changing World</a>
           </li>
           
+          
+          <li>
+            Next post: <a class="next" href="http://erenon.hu/posts/2022-03-07-preprocessor_foreach_compile_time/">Preprocessor foreach compile time</a>
+          </li>
           
         </ul>
       </div>
