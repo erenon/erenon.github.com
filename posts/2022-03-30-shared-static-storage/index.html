@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+    <nav class="site-nav">
+      <div class="trigger">
+        <a class="page-link" href="http://careers.stackoverflow.com/erenon">CV</a>
+      </div>
+    </nav>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Static storage shared between compilation units</h1><time class="post-meta" datetime="2022-03-30">2022-03-30</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>Suppose you want to create a static container compilation time,
+that can be inserted into by different translation units,
+and can be iterated runtime. For example:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// a.cpp
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">a</span><span class="p">()</span> <span class="p">{</span> <span class="n">STORE</span><span class="p">(</span><span class="s">&#34;names&#34;</span><span class="p">,</span> <span class="s">&#34;alice&#34;</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// b.cpp
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{</span> <span class="n">STORE</span><span class="p">(</span><span class="s">&#34;names&#34;</span><span class="p">,</span> <span class="s">&#34;bob&#34;</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// c.cpp
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">c</span><span class="p">()</span> <span class="p">{</span> <span class="n">STORE</span><span class="p">(</span><span class="s">&#34;names&#34;</span><span class="p">,</span> <span class="s">&#34;charlie&#34;</span><span class="p">)</span> <span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">name</span> <span class="p">:</span> <span class="n">fetch</span><span class="p">(</span><span class="s">&#34;names&#34;</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;,&#34;</span><span class="p">;</span>
+    <span class="c1">// prints alice,bob,charlie, in unspecified order
+</span><span class="c1"></span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>I know of no way in standard C or C++ that&rsquo;d allow this.
+However, with platform specific tools, it is possible
+to implement <code>STORE</code> and <code>fetch</code> - this post describes how.
+The complete source code is available in the <a href="https://github.com/erenon/static-storage">companion repository</a>.</p>
+<h1 id="theory">Theory</h1>
+<p>The following discussion is constrained to the linux, macOS
+and windows platforms. Each platform in scope has a mainstream
+execution format, that defines how an executable binary should look like.
+<a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a> for linux, <a href="https://en.wikipedia.org/wiki/Mach-O">Mach-O</a> for macOS, <a href="https://en.wikipedia.org/wiki/Portable_Executable">PE</a> for windows.
+Each of these formats define headers (metadata) and sections (data).
+Sections can contain e.g: program code, exported symbol information debug symbols,
+or even arbitrary data. We are going to create and populate a custom section
+(<code>STORE</code>), and read to contents of that section runtime (<code>fetch</code>).</p>
+<h1 id="put-data-into-custom-sections">Put Data into Custom Sections</h1>
+<p>On each platform, a different construct can be used
+to put a given static variable into a specific section:</p>
+<ul>
+<li>
+<p>linux/ELF: <a href="https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-section-variable-attribute">section attribute</a>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#define STORE(name, str) {               \
+</span><span class="cp">  __attribute__((section(name), used))   \
+</span><span class="cp">  static constexpr const char s[] = str; \
+</span><span class="cp">}
+</span></code></pre></div><p>The <code>used</code> attribute instructs the compiler not to remove <code>s</code>,
+even if it appears unused. The curly braces around the definition
+prevent name conflicts (e.g: if there are multiple <code>STORE</code> invocations
+in the same scope).</p>
+</li>
+<li>
+<p>macOS/Mach-O: sections are grouped into segments,
+the segment name must be also specified to the attribute:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#define STORE(name, str) {                               \
+</span><span class="cp">  __attribute__((&#34;__DATA_CONST,&#34; section(name), used))   \
+</span><span class="cp">  static constexpr const char s[] = str;                 \
+</span><span class="cp">}
+</span></code></pre></div></li>
+<li>
+<p>windows/PE: <a href="https://docs.microsoft.com/en-us/cpp/cpp/allocate">allocate specifier</a>. I couldn&rsquo;t find the
+equivalent of the <code>used</code> attribute, so you have to convince
+the compiler otherwise, that the variable is used (e.g: by
+actually using it) - not shown here. Also each section need to be initialized first
+with a <a href="https://docs.microsoft.com/en-us/cpp/preprocessor/const-seg">const_seg</a> pragma. The pragma must be in global/namespace scope,
+it can&rsquo;t be added to the <code>STORE</code> macro.</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#define STORE(name, str) {               \
+</span><span class="cp">  __declspec(allocate(name))             \
+</span><span class="cp">  static constexpr const char s[] = str; \
+</span><span class="cp">}
+</span><span class="cp"></span>
+<span class="cp">#pragma const_seg(&#34;names&#34;) </span><span class="c1">// user code, required once for each segment/translation unit
+</span></code></pre></div></li>
+</ul>
+<p>This definition makes it possible to use <code>STORE</code> inside functions.
+Similarly, a <code>STORE_GLOBAL</code> macro can be created, that works in global/namespace scope.</p>
+<p>One might be tempted to prefix the custom section name with a leading dot (ELF/PE)
+or double underscore (Mach-O) to match conventions of the well known sections
+(e.g: <code>.text</code> or <code>.rodata</code>). However, that&rsquo;d be incorrect: the leading decoration
+is there to separate platform specified sections from user defined custom sections.
+For example:</p>
+<blockquote>
+<p>Section names with a dot (.) prefix are reserved for the system, although applications may use these sections if their existing meanings are satisfactory.
+Applications may use names without the prefix to avoid conflicts with system sections.
+<br><a href="https://refspecs.linuxfoundation.org/elf/elf.pdf">Executable and Linkable Format</a>, 1-16</p>
+</blockquote>
+<p>To verify that <code>STORE</code> works, create a test binary that invokes it,
+and run a platform specific tool that dumps the contents of a specified section
+of the specified binary:</p>
+<ul>
+<li>linux/ELF: <a href="https://man7.org/linux/man-pages/man1/readelf.1.html">readelf</a>: <code>readelf -x names binary</code></li>
+<li>macOS/Mach-O: <a href="https://www.manpagez.com/man/1/otool/">otool</a>: <code>otool -s __DATA_CONST names binary -V</code></li>
+<li>windows/PE: <a href="https://docs.microsoft.com/en-us/cpp/build/reference/dumpbin-command-line">dumpbin</a>: <code>dumpbin.exe /SECTION:names binary /RAWDATA</code></li>
+</ul>
+<p>The strings we invoked <code>STORE</code> with should appear in the output of these commands.</p>
+<h1 id="gcc-complications">GCC Complications</h1>
+<p>All trivial so far. Unfortunately, if <code>STORE</code> is used in functions
+with different linkage (e.g: in a normal function and in an inline or template function),
+GCC will produce a section type conflict.
+The situation is analyzed in a <a href="https://stackoverflow.com/questions/35091862/inline-static-data-causes-a-section-type-conflict">stackoverflow question</a>.</p>
+<p>The issue stems from the fact that GCC must give special care to
+some function local static variables:</p>
+<blockquote>
+<p>Function-local static objects in all definitions of the same inline function
+(which may be implicitly inline) all refer to the same object defined in one
+translation unit, as long as the function has external linkage. <br>
+<a href="https://en.cppreference.com/w/cpp/language/storage_duration">cppreference</a></p>
+</blockquote>
+<p>To ensure uniqueness, those variables are put into a comdat section,
+other variables are not, and GCC is unable to resolve this situation.
+To avoid GCC messing up the section type, it has to be specified explicitly.
+Unfortunately, it cannot be specified using the section attribute,
+and I found no way to convince GCC to forget about the standard requirements,
+so inline assembly needs to be used:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#define STORE(name, str)                              \
+</span><span class="cp">  __asm__ (                                           \
+</span><span class="cp">    &#34;.pushsection \&#34;&#34; name &#34;\&#34;,\&#34;?\&#34;,@progbits&#34; &#34;\n&#34;  \
+</span><span class="cp">    &#34;.asciz \&#34;&#34; str &#34;\&#34;&#34;                        &#34;\n&#34;  \
+</span><span class="cp">    &#34;.popsection&#34;                               &#34;\n&#34;  \
+</span><span class="cp">  );
+</span></code></pre></div><p>The <a href="https://sourceware.org/binutils/docs/as/PushSection.html">.pushsection</a> and <a href="https://sourceware.org/binutils/docs/as/Asciz.html">.asciz</a> assembler pseudo directives are used
+to put a string value into a specific section, without actually creating
+a variable that is restricted by C++ rules. The quoting mess is a bit
+scary, but there&rsquo;s nothing too complicated here.</p>
+<h1 id="get-data-from-custom-sections">Get data from custom sections</h1>
+<p>We have a <code>STORE</code> macro, that takes two string literals,
+and puts one into the section indicated by the other.
+Now we only need to extract the data runtime that was inserted compile time.
+To do that, we just need to replicate a small portion of what
+readelf/otool/dumpbin does. The implementation is platform specific,
+let&rsquo;s see the linux/ELF case for illustration:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Get every string STOREd in `name` in the binary at `path`.
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">fetch</span><span class="p">(</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span> <span class="o">=</span> <span class="n">current_binary_path</span><span class="p">())</span>
+<span class="p">{</span>
+  <span class="c1">// Create a random access view of `path` (error handling on read included)
+</span><span class="c1"></span>  <span class="k">const</span> <span class="n">MemoryMappedFile</span> <span class="nf">f</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+
+  <span class="c1">// Read the ELF header.
+</span><span class="c1"></span>  <span class="c1">// ElfW(Ehdr) expands to Efl32_Ehdr or Elf64_Ehdr,
+</span><span class="c1"></span>  <span class="c1">// according to the current platform.
+</span><span class="c1"></span>  <span class="n">ElfW</span><span class="p">(</span><span class="n">Ehdr</span><span class="p">)</span> <span class="n">ehdr</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ehdr</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">ehdr</span><span class="p">);</span>
+
+  <span class="c1">// Read the section headers from the location
+</span><span class="c1"></span>  <span class="c1">// indicated by the ELF header.
+</span><span class="c1"></span>  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ElfW</span><span class="p">(</span><span class="n">Shdr</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">shdrs</span><span class="p">(</span><span class="n">ehdr</span><span class="p">.</span><span class="n">e_shnum</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">ehdr</span><span class="p">.</span><span class="n">e_shoff</span><span class="p">,</span> <span class="n">shdrs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ElfW</span><span class="p">(</span><span class="n">Shdr</span><span class="p">)),</span> <span class="n">shdrs</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+
+  <span class="c1">// The section headers do not contain their name,
+</span><span class="c1"></span>  <span class="c1">// only an offset into the section header string table.
+</span><span class="c1"></span>  <span class="c1">// Locate this string table:
+</span><span class="c1"></span>  <span class="k">const</span> <span class="nf">ElfW</span><span class="p">(</span><span class="n">Off</span><span class="p">)</span> <span class="n">string_table_offset</span> <span class="o">=</span> <span class="n">shdrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">ehdr</span><span class="p">.</span><span class="n">e_shstrndx</span><span class="p">).</span><span class="n">sh_offset</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+
+  <span class="c1">// For each section
+</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">ElfW</span><span class="p">(</span><span class="n">Shdr</span><span class="p">)</span><span class="o">&amp;</span> <span class="nl">shdr</span> <span class="p">:</span> <span class="n">shdrs</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="c1">// Get the section name from the string table
+</span><span class="c1"></span>    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string_view</span> <span class="n">section_name</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">string</span><span class="p">(</span><span class="n">string_table_offset</span> <span class="o">+</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_name</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">section_name</span> <span class="o">==</span> <span class="n">name</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="c1">// This is the section we are looking for.
+</span><span class="c1"></span>      <span class="c1">// Get all the strings.
+</span><span class="c1"></span>      <span class="k">for</span> <span class="p">(</span><span class="n">ElfW</span><span class="p">(</span><span class="n">Xword</span><span class="p">)</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">offset</span> <span class="o">&lt;</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_size</span><span class="p">;)</span>
+      <span class="p">{</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string_view</span> <span class="n">str</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">string</span><span class="p">(</span><span class="n">shdr</span><span class="p">.</span><span class="n">sh_offset</span> <span class="o">+</span> <span class="n">offset</span><span class="p">);</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+        <span class="n">offset</span> <span class="o">+=</span> <span class="n">str</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c1">// no break or early return here.
+</span><span class="c1"></span>      <span class="c1">// section names do not need to be unique.
+</span><span class="c1"></span>    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>The full source is available in the <a href="https://github.com/erenon/static-storage">companion repository</a>.</p>
+<h1 id="use-case">Use case</h1>
+<p>This looks cool (?), but why? The <a href="https://github.com/morganstanley/binlog/blob/hiperf/include/binlog/create_source.hpp">binlog</a> high performance log library
+uses a more advanced variation of this technique to store the metadata
+of log invocations in the binary, avoiding one-time setup for each
+invocation that&rsquo;d be otherwise necessary.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2022-03-07-preprocessor_foreach_compile_time/">Preprocessor foreach compile time</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="http://careers.stackoverflow.com/erenon">CV</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
