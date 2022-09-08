@@ -6,7 +6,26 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 08 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Summary of Readings</title>
+      <link>http://erenon.hu/posts/2022-09-08-summary-of-readings/</link>
+      <pubDate>Thu, 08 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2022-09-08-summary-of-readings/</guid>
+      <description>A non-exhaustive list of non-fiction books in no particular order I read recently, with some recommendation. This post was inspired by the similar posts of Eli Bendersky.
+Engineering  Kelly: More Than My Share of It All by Clarence &amp;ldquo;Kelly&amp;rdquo; Johnson. The autobiography of a aeronautical engineer genius, the founder of the Skunk Works. Concise and honest, inspirational. Skunk Works: A Personal Memoir of My Years at Lockheed by Ben Rich.</description>
+    </item>
+    
+    <item>
+      <title>The Unreasonable Effectiveness of Doing Nothing</title>
+      <link>http://erenon.hu/posts/2022-08-08-the-unreasonable-effectiveness/</link>
+      <pubDate>Thu, 08 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2022-08-08-the-unreasonable-effectiveness/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Static storage shared between compilation units</title>
       <link>http://erenon.hu/posts/2022-03-30-shared-static-storage/</link>
