@@ -26,7 +26,7 @@ by the [similar posts][] of [Eli Bendersky][].
    The history of how the PARC research center was founded, the inventions that came out of it,
    and how Xerox capitalized on this precious gem. Somewhat longer, chapters dedicated to distinct researchers,
    management being the overarching cohesion.
- - [The Soul of a New Machine](https://www.goodreads.com/book/show/7090.The_Soul_of_a_New_Machine) by Tracy Kidder
+ - [The Soul of a New Machine](https://www.goodreads.com/book/show/7090.The_Soul_of_a_New_Machine) by Tracy Kidder.
    A detailed account of how a particular computer was developed in the late 1970s in the U.S,
    mostly by enthusiast, young professionals -- with a twist at the end.
    The author is a master of his craft (journalism).
@@ -60,7 +60,7 @@ by the [similar posts][] of [Eli Bendersky][].
  - [Thinking, Fast and Slow](https://www.goodreads.com/book/show/11468377-thinking-fast-and-slow) by Daniel Kahneman.
    A collection of important psychological phenomena, that helps to understand why do we feel, think, decide, and get things wrong the way we do.
    Very long, but extremely insightful.
- - [The Formula: The Universal Laws of Success](https://www.goodreads.com/book/show/39088545-the-formula) by Albert-László Barabási
+ - [The Formula: The Universal Laws of Success](https://www.goodreads.com/book/show/39088545-the-formula) by Albert-László Barabási.
    An analysis of how valuation of achievements at the highest level does (not) work.
    An interesting, data driven, simple message, in a bit lengthy and sensationalist form.
 
@@ -77,10 +77,10 @@ by the [similar posts][] of [Eli Bendersky][].
 
 ## Parenting
 
- - [How to Talk So Kids Will Listen & Listen So Kids Will Talk](https://www.goodreads.com/book/show/769016) by Adele Faber, Elaine Mazlish
+ - [How to Talk So Kids Will Listen & Listen So Kids Will Talk](https://www.goodreads.com/book/show/769016) by Adele Faber, Elaine Mazlish.
    A great book with practical tips on _difficult_ but everyday situations when dealing with children.
    Half of the book is tips - just the right amount, half of it is case-studies.
-   The presented techniques do work.
+   The presented techniques do work. Highly recommended for parents with small children.
  - [Raising An Emotionally Intelligent Child](https://www.goodreads.com/book/show/213186.Raising_An_Emotionally_Intelligent_Child) by John Gottman.
    The author argues that understanding, reflecting and labeling the child's emotions is beneficial in may ways.
    True. The book information/letter ratio is a bit low.
