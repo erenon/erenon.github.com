@@ -25,3 +25,12 @@ by the [similar posts][] of [Eli Bendersky][].
    as a solution. A depressing read, forecasting the untimely death of billions
    in this century.
 
+## Software
+
+ - [The Making of Prince of Persia](https://www.goodreads.com/book/show/52824295-the-making-of-prince-of-persia)
+   by Jordan Mechner.
+   Relevant journal entries verbatim, from the author of the famous computer game,
+   around 1985-1993. Shows how Jordan struggles between game development and screenwriting,
+   and the fascinating self-doubt of an extremely talented and professionally successful youth.
+   Easy to read, exciting, inspirational.
+
