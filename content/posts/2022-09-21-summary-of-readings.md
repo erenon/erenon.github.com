@@ -34,3 +34,13 @@ by the [similar posts][] of [Eli Bendersky][].
    and the fascinating self-doubt of an extremely talented and professionally successful youth.
    Easy to read, exciting, inspirational.
 
+ - [Masters of Doom](https://www.goodreads.com/book/show/222146.Masters_of_Doom) by David Kushner.
+   A documentary on how the computer game developer company _id_ was founded and operated,
+   from Commander Keen through Doom to Quake I-II, mostly focusing on John Carmack and John Romero,
+   their different personalities and motivations -- without technical details.
+
+
+<!--
+ https://www.goodreads.com/book/show/50878951-how-to-drive-a-nuclear-reactor
+ https://www.goodreads.com/book/show/477028.The_Life_of_Isaac_Newton
+-->
