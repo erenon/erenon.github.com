@@ -11,6 +11,17 @@ by the [similar posts][] of [Eli Bendersky][].
 [similar posts]: https://eli.thegreenplace.net/tag/book-reviews
 [Eli Bendersky]: https://eli.thegreenplace.net/
 
+## Energy
+
+ - [How to Drive a Nuclear Reactor](https://www.goodreads.com/en/book/show/50878951-how-to-drive-a-nuclear-reactor)
+   by Colin Tucker.
+   A high level tour for laymans on how a specific kind of nuclear reactors (PWR) work.
+   Goes from the reactor, through the two circuits, to the turbine and the grid.
+   Deftly written, makes you believe you actually understand what's going on,
+   but still highlights the enormous complexity of such an installation.
+   While reading, I recommend to keep a list of abbreviations, they come up frequently,
+   but only explained once.
+
 ## Environment
 
  - [Limits To Growth](https://www.goodreads.com/book/show/705418.The_Limits_to_Growth)
