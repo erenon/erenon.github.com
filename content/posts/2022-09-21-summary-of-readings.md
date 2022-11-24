@@ -45,6 +45,11 @@ by the [similar posts][] of [Eli Bendersky][].
    and the fascinating self-doubt of an extremely talented and professionally successful youth.
    Easy to read, exciting, inspirational.
 
+ - [The Making of Karateka](https://www.goodreads.com/book/show/17901833-the-making-of-karateka)
+   by Jordan Mechner.
+   A prequel to _The Making of Prince of Persia_, this time about a less well-known game, Karateka.
+   Similarly cute and easy to read. The amount and quality of output this young boy produces is fascinating.
+
  - [Masters of Doom](https://www.goodreads.com/book/show/222146.Masters_of_Doom) by David Kushner.
    A documentary on how the computer game developer company _id_ was founded and operated,
    from Commander Keen through Doom to Quake I-II, mostly focusing on John Carmack and John Romero,
