@@ -1,12 +1,10 @@
 ---
 title: "Summary of Readings"
-date: 2022-09-21
-draft: true
+date: 2022-12-27
 ---
 
-A non-exhaustive list of non-fiction books in no particular order I read recently,
-with some recommendation. This post was inspired
-by the [similar posts][] of [Eli Bendersky][].
+A list of non-fiction books in no particular order I read recently,
+with some recommendation. This post was inspired by the [similar posts][] of [Eli Bendersky][].
 
 [similar posts]: https://eli.thegreenplace.net/tag/book-reviews
 [Eli Bendersky]: https://eli.thegreenplace.net/
