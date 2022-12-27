@@ -22,6 +22,15 @@ by the [similar posts][] of [Eli Bendersky][].
    While reading, I recommend to keep a list of abbreviations, they come up frequently,
    but only explained once.
 
+ - [The Future Of Fusion Energy](https://www.goodreads.com/book/show/43700662-the-future-of-fusion-energy)
+   by Jason Parisi, Justin Ball.
+   A long introduction to fusion energy, goals and challenges, prospects. The book covers the past,
+   present, and the expected future of the field (no, we'll not expected to have commercial
+   fusion reactors at least until 2100, sorry). It attempts to explain things without mathematics.
+   The authors could use a bit fewer footnotes[^1].
+   The second chapter of the book could stand on its own: a comprehensive, but accessible, list
+   of energy sources of the Earth.
+
 ## Environment
 
  - [Limits To Growth](https://www.goodreads.com/book/show/705418.The_Limits_to_Growth)
@@ -55,8 +64,4 @@ by the [similar posts][] of [Eli Bendersky][].
    from Commander Keen through Doom to Quake I-II, mostly focusing on John Carmack and John Romero,
    their different personalities and motivations -- without technical details.
 
-
-<!--
- https://www.goodreads.com/book/show/50878951-how-to-drive-a-nuclear-reactor
- https://www.goodreads.com/book/show/477028.The_Life_of_Isaac_Newton
--->
+[^1]: These (sometimes) (slightly) funny footnotes do not really add value, but break the flow of reading.
