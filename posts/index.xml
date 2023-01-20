@@ -6,7 +6,17 @@
     <description>Recent content in Posts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 27 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sway sessions à la tmux</title>
+      <link>http://erenon.hu/posts/2023-01-20-sway-sessions-a-la-tmux/</link>
+      <pubDate>Fri, 20 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2023-01-20-sway-sessions-a-la-tmux/</guid>
+      <description>A window manager allows the user to organize windows of running programs on a desktop. Desktops are mapped to outputs (i.e: monitors). Most window managers support Virtual Desktops, allowing the user to move windows to separate desktops and quickly switch which desktop is shown on a given output (how quickly depends on the window manager: on popular commercial systems, not so quickly).
+The used workspaces might be shown to the user in a taskbar-like fashion, e.</description>
+    </item>
+    
     <item>
       <title>Summary of Readings</title>
       <link>http://erenon.hu/posts/2022-12-27-summary-of-readings/</link>
