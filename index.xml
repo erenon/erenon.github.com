@@ -6,7 +6,18 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The disgust of sequential processing of binary WebSocket messages in JavaScript</title>
+      <link>http://erenon.hu/posts/2023-03-09-javascript-binary-ws/</link>
+      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2023-03-09-javascript-binary-ws/</guid>
+      <description>Let&amp;rsquo;s process binary WebSocket messages in the browser, in the order the server has sent them. The Writing WebSocket client applications MDN article is a reasonable place to start:
+const ws = new WebSocket(&amp;#39;ws://foo.bar/endpoint&amp;#39;) ws.onmessage = (event) =&amp;gt; { console.log(event.data) } If we were to receive text messages, this&amp;rsquo;d be all we need. However, with binary messages, we&amp;rsquo;ll get:
+Blob { size: 16, type: &amp;quot;&amp;quot; } Ugh. So we need to extract the received bytes from this blob first.</description>
+    </item>
+    
     <item>
       <title>Sway sessions à la tmux</title>
       <link>http://erenon.hu/posts/2023-01-20-sway-sessions-a-la-tmux/</link>

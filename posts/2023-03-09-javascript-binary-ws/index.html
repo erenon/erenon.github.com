@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">The disgust of sequential processing of binary WebSocket messages in JavaScript</h1><time class="post-meta" datetime="2023-03-09">2023-03-09</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>Let&rsquo;s process binary WebSocket messages in the browser, in the order the server has sent them.
+The <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications">Writing WebSocket client applications</a> MDN article is a reasonable place to start:</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://foo.bar/endpoint&#39;</span><span class="p">)</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>If we were to receive <a href="https://www.rfc-editor.org/rfc/rfc6455#section-5.6">text messages</a>, this&rsquo;d be all we need.
+However, with binary messages, we&rsquo;ll get:</p>
+<pre><code>Blob { size: 16, type: &quot;&quot; }
+</code></pre><p>Ugh. So we need to extract the received bytes from this blob first.
+Also note that, about <code>event.data</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent/data">MDN says</a>:</p>
+<blockquote>
+<p>The data sent by the message emitter; this can be any data type.</p>
+</blockquote>
+<p>Therefore, a correct program should check if it really received a blob.
+Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">Blob</a> does not provide a synchronous way to get to its data,
+only through an asynchronous promise (and this will be a pain later):</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://foo.bar/endpoint&#39;</span><span class="p">)</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">ab</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ab</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div><p>At this point, we have an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a>. It still does not allow reading its data,
+we have to use another wrapper:</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://foo.bar/endpoint&#39;</span><span class="p">)</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">ab</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">dv</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DataView</span><span class="p">(</span><span class="nx">ab</span><span class="p">)</span>
+    <span class="kr">const</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">dv</span><span class="p">.</span><span class="nx">getUint32</span><span class="p">(</span><span class="mi">0</span> <span class="cm">/* offset */</span><span class="p">,</span> <span class="kc">true</span> <span class="cm">/* little endian */</span><span class="p">)</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div><p>Finally, we managed to read a 32 bit unsigned number from the binary payload.
+The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a> documentation says:</p>
+<blockquote>
+<p>The DataView view provides a low-level interface for reading and writing multiple number types in a binary ArrayBuffer, without having to care about the platform&rsquo;s endianness.</p>
+</blockquote>
+<p>Obviously, we still need to care about the endinanness of the message!</p>
+<h2 id="ordering">Ordering</h2>
+<p>So this was it? It wasn&rsquo;t that hard! Yes, and this solution is also wrong.
+We wanted to process the messages in the order the server has sent them.
+However, while we wait for the array buffer promise that fetches our data (see: <code>then</code>),
+the onmessage handler yields to the runtime, that is free to schedule another task.
+It is even free to schedule another onmessage invocation, and that promise might be ready earlier.
+Therefore, it is possible, that we&rsquo;ll process messages out of order.
+If the message rate is high enough, this possibility becomes a certainty.</p>
+<p>One possible solution is to queue the promises, and process them in queue order, instead of resolution order:</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">Sequencer</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">xs</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="kd">let</span> <span class="nx">x0id</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">read</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x0id</span><span class="o">++</span>
+        <span class="k">return</span> <span class="nx">xs</span><span class="p">.</span><span class="nx">shift</span><span class="p">()</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="kc">undefined</span>
+    <span class="p">},</span>
+    <span class="nx">reserve</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">xs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="kc">undefined</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nx">x0id</span> <span class="o">+</span> <span class="nx">xs</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="nx">write</span><span class="o">:</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">xs</span><span class="p">[</span><span class="nx">id</span> <span class="o">-</span> <span class="nx">x0id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">x</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">processNextMessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">q</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">read</span><span class="p">();</span> <span class="nx">msg</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">;</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">read</span><span class="p">())</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">dv</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DataView</span><span class="p">(</span><span class="nx">ab</span><span class="p">)</span>
+    <span class="kr">const</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">dv</span><span class="p">.</span><span class="nx">getUint32</span><span class="p">(</span><span class="mi">0</span> <span class="cm">/* offset */</span><span class="p">,</span> <span class="kc">true</span> <span class="cm">/* little endian */</span><span class="p">)</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">q</span> <span class="o">=</span> <span class="nx">Sequencer</span><span class="p">()</span>
+<span class="kr">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://foo.bar/endpoint&#39;</span><span class="p">)</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">mi</span> <span class="o">=</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">reserve</span><span class="p">()</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">ab</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">q</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">mi</span><span class="p">,</span> <span class="nx">ab</span><span class="p">)</span>
+    <span class="nx">processNextMessage</span><span class="p">(</span><span class="nx">q</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="conclusion">Conclusion</h2>
+<p>A tiny change in the requirements (binary messages instead of text messages)
+inflicted a great deal of complexity on the correct implementation.
+It is sad to see how seemingly simple tasks can turn out to be not so simple.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2023-01-20-sway-sessions-a-la-tmux/">Sway sessions à la tmux</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
