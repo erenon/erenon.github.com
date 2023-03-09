@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">LedgerSplit vim function</h1><time class="post-meta" datetime="2023-03-09">2023-03-09</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>I manage my finances using <a href="https://www.ledger-cli.org/">ledger</a>.
+Periodically, I export my bank statements and push them through a <a href="https://www.gnu.org/software/make/">make</a>
+pipeline to get a ledger file. The conversion assigns transactions
+to accounts based on a set of rules, e.g: If the payee is &ldquo;Foo Shop&rdquo;,
+the account is going to be &ldquo;Expenses:Food&rdquo;:</p>
+<pre><code class="language-ledger" data-lang="ledger">2023-03-09 Foo Shop
+    Expenses:Food           1000 HUF
+    Assets:Card
+</code></pre><p>However, sometimes I buy e.g: toothpaste in &ldquo;Foo Shop&rdquo;, that I don&rsquo;t want to eat.
+I do not want to contaminate my ledger, so I save the receipt and mark the item.
+During the periodic export, I manually fix the ledger file in <a href="https://www.vim.org/">vim</a>:</p>
+<pre><code class="language-ledger" data-lang="ledger">2023-03-09 Foo Shop
+    Expenses:Food            750 HUF
+    Expenses:Health          250 HUF
+    Assets:Card
+</code></pre><p>Since I have an engineering degree, most of the time I get this subtraction right.
+For the same reason, I made a tiny vim script, that automates some of this.
+Standing on this line:</p>
+<pre><code class="language-ledger" data-lang="ledger">    Expenses:Food           1000 HUF
+</code></pre><p>Issuing this command:</p>
+<pre><code>:LedgerSplit 100+200
+</code></pre><p>Modifies the posting like this:</p>
+<pre><code class="language-ledger" data-lang="ledger">    Expenses:Food           700 HUF
+    Expenses:Food           300 HUF
+</code></pre><p>It splits the given amount from the current posting, and moves it to the next line.
+It handles expressions (as shown) and decimal fractions.
+After this I just need to fix the second account name.</p>
+<h2 id="installation">Installation</h2>
+<p>To <code>.vimrc</code>, add:</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">au</span> <span class="nx">BufRead</span><span class="p">,</span><span class="nx">BufNewFile</span> *.<span class="nx">ledger</span> <span class="nx">set</span> <span class="nx">filetype</span><span class="p">=</span><span class="nx">ledger</span><span class="err">
+</span></code></pre></div><p>To <code>.vim/after/ftplugin/ledger.vim</code>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="k">function</span><span class="p">!</span> <span class="nx">LedgerSplit</span><span class="p">(</span><span class="nx">amount</span><span class="p">)</span> <span class="nx">abort</span><span class="err">
+</span><span class="err"></span>  <span class="k">let</span> <span class="nx">pat</span> <span class="p">=</span> <span class="s2">&#34;[0-9\\.]\\+&#34;</span><span class="err">
+</span><span class="err"></span>  <span class="k">let</span> <span class="nx">line</span> <span class="p">=</span> <span class="nx">getline</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="k">let</span> <span class="nx">old</span> <span class="p">=</span> <span class="nx">str2float</span><span class="p">(</span><span class="nx">matchstr</span><span class="p">(</span><span class="nx">getline</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">),</span> <span class="nx">pat</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span><span class="err">
+</span><span class="err"></span>  <span class="k">let</span> <span class="nx">new</span> <span class="p">=</span> <span class="nx">substitute</span><span class="p">(</span><span class="nx">printf</span><span class="p">(</span><span class="s2">&#34;%.2f&#34;</span><span class="p">,</span> <span class="nx">old</span><span class="p">-</span><span class="nx">a</span>:<span class="nx">amount</span><span class="p">),</span> <span class="s2">&#34;\\.00$&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="k">let</span> <span class="nx">split</span> <span class="p">=</span> <span class="nx">substitute</span><span class="p">(</span><span class="nx">printf</span><span class="p">(</span><span class="s2">&#34;%.2f&#34;</span><span class="p">,</span> <span class="nx">a</span>:<span class="nx">amount</span><span class="p">),</span> <span class="s2">&#34;\\.00$&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="nx">call</span> <span class="nx">setline</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">,</span> <span class="nx">substitute</span><span class="p">(</span><span class="nx">line</span><span class="p">,</span> <span class="nx">pat</span><span class="p">,</span> <span class="nx">new</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">))</span><span class="err">
+</span><span class="err"></span>  <span class="nx">call</span> <span class="nx">append</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">,</span> <span class="nx">substitute</span><span class="p">(</span><span class="nx">line</span><span class="p">,</span> <span class="nx">pat</span><span class="p">,</span> <span class="nx">split</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">))</span><span class="err">
+</span><span class="err"></span><span class="k">endfunction</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">command</span><span class="p">!</span> <span class="p">-</span><span class="nx">nargs</span><span class="p">=</span><span class="m">1</span> <span class="nx">LedgerSplit</span> <span class="nx">call</span> <span class="nx">LedgerSplit</span><span class="p">(&lt;</span><span class="nx">args</span><span class="p">&gt;)</span><span class="err">
+</span></code></pre></div>
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2023-03-09-javascript-binary-ws/">The disgust of sequential processing of binary WebSocket messages in JavaScript</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
