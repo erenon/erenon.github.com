@@ -65,7 +65,7 @@ To `.vim/after/ftplugin/ledger.vim`:
 function! LedgerSplit(amount) abort
   let pat = "[0-9\\.]\\+"
   let line = getline(".")
-  let old = str2float(matchstr(getline("."), pat, 0))
+  let old = str2float(matchstr(line, pat, 0))
   let new = substitute(printf("%.2f", old-a:amount), "\\.00$", "", "")
   let split = substitute(printf("%.2f", a:amount), "\\.00$", "", "")
   call setline(".", substitute(line, pat, new, ""))
