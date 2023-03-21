@@ -32,3 +32,16 @@ A non-exhaustive list of recently read non-fiction books in no particular order.
    olvasmányos könyv. Ajánlom.
  
  - [The Choice](https://www.goodreads.com/book/show/30753738-the-choice) by Edith Eva Eger.
+
+ - [Men's Search for Meaning](https://www.goodreads.com/book/show/25701004-mens-search-for-meaning) by Viktor Frankl.
+   A short, two parts book from a famous Holocaust survivor. In the first part,
+   the author describes his concentration camp experiences from an analytical
+   perspective, focusing on the behaviour of inmates and guards. The second
+   part is a short introduction to Logotherapy, a psychotherapy school founded
+   by the author that emphasises the importance of finding the meaning of life,
+   and actualizing possibilities presented by it. Theories of the second part
+   are underpinned by examples from the first part, making the book whole. It
+   has a lot of food for thought, e.g:
+   _"It’s not what you expect from life, but what life expects from you."_.
+
+## Honorable Mentions
