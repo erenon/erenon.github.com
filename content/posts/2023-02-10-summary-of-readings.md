@@ -32,6 +32,9 @@ A non-exhaustive list of recently read non-fiction books in no particular order.
    olvasmányos könyv. Ajánlom.
  
  - [The Choice](https://www.goodreads.com/book/show/30753738-the-choice) by Edith Eva Eger.
+   Autobiography, from coming of age, through Auschwitz and other camps, to a new land.
+   From trauma to healing, through acceptance and love. Excellent writing, with suspense and drama,
+   pierced through by an ever positive attitude.
 
  - [Men's Search for Meaning](https://www.goodreads.com/book/show/25701004-mens-search-for-meaning) by Viktor Frankl.
    A short, two parts book from a famous Holocaust survivor. In the first part,
