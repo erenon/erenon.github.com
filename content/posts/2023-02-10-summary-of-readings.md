@@ -48,3 +48,6 @@ A non-exhaustive list of recently read non-fiction books in no particular order.
    _"It’s not what you expect from life, but what life expects from you."_.
 
 ## Honorable Mentions
+
+ - Agamemnon by Aeschylus. I barely understand the English version. I also tried an older Hungarian one,
+   with similar results. It appears that [bit rot](https://en.wikipedia.org/wiki/Software_rot) applies to literature as well.
