@@ -54,7 +54,8 @@ A non-exhaustive list of recently read non-fiction books in no particular order.
    The mainline is illustrated with memorable stories (mainly experiments and surprising incidents),
    generous praise of fellow behavioral economists,
    and an endless stream of jabs pointed at classical economists.
-   A shorter summary of the presented findings would have been appreciated.
+   A shorter summary focusing on the presented findings would have been appreciated to save pages:
+   it is too shallow for a biography, and too verbose otherwise, while still thought provoking.
    Read [Thinking, Fast and Slow](https://www.goodreads.com/book/show/11468377-thinking-fast-and-slow) first.
 
 ## Honorable Mentions
