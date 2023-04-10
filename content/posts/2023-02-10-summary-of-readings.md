@@ -47,6 +47,16 @@ A non-exhaustive list of recently read non-fiction books in no particular order.
    has a lot of food for thought, e.g:
    _"It’s not what you expect from life, but what life expects from you."_.
 
+## Economy
+
+ - [Misbehaving: The Making of Behavioral Economics](https://www.goodreads.com/book/show/26530355-misbehaving) by Richard Thaler.
+   Part professional autobiography, part the story of how behavioral economics was developed and popularized.
+   The mainline is illustrated with memorable stories (mainly experiments and surprising incidents),
+   generous praise of fellow behavioral economists,
+   and an endless stream of jabs pointed at classical economists.
+   A shorter summary of the presented findings would have been appreciated.
+   Read [Thinking, Fast and Slow](https://www.goodreads.com/book/show/11468377-thinking-fast-and-slow) first.
+
 ## Honorable Mentions
 
  - Agamemnon by Aeschylus. I barely understand the English version. I also tried an older Hungarian one,
