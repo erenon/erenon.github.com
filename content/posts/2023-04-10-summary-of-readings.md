@@ -1,7 +1,6 @@
 ---
 title: "Summary of Readings"
-date: 2023-02-10
-draft: true
+date: 2023-04-10
 ---
 
 A non-exhaustive list of recently read non-fiction books in no particular order.
