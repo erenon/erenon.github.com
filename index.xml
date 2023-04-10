@@ -6,7 +6,17 @@
     <description>Recent content on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 10 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Summary of Readings</title>
+      <link>http://erenon.hu/posts/2023-04-10-summary-of-readings/</link>
+      <pubDate>Mon, 10 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2023-04-10-summary-of-readings/</guid>
+      <description>A non-exhaustive list of recently read non-fiction books in no particular order.
+Hit  Böjte Csaba füveskönyve 2., Böjte Csaba. Rövid, tömör, önmagukban megálló, bölcs gondolatok. Csaba atya férfias szeretete átsugárzik a sorain. Szülőknek és útkeresőknek kifejezetten ajánlom.  Industrial Design  The Design of Everyday Things, by Donald A. Norman. A few good ideas on how to design user interfaces (or in general, anything). Overall, the information density of this book is very low, it was a huge drag.</description>
+    </item>
+    
     <item>
       <title>LedgerSplit vim function</title>
       <link>http://erenon.hu/posts/2023-03-09-ledger-split-vim/</link>
