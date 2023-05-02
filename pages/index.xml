@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on erenon.hu</title>
+    <link>http://erenon.hu/pages/</link>
+    <description>Recent content in Pages on erenon.hu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/pages/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>http://erenon.hu/pages/about/</link>
+      <pubDate>Tue, 02 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/pages/about/</guid>
+      <description>This is the professional blog of Thaler Benedek.</description>
+    </item>
+    
+  </channel>
+</rss>
