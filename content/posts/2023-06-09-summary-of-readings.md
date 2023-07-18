@@ -11,6 +11,19 @@ by the [similar posts][] of [Eli Bendersky][].
 [similar posts]: https://eli.thegreenplace.net/tag/book-reviews
 [Eli Bendersky]: https://eli.thegreenplace.net/
 
+## Adventure
+
+  - [Endurance: Shackleton's Incredible Voyage](https://www.goodreads.com/book/show/139069.Endurance) by Alfred Lansing.
+    The true story of how the members of a failed Antarctic expedition struggle for years to get home.
+    Based on journals and interviews with the survived. Excellent writing, recommended.
+
+## Biography
+
+  - [Surely you are joking, Mr. Feynman](https://www.goodreads.com/book/show/133800004-surely-you-are-joking-mr-feynman) by Richard P. Feynman.
+    Edited personal stories told by the Nobel prize laureate author, presented in an informal, entertaining style,
+    without any forced political correctness. The focus is on physics, education, social interactions and _girls_,
+    strongly from the authors point of view.
+
 ## Sociology
 
   - [A közösség nélküli ember](https://moly.hu/konyvek/kormendy-lajos-a-kozosseg-nelkuli-ember), Körmendy Lajos.
