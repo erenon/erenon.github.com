@@ -6,7 +6,17 @@
     <description>Recent content in Posts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 18 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Why Bazel</title>
+      <link>http://erenon.hu/posts/2023-07-18-why-bazel/</link>
+      <pubDate>Tue, 18 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2023-07-18-why-bazel/</guid>
+      <description>Some time ago I was tasked with improving the build system of a large company. Requirements: build (compile and test) a large amount of C++ code (n*100k+ lines), targeting various versions of Linux and Windows, scattered in several repositories, using an enormous number of dependencies (mostly stored as binaries), mixed with Python tests, with the possibility of extending it to Java.
+This post explains why Bazel was chosen for this particular task.</description>
+    </item>
+    
     <item>
       <title>Summary of Readings</title>
       <link>http://erenon.hu/posts/2023-04-10-summary-of-readings/</link>

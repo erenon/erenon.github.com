@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Why Bazel</h1><time class="post-meta" datetime="2023-07-18">2023-07-18</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>Some time ago I was tasked with improving the build system of a large company.
+Requirements: build (compile and test) a large amount of C++ code (n*100k+ lines), targeting various versions of Linux and Windows,
+scattered in several repositories,
+using an enormous number of dependencies (mostly stored as binaries), mixed with Python tests,
+with the possibility of extending it to Java.</p>
+<p>This post explains why <a href="https://bazel.build/">Bazel</a> was chosen for this particular task. This is not a general introduction for Bazel,
+nor a thorough comparison against other build systems.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>The then current build system was based on a fork of a lesser known <a href="https://www.gnu.org/software/make/">Makefile</a> generator.
+It had the following issues:</p>
+<ul>
+<li>The only form of caching was with <a href="https://ccache.dev/">ccache</a>, that stores object files only, and has its own limitations.</li>
+<li>The generated Makefiles allowed one to change a dependency without triggering a re-build
+(this is because <code>make</code> uses <code>mtime</code> for change detection), causing hard to debug issues,
+causing developers to lose trust in the system, causing them to regularly <code>make clean</code> first,
+further increasing resource usage.</li>
+<li>The development of the tool was halted, there was no hope to get C++ Modules support for it.</li>
+<li>The build system did not cover running tests. Even if the smallest change was made in a very large
+repository (think monorepo), all the tests must be re-run, taking a lot of time and resources.</li>
+<li>Because running all the tests was slow, developers skipped them, or guessed, failing in CI much later,
+losing time.</li>
+<li>Multiplatform builds were time consuming and difficult, making developers to push it on the CI,
+and running long cycles on failure.</li>
+<li>Getting a project and all its dependencies build with a particular set of compiler flags (e.g: <code>-fsanitize=address</code>)
+was next to impossible, turning easy-to-find bugs to terribly difficult to debug failures.</li>
+</ul>
+<h2 id="the-solution">The Solution</h2>
+<p>I chose to migrate to Bazel, that offers a set of self-reinforcing benefits.
+To understand these benefits, we need to understand how Bazel works (supposed to work).
+I&rsquo;m going to simplify things for brevity.</p>
+<p>Bazel is similar to <code>make</code>. The user defines a set of rules, that describe how the project can be built.
+Each rule has a set of inputs and an expected set of outputs.
+The input set contains e.g: a command, that defines what should be executed to turn the inputs into the output.
+The input set also contains a program (e.g: a compiler) that transforms the input files into the output files.
+The output of one rule can be the input of another, forming a tree.
+To build a particular output, first the system builds the dependencies of the rule (the inputs that are
+outputs of other rules), then it executes the rule.</p>
+<p>Bazel is an improvement over <code>make</code>. First, it enforces (tries hard to) that
+rules are only allowed to read their declared inputs, to produce the output,
+and cannot depend on anything else (e.g: system time, network, etc).
+A build executed in this fashion is called a <em>Hermetic Build</em>.</p>
+<p>If a build is really hermetic, executing it on the same source
+always yields to the same output, therefore it is a <em>Reproducible Build</em>.</p>
+<p>For the first full build, there&rsquo;s little difference compared to <code>make</code>.
+For subsequent, incremental builds however, there are plenty.</p>
+<p>Because of the reproducible property, if the inputs of a rule
+did not change, the output wouldn&rsquo;t change either, therefore the rule
+does not need to re-run.
+For example, if a comment is removed, but the compiler produces the same object
+file, the link step will not be executed again.
+Bazel manages tests, similar to compilation, therefore, if the test binary
+(and its inputs) did not change, the test doesn&rsquo;t need to re-run either.</p>
+<p>To decide whether the input has changed (compared to the previously built output),
+Bazel uses the hash of the input (compared to <code>make</code>, that uses <code>ctime</code>).
+This fixes the correctness issues, and a key piece for distributed execution and caching.</p>
+<p>It is possible to setup a <em>remote executor</em> cluster (e.g: <a href="https://github.com/buildbarn">buildbarn</a>),
+that accepts rules to be executed, along with the inputs.
+If the rule for the given set of input was already executed,
+it returns the cached result, otherwise it executes the rule,
+caches then returns the result. This includes not just compilation,
+but also running the tests (where the test results are cached).</p>
+<p>This improves the developer workflow on several points:</p>
+<ul>
+<li>
+<p>Fetching and building the main branch of a repository is quick,
+as that state is probably already built and cached.</p>
+</li>
+<li>
+<p>After a change, it is to run all the affected tests, and only those,
+implcitly caching the results at the same time.</p>
+</li>
+<li>
+<p>The CI gets also fast, because it just fetches the repository,
+and probably gets back the green results of the tests,
+produced from the previous step.</p>
+</li>
+<li>
+<p>The remote executor can support multiplatform builds,
+saving the programmer from shipping the code manually to multiple platforms
+for building.</p>
+</li>
+</ul>
+<p>It also greatly reduces the overall resource usage.</p>
+<p>Because of its efficiency, Bazel allows one to put more and more code (also dependencies)
+into a single repository, building them together. This unlocks further opportunities:
+fully static builds for better optimization and simplicity, build governed flags (e.g: sanitizers).</p>
+<p>Bazel is not without difficulties: making builds hermetic, maintaining proper state (the input hash, output storage),
+operating the remote executor and cache, etc., is a demanding task.
+Therefore Bazel is better suited for larger projects with more developers.
+During selection, CMake was considered and evaluated, but apart from it being a popular build system,
+it does not solve any of the issues Bazel does.</p>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2023-04-10-summary-of-readings/">Summary of Readings</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
