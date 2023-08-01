@@ -53,4 +53,5 @@ The result is a securely available, robust, fast, clean news feed.
 [minipay]: https://miniflux.app/hosting.html
 [FeedMe]: https://play.google.com/store/apps/details?id=com.seazon.feedme&hl=en&gl=US
 [NetNewsWire]: https://netnewswire.com/
+[tailscale]: https://tailscale.com/
 [tailscale-how]: https://tailscale.com/blog/how-nat-traversal-works/
