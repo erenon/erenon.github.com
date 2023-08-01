@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Selfhosted RSS Reader</h1><time class="post-meta" datetime="2023-08-01">2023-08-01</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>For some time I was using a simple <a href="https://en.wikipedia.org/wiki/RSS">RSS</a> reader on my phone.
+However, I wanted to:</p>
+<ul>
+<li>Read the same set of feeds on multiple devices</li>
+<li>Archive the scraped content</li>
+<li>Search the archived content</li>
+</ul>
+<p>So I looked around for different options.
+I ruled out proprietary options, fearing their end of life (e.g: Google Reader)
+or gradual degradation - I wanted something stable.</p>
+<p>The chosen architecture consists of (1) a server component, that periodically
+scrapes and archives the configured feeds, exports the content to authorized clients,
+and tracks read status (So if I read an article on one device, it&rsquo;ll appear as
+read on all the connected devices), and (2) client programs on different devices with screens.</p>
+<p>For the server side, I chose <a href="https://miniflux.app/">miniflux</a>. It is easy to deploy (requires PostgreSQL),
+sufficiently fast on a Raspberry Pi4 (written in Go), and provides a pleasingly simple
+web interface, for desktop use. Note that miniflux offers a <a href="https://miniflux.app/hosting.html">paid, hosted service</a>.</p>
+<p>For mobile, there are several options with different qualities.
+On Android, I found <a href="https://play.google.com/store/apps/details?id=com.seazon.feedme&amp;hl=en&amp;gl=US">FeedMe</a> really good. Enable the Fever API in miniflux
+(Settings/Integrations/Fever) to make them connect.</p>
+<p>On iOS, <a href="https://netnewswire.com/">NetNewsWire</a> is an absolute treat. Enable the Google Reader API in
+miniflux, and use the FreshRSS option in the client to make them connect.</p>
+<p>All of these components (miniflux, FeedMe, NetNewsWire) can also get the original HTML
+content and convert it to simplified text (with images), in case the content in the RSS
+feed is missing or incomplete. A non-trivial, and really useful feature.</p>
+<p>The server runs on a network that doesn&rsquo;t have a public IP address.
+I made it available to other devices using [tailscale][], that is
+also warmly recommended, and surprisingly easy to set up.
+It uses <a href="https://tailscale.com/blog/how-nat-traversal-works/">various tricks</a> to bypass NAT based firewalls,
+and works in every scenario I tested so far.</p>
+<p>The result is a securely available, robust, fast, clean news feed.</p>
+<h2 id="considered-alternatives">Considered Alternatives</h2>
+<ul>
+<li>FreshRSS: I didn&rsquo;t like the HTML interface</li>
+<li>Microflux: Slow and confusing UI</li>
+<li>Miniflutt: Does not store content locally, always needs to re-fetch everything on start (no offline mode)</li>
+</ul>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2023-07-18-why-bazel/">Why Bazel</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>

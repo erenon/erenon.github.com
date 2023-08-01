@@ -6,7 +6,18 @@
     <description>Recent content in Posts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 18 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Selfhosted RSS Reader</title>
+      <link>http://erenon.hu/posts/2023-08-01-selfhosted-rss/</link>
+      <pubDate>Tue, 01 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2023-08-01-selfhosted-rss/</guid>
+      <description>For some time I was using a simple RSS reader on my phone. However, I wanted to:
+ Read the same set of feeds on multiple devices Archive the scraped content Search the archived content  So I looked around for different options. I ruled out proprietary options, fearing their end of life (e.g: Google Reader) or gradual degradation - I wanted something stable.
+The chosen architecture consists of (1) a server component, that periodically scrapes and archives the configured feeds, exports the content to authorized clients, and tracks read status (So if I read an article on one device, it&amp;rsquo;ll appear as read on all the connected devices), and (2) client programs on different devices with screens.</description>
+    </item>
+    
     <item>
       <title>Why Bazel</title>
       <link>http://erenon.hu/posts/2023-07-18-why-bazel/</link>
