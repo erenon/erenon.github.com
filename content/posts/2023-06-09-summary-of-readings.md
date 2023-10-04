@@ -24,6 +24,12 @@ by the [similar posts][] of [Eli Bendersky][].
     without any forced political correctness. The focus is on physics, education, social interactions and _girls_,
     strongly from the authors point of view.
 
+  - [Failure is Not an Option](https://www.goodreads.com/book/show/141499.Failure_is_Not_an_Option) by Gene Kranz.
+    Memoir, focusing on the U.S. space program, from Mercury through Gemini to Apollo - from the first lauch to the first
+    manned Moon landing and more. It is especially about the Mission Control Center. To work is insightful as
+    it shows how the space program (the preparations and missions) was operated. Marta is a real hero.
+    The writing is sometimes unclear and overall a bit long.
+
 ## Sociology
 
   - [A közösség nélküli ember](https://moly.hu/konyvek/kormendy-lajos-a-kozosseg-nelkuli-ember), Körmendy Lajos.
