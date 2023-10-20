@@ -6,7 +6,17 @@
     <description>Recent content in Posts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Summary of Readings</title>
+      <link>http://erenon.hu/posts/2023-10-20-summary-of-readings/</link>
+      <pubDate>Fri, 20 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://erenon.hu/posts/2023-10-20-summary-of-readings/</guid>
+      <description>A non-exhaustive list of non-fiction books in no particular order I read recently, with some recommendation. This post was inspired by the similar posts of Eli Bendersky.
+Adventure  Endurance: Shackleton&amp;rsquo;s Incredible Voyage by Alfred Lansing. The true story of how the members of a failed Antarctic expedition struggle for years to get home. Based on journals and interviews with the survived. Excellent writing, recommended.  Biography   Surely you are joking, Mr.</description>
+    </item>
+    
     <item>
       <title>Selfhosted RSS Reader</title>
       <link>http://erenon.hu/posts/2023-08-01-selfhosted-rss/</link>
