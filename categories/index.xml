@@ -3,8 +3,9 @@
   <channel>
     <title>Categories on erenon.hu</title>
     <link>http://erenon.hu/categories/</link>
-    <description>Recent content in Categories on erenon.hu</description>
+    <description>Recent blogposts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="http://erenon.hu/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    <atom:link href="http://erenon.hu/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

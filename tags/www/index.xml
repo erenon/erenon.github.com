@@ -3,19 +3,97 @@
   <channel>
     <title>www on erenon.hu</title>
     <link>http://erenon.hu/tags/www/</link>
-    <description>Recent content in www on erenon.hu</description>
+    <description>Recent blogposts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Wed, 30 May 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/tags/www/index.xml" rel="self" type="application/rss+xml" />
+    
+    <lastBuildDate>Wed, 30 May 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://erenon.hu/tags/www/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to share a calendar entry</title>
       <link>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</link>
       <pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate>
-      
       <guid>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</guid>
-      <description>Suppose you&amp;rsquo;d like to share a calendar event over the internet, e.g: on your website. The goal is to be support as many platforms as possible:
- Desktop calendars (Thunderbird, macOS iCal, Outlook) Web applications (Google Calendar) Smartphone applications (Google Calendar App, iOS iCal)  The most intuitive way is to create the event in your calendar of choice, and send the invites in the native way provided by the application.</description>
+      <description>&lt;p&gt;Suppose you&amp;rsquo;d like to share a calendar event over the internet,
+e.g: on your website. The goal is to be support as many platforms as possible:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Desktop calendars (Thunderbird, macOS iCal, Outlook)&lt;/li&gt;
+&lt;li&gt;Web applications (Google Calendar)&lt;/li&gt;
+&lt;li&gt;Smartphone applications (Google Calendar App, iOS iCal)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The most intuitive way is to create the event in your calendar of
+choice, and send the invites in the native way provided by the application.
+However, such methods tend to work only if the recipient uses the same
+system, which isn&amp;rsquo;t a plausible assumption &amp;ndash; we need something platform independent.&lt;/p&gt;
+&lt;h3 id=&#34;using-icalendar&#34;&gt;Using iCalendar&lt;/h3&gt;
+&lt;p&gt;Wikipedia indicates that &lt;a href=&#34;https://en.wikipedia.org/wiki/ICalendar&#34;&gt;iCalendar&lt;/a&gt; is well supported format, which
+&lt;em&gt;allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.&lt;/em&gt;
+&amp;ndash; exactly what we are looking for. Let&amp;rsquo;s create an &lt;code&gt;.ics&lt;/code&gt; file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+X-WR-TIMEZONE:Europe/Budapest
+BEGIN:VEVENT
+UID:your_eventname@yourdomain.com
+DTSTART:20180530T130000Z
+DTEND:20180530T143000Z
+DESCRIPTION:The description of your event
+LOCATION:The location of your event
+SEQUENCE:0
+SUMMARY:The summary of your event
+END:VEVENT
+END:VCALENDAR
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are &lt;a href=&#34;https://tools.ietf.org/html/rfc5545&#34;&gt;other fields&lt;/a&gt;.
+The fields are mostly self describing.
+In free form text values, &lt;code&gt;,&lt;/code&gt; and &lt;code&gt;;&lt;/code&gt; characters must be escaped by a backslash.
+The &lt;code&gt;tzselect&lt;/code&gt; command can be used to get the name of your timezone.
+The &lt;code&gt;DTSTART&lt;/code&gt; and &lt;code&gt;DTEND&lt;/code&gt; fields are in &lt;a href=&#34;https://en.wikipedia.org/wiki/Coordinated_Universal_Time&#34;&gt;UTC&lt;/a&gt;, 20180530T130000 is 2018. 05. 30, 13:00:00.
+If all this sound difficult, create your event in a suitable calendar application
+and export it to &lt;code&gt;.ics&lt;/code&gt; from there.&lt;/p&gt;
+&lt;p&gt;Sharing this file will cover desktop calendars associated with the ics extension
+and the iOS calendar. It probably will not work with the Google Calendar website,
+and &amp;ndash; surprisingly &amp;ndash; it will not work on Android as expected.&lt;/p&gt;
+&lt;h3 id=&#34;fixing-android&#34;&gt;Fixing Android&lt;/h3&gt;
+&lt;p&gt;On Android, after download, a toast message will be shown, saying:
+&amp;ldquo;Unable to launch event&amp;rdquo;. Internet wisdom blames various components.
+On the phones I had access to, Logcat show that the Calendar app does not
+have permission to read downloaded files.&lt;/p&gt;
+&lt;p&gt;Fortunately, there&amp;rsquo;s a way around: Android allows &lt;a href=&#34;https://stackoverflow.com/questions/42936576/open-android-calendar-with-intent-from-web-chrome&#34;&gt;emitting intents by links&lt;/a&gt;, in some cases.
+The proper syntax and the allowed fields can be discovered by looking at the &lt;a href=&#34;https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml&#34;&gt;source&lt;/a&gt;,
+or &lt;a href=&#34;https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation&#34;&gt;StackOverflow&lt;/a&gt;.
+Here&amp;rsquo;s an example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;href&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;https://www.google.com/calendar/event?action=TEMPLATE&amp;amp;text=your_event&amp;amp;dates=20180530T130000Z/20180530T143000Z&amp;amp;location=location of the event&amp;amp;sprop=yourdomain.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Calendar event&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Values need to be &lt;a href=&#34;https://en.wikipedia.org/wiki/Percent-encoding&#34;&gt;urlencoded&lt;/a&gt;.
+Clicking on this link on Android will open the Google Calendar application, if installed,
+with the specified event shown to be saved. Fortunately, this link will work for the
+browser based Google Calendar as well!&lt;/p&gt;
+&lt;h3 id=&#34;solution&#34;&gt;Solution&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s put all this together. By default, we should link to the &lt;code&gt;.ics&lt;/code&gt; file,
+as it works on most platforms. On Android, the link has to be changed:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;href&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;event.ics&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;data-gcal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;https://www.google.com/calendar/event?...&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;ics-link&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Calendar event&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;replaceIcs&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;.ics-link&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;as&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;length&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;as&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;href&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;as&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getAttribute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;data-gcal&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+
+&lt;span class=&#34;nb&#34;&gt;document&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;addEventListener&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;DOMContentLoaded&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;// NB: there are more robust ways to check for android
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;userAgent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;userAgent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;toLowerCase&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;userAgent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;indexOf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;android&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;replaceIcs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What about desktop clients using the Google Calendar web application?
+It is difficult if possible to tell what kind of calendar solution such users would like to use.
+However, there&amp;rsquo;s a hack, which detects if the &lt;a href=&#34;http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/&#34;&gt;user is logged in to a google account&lt;/a&gt;.
+If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.&lt;/p&gt;
+&lt;h3 id=&#34;summary&#34;&gt;Summary&lt;/h3&gt;
+&lt;p&gt;It is more difficult to share a calendar entry over the internet as expected.
+Application native ways do not interoperate, while some platforms are hard to target by standard solutions.
+While the solution shown above covers a large percentage of use-cases, it still might fail in others.
+A free web needs more support of open standards!&lt;/p&gt;
+</description>
     </item>
-    
   </channel>
 </rss>

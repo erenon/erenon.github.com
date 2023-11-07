@@ -3,31 +3,106 @@
   <channel>
     <title>C&#43;&#43; on erenon.hu</title>
     <link>http://erenon.hu/tags/c&#43;&#43;/</link>
-    <description>Recent content in C&#43;&#43; on erenon.hu</description>
+    <description>Recent blogposts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 12 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://erenon.hu/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    
+    <lastBuildDate>Thu, 12 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://erenon.hu/tags/c++/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Overloading by concept without concepts in C&#43;&#43;</title>
       <link>http://erenon.hu/posts/2019-09-12-concept-overloading/</link>
       <pubDate>Thu, 12 Sep 2019 00:00:00 +0000</pubDate>
-      
       <guid>http://erenon.hu/posts/2019-09-12-concept-overloading/</guid>
-      <description>Given the following function:
-void f(int);  Suppose you want to make the behaviour of this function to depend on the argument type. A simple way to use overloading:
-void f(int); void f(double);  What if you want to define an overload for a set of types, which satisfy a given concept? As of C++20, concepts can be used for overloading. Before that, the function has to be converted to a template.</description>
+      <description>&lt;p&gt;Given the following function:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;void f(int);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Suppose you want to make the behaviour of this function
+to depend on the argument type. A simple way to use overloading:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;void f(int);
+void f(double);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What if you want to define an overload for a set of types,
+which satisfy a given concept? As of C++20, concepts
+can be used for overloading. Before that, the function has to be
+converted to a template. However, since C++ does not allow
+specialization of function templates, first change the
+function into a type template with a single static member:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename&amp;gt; struct F; // default case undefined
+template &amp;lt;&amp;gt; struct F&amp;lt;int&amp;gt; { static void f(int); };
+template &amp;lt;&amp;gt; struct F&amp;lt;double&amp;gt; { static void f(double); };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is equivalent with the above, but now we can apply
+various kind of &lt;a href=&#34;https://en.cppreference.com/w/cpp/language/sfinae&#34;&gt;SFINAE&lt;/a&gt; magic to enable different specializations
+for different kind of types. Common techniques use &lt;code&gt;std::enable_if&lt;/code&gt;,
+expression SFINAE and others. Here a simple, yet powerful
+solution is presented, which is based on &lt;a href=&#34;https://en.cppreference.com/w/cpp/types/void_t&#34;&gt;&lt;code&gt;void_t&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;class... &amp;gt;
+using void_t = void;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This innocent looking type alias resolves to &lt;code&gt;void&lt;/code&gt;,
+if the template arguments are valid, otherwise it
+becomes a substitution failure.&lt;/p&gt;
+&lt;p&gt;To use it, add an extra, defaulted template argument to &lt;code&gt;F&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename, typename = void&amp;gt; struct F; // default case undefined
+template &amp;lt;&amp;gt; struct F&amp;lt;int, void&amp;gt; { static void f(int); };
+template &amp;lt;&amp;gt; struct F&amp;lt;double, void&amp;gt; { static void f(double); };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So far, there&amp;rsquo;s no behavioural change. However, no we can easily
+add overloads which apply to a set of types, e.g:
+types which has a specific nested type:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename Container&amp;gt;
+struct F&amp;lt;Container, void_t&amp;lt;typename Container::value_type&amp;gt;&amp;gt; {
+  static void f(Container const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A different example, specialize for types with a specific member:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename Lockable&amp;gt;
+struct F&amp;lt;Lockable, void_t&amp;lt;decltype(Lockable::lock)&amp;gt; {
+  static void f(Lockable const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This technique also integrates well with standard type predicates.
+First, define the following helper:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename Cond&amp;gt;
+using enable_spec_if = void_t&amp;lt;std::enable_if_t&amp;lt;Cond::value&amp;gt;&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Usage:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename Trivial&amp;gt;
+struct F&amp;lt;Trivial, enable_spec_if&amp;lt;std::is_trivial&amp;lt;Trivial&amp;gt;&amp;gt;&amp;gt; {
+  static void f(Trivial const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Given C++17 is available, a similar, slightly longer solution is:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename Trivial&amp;gt;
+struct F&amp;lt;Trivial, std::enable_if_t&amp;lt;std::is_trivial_v&amp;lt;Trivial&amp;gt;, void&amp;gt;&amp;gt; {
+  static void f(Trivial const&amp;amp;);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A limitation of this technique (and also several others),
+that specializations must be mutually exclusive for the
+types they are used.&lt;/p&gt;
+&lt;p&gt;To make usage easier, we can add a function template,
+making it the only entry point of the operation,
+while hiding &lt;code&gt;F&lt;/code&gt; in the detail namespace:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename T&amp;gt;
+void f(const T&amp;amp; t) { detail::F&amp;lt;T&amp;gt;::f(t); }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the next part, we&amp;rsquo;ll cover how to allow third parties to define
+additional specializations, without conflicting with built in ones.&lt;/p&gt;
+</description>
     </item>
-    
     <item>
       <title>Imprisoned Toroid - Raytrace on CUDA</title>
       <link>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</link>
       <pubDate>Sun, 25 Nov 2012 00:00:00 +0000</pubDate>
-      
       <guid>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</guid>
-      <description>The following video is created by a C++/CUDA program using the theory of raytracing which was the most interesting piece of knowledge I learned on the university this semester.
-Because of its as-good-as-it-should-be quality of the source, I can&amp;rsquo;t opensource it at this precise moment. Meanwhile, take a look at OptiX, which I found a month later I had completed this.
-The video was rendered at 24 FPS, render time appr.</description>
+      <description>&lt;p&gt;The following video is created by a C++/CUDA program using the theory of raytracing
+which was the most interesting piece of knowledge I learned on the university this semester.&lt;/p&gt;
+&lt;p&gt;Because of its as-good-as-it-should-be quality of the source, I can&amp;rsquo;t opensource it at this precise moment.
+Meanwhile, take a look at &lt;a href=&#34;https://developer.nvidia.com/optix&#34;&gt;OptiX&lt;/a&gt;, which I found a month later I had completed this.&lt;/p&gt;
+&lt;p&gt;The video was rendered at 24 FPS, render time appr. 3 hours.&lt;/p&gt;
+&lt;iframe width=&#34;480&#34; height=&#34;360&#34; src=&#34;http://www.youtube.com/embed/oYdYEcjz7_4&#34; frameborder=&#34;0&#34;&gt; &lt;/iframe&gt;
+</description>
     </item>
-    
   </channel>
 </rss>
