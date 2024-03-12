@@ -19,3 +19,15 @@ by the [similar posts][] of [Eli Bendersky][].
     factual errors (and suspected cosmetics), from Josephus, once a Jewish general of the rebellion,
     turned to writing after falling captive to Vespasianus. Take away: apparently, people changed
     little in 2000 years: greed, hubris, envy, cruelty: nothing new. Also: Herod had every reason to get mad.
+
+## Science
+
+  - [Breaking Through: My Life in Science](https://www.goodreads.com/en/book/show/123025953) by Katalin Karikó.
+    Autobiography of the Nobel laureate mRNS pioneer, who played a great role in developing a COVID-19 vaccine.
+    Also a story of how an extremely determined girl from a family of simple means achieves
+    great success, through sheer will a continuous work - for decades.
+    I'd also like to acknowledge the seemingly unwavering support of her family.
+    There's not much about COVID itself, books are referenced instead that explain it in details.
+    The second part (after Penn) felt rushed, the development mostly unclear to me.
+    I suppose _Kati_ had some reading due...
+    The writing is not great - it is clearly written by a scientist.
