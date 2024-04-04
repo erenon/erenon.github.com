@@ -6,8 +6,53 @@
     <description>Recent blogposts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     
-    <lastBuildDate>Fri, 20 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 04 Apr 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>No Miracles</title>
+      <link>http://erenon.hu/posts/2024-04-04-no-miracles/</link>
+      <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>http://erenon.hu/posts/2024-04-04-no-miracles/</guid>
+      <description>&lt;p&gt;One would argue that miracles do not exist.&lt;/p&gt;
+&lt;p&gt;Long time ago, a prominent member of a now mostly abandoned web forum offered to lend
+a technical book (JavaScript: The Good Parts) to me, an absolute unknown nobody. For free. No strings attached.
+Obviously, it isn&amp;rsquo;t a miracle, just a selfless act of kindness. I was still flattered.&lt;/p&gt;
+&lt;p&gt;15 years later, I was wondering what happened to him. His blog had a very memorable domain name.
+Lacking a device, I couldn&amp;rsquo;t check it out immediately, and the memory faded. The very next day,
+a post from that very blog popped up in my RSS reader, coming through the HackerNews &amp;ldquo;best&amp;rdquo; feed.
+A feed that selects the top few posts of thousands of submissions all over the world.
+A lucky coincidence, we can conclude, no miracle.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://20y.hu/~slink/journal/xylophone-duplo/&#34;&gt;The article&lt;/a&gt; is about a scientific experiment (if you squint a bit). Given the connection above,
+I felt compelled to verify the results by reproduction, especially because I had all the required resources:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Some colored pieces of DUPLO&lt;/li&gt;
+&lt;li&gt;A xylophone of matching (somewhat) colors&lt;/li&gt;
+&lt;li&gt;An interested toddler&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Please find the anonymized results of the reproduced experiment in the diagram below (Figure 1):&lt;/p&gt;
+&lt;p&gt;&lt;figure&gt;
+  &lt;img src=&#34;http://erenon.hu/img/xylophone.jpg&#34; alt=&#34;Colored duplo pieces arranged in a matrix, with two figures at opposite corners, and a similarly colored xylophone&#34;&gt;
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;I can confirm that, in accordance with the original research:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Toddler beating the xylophone can instruct papa correctly to find the daughter&lt;/li&gt;
+&lt;li&gt;Toddler listening to the xylophone can move the daughter correctly to find papa&lt;/li&gt;
+&lt;li&gt;and have fun in the meantime&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In addition, we found that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Collectibe flowers can be added to the map, and a mini inventory (separate flat piece),
+so the daughter can find and properly greet mama&lt;/li&gt;
+&lt;li&gt;Introducing windows that can be opened and climbed through works&lt;/li&gt;
+&lt;li&gt;Only listening to the xylophone without looking at the colors doesn&amp;rsquo;t work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Apparently, you can have this simple, no-computer equipment, and still have fun with your kid,
+science concur. So we experiment, explore, build and laugh together, freely.&lt;/p&gt;
+&lt;p&gt;And one might argue, that miracles do not exist.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Summary of Readings</title>
       <link>http://erenon.hu/posts/2023-10-20-summary-of-readings/</link>
