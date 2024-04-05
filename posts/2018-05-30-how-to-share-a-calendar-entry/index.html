@@ -40,7 +40,7 @@ system, which isn&rsquo;t a plausible assumption &ndash; we need something platf
 <p>Wikipedia indicates that <a href="https://en.wikipedia.org/wiki/ICalendar">iCalendar</a> is well supported format, which
 <em>allows Internet users to send meeting requests and tasks to other Internet users by sharing or sending files in this format through various methods.</em>
 &ndash; exactly what we are looking for. Let&rsquo;s create an <code>.ics</code> file:</p>
-<pre><code>BEGIN:VCALENDAR
+<pre tabindex="0"><code>BEGIN:VCALENDAR
 VERSION:2.0
 METHOD:PUBLISH
 X-WR-TIMEZONE:Europe/Budapest
@@ -73,30 +73,30 @@ have permission to read downloaded files.</p>
 The proper syntax and the allowed fields can be discovered by looking at the <a href="https://android.googlesource.com/platform/packages/apps/Calendar/+/donut-release/AndroidManifest.xml">source</a>,
 or <a href="https://stackoverflow.com/questions/22757908/google-calendar-render-action-template-parameter-documentation">StackOverflow</a>.
 Here&rsquo;s an example:</p>
-<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://www.google.com/calendar/event?action=TEMPLATE&amp;text=your_event&amp;dates=20180530T130000Z/20180530T143000Z&amp;location=location of the event&amp;sprop=yourdomain.com&#34;</span><span class="p">&gt;</span>Calendar event<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-</code></pre></div><p>Values need to be <a href="https://en.wikipedia.org/wiki/Percent-encoding">urlencoded</a>.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://www.google.com/calendar/event?action=TEMPLATE&amp;text=your_event&amp;dates=20180530T130000Z/20180530T143000Z&amp;location=location of the event&amp;sprop=yourdomain.com&#34;</span><span class="p">&gt;</span>Calendar event<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p>Values need to be <a href="https://en.wikipedia.org/wiki/Percent-encoding">urlencoded</a>.
 Clicking on this link on Android will open the Google Calendar application, if installed,
 with the specified event shown to be saved. Fortunately, this link will work for the
 browser based Google Calendar as well!</p>
 <h3 id="solution">Solution</h3>
 <p>Let&rsquo;s put all this together. By default, we should link to the <code>.ics</code> file,
 as it works on most platforms. On Android, the link has to be changed:</p>
-<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;event.ics&#34;</span> <span class="na">data-gcal</span><span class="o">=</span><span class="s">&#34;https://www.google.com/calendar/event?...&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ics-link&#34;</span><span class="p">&gt;</span>Calendar event<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">replaceIcs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">as</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ics-link&#39;</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">as</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">as</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">as</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;data-gcal&#39;</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;DOMContentLoaded&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// NB: there are more robust ways to check for android
-</span><span class="c1"></span>  <span class="kd">var</span> <span class="nx">userAgent</span> <span class="o">=</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&#34;android&#34;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">replaceIcs</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div><p>What about desktop clients using the Google Calendar web application?
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;event.ics&#34;</span> <span class="na">data-gcal</span><span class="o">=</span><span class="s">&#34;https://www.google.com/calendar/event?...&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ics-link&#34;</span><span class="p">&gt;</span>Calendar event<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">replaceIcs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">var</span> <span class="nx">as</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ics-link&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">as</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">as</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">as</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;data-gcal&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;DOMContentLoaded&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// NB: there are more robust ways to check for android
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">var</span> <span class="nx">userAgent</span> <span class="o">=</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&#34;android&#34;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">replaceIcs</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></div><p>What about desktop clients using the Google Calendar web application?
 It is difficult if possible to tell what kind of calendar solution such users would like to use.
 However, there&rsquo;s a hack, which detects if the <a href="http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/">user is logged in to a google account</a>.
 If desired, as an imperfect solution, ics links can be also replaced, if such a login is detected.</p>

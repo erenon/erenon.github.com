@@ -26,16 +26,16 @@
     <h1 class="post-title" itemprop="name headline">Bootstrap Typeahead submit on select</h1><time class="post-meta" datetime="2013-03-02">2013-03-02</time>
   </header>
   <div class="post-content" itemprop="articleBody"><p>The <a href="http://twitter.github.com/bootstrap/index.html">Twitter Bootstrap</a>s <a href="http://twitter.github.com/bootstrap/javascript.html#typeahead">Typeahead</a> is a very nice way to provide autocomplete functionality on your text inputs. However, the default configuration might be a bit confusing. When the user clicks on a suggestion in the dropdown menu, the utility populates the input but doesn&rsquo;t submit the form. It&rsquo;s usually ok, but sometimes (e.g: search boxes) it&rsquo;s frustrating. Here&rsquo;s how to change it:</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">input</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#your-input-box&#39;</span><span class="p">);</span>
-<span class="nx">input</span><span class="p">.</span><span class="nx">typeahead</span><span class="p">({</span>
-    <span class="s1">&#39;source&#39;</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;baz&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;updater&#39;</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">$element</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">item</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">$element</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">form</span><span class="p">.</span><span class="nx">submit</span><span class="p">();</span>
-        <span class="k">return</span> <span class="nx">item</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div><p>This snippet autosubmits the form if the user clicks on a suggestion or selects it by keyboard.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">input</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#your-input-box&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">input</span><span class="p">.</span><span class="nx">typeahead</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;source&#39;</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;baz&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;updater&#39;</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">$element</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">item</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">$element</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">form</span><span class="p">.</span><span class="nx">submit</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">item</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></div><p>This snippet autosubmits the form if the user clicks on a suggestion or selects it by keyboard.</p>
 
   </div>
 </article>

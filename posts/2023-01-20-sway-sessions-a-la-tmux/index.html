@@ -31,20 +31,20 @@ Most window managers support <a href="https://en.wikipedia.org/wiki/Virtual_desk
 to move windows to separate desktops and quickly switch which desktop is shown on a given output
 (how quickly depends on the window manager: on popular commercial systems, not so quickly).</p>
 <p>The used workspaces might be shown to the user in a taskbar-like fashion, e.g: on <a href="https://swaywm.org/">Sway</a>:</p>
-<pre><code>[1] [2] [3]
+<pre tabindex="0"><code>[1] [2] [3]
 </code></pre><p>Virtual desktops (or workspaces, in the <a href="https://i3wm.org/">i3</a>/sway terminology) enlarge the available screen estate.
 By putting certain windows on well-known workspaces, one can quickly find them without cycling
 through all the windows by <kbd>Alt</kbd>+<kbd>Tab</kbd>-ing (or <a href="https://wanderingstan.com/wp-content/uploads/2009/07/alt-tab-flowcharts-labeled-2.png">even</a>&hellip;).
 For example, I always put a browser to workspace 1, an editor to workspace 2, and a shell to workspace 3.
 This way I can always quickly jump to any of them, by pressing <kbd>Mod</kbd>+<kbd>1/2/3</kbd>.</p>
 <p>What happens if I have to work on two things (<em>foo</em> and <em>bar</em>) concurrently? I can open 3 more workspaces:</p>
-<pre><code>[1] [2] [3] [4] [5] [6]
+<pre tabindex="0"><code>[1] [2] [3] [4] [5] [6]
 </code></pre><p>Now this is a bit unfortunate. If the workload is dynamic enough, I&rsquo;ll have a hard time
 quickly telling what is running where. It can be improved by renaming some workspaces, e.g:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ swaymsg rename workspace <span class="m">1</span> to 1:foo
-$ swaymsg rename workspace <span class="m">4</span> to 4:bar
-</code></pre></div><p>So it&rsquo;ll look like this:</p>
-<pre><code>[1:foo] [2] [3] [4:bar] [5] [6]
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ swaymsg rename workspace <span class="m">1</span> to 1:foo
+</span></span><span class="line"><span class="cl">$ swaymsg rename workspace <span class="m">4</span> to 4:bar
+</span></span></code></pre></div><p>So it&rsquo;ll look like this:</p>
+<pre tabindex="0"><code>[1:foo] [2] [3] [4:bar] [5] [6]
 </code></pre><p>While it is certainly better, it isn&rsquo;t ideal. Muscle memory doesn&rsquo;t help any more: while editing the second project
 (workspace 5), pressing the usual <kbd>Mod</kbd>+<kbd>3</kbd> will jump to the shell of the first
 project (workspace 3), not to workspace 6, that hosts the shell of the second project.</p>
@@ -59,135 +59,135 @@ This is (almost) exactly what I wanted. Sway does not provide this functionality
 so I created some scripts to emulate it. Let&rsquo;s see:</p>
 <h2 id="scripts-to-emulate-sessions">Scripts to emulate sessions</h2>
 <p>First, there&rsquo;s <code>sway_rename_workspace.py</code>, that simply wraps <code>swaymsg rename workspace</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python3</span>
-
-<span class="c1"># Prompts for a name and renames the current workspace to it, ESC cancels.</span>
-<span class="c1"># It preserves the number of the workspace - therefore the ordering.</span>
-
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-
-<span class="k">def</span> <span class="nf">ui_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/dmenu&#34;</span><span class="p">,</span> <span class="s2">&#34;-b&#34;</span><span class="p">,</span> <span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">],</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;ascii&#34;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">focused_workspace_num</span><span class="p">():</span>
-    <span class="n">workspaces</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;-r&#34;</span><span class="p">,</span> <span class="s2">&#34;-t&#34;</span><span class="p">,</span> <span class="s2">&#34;get_workspaces&#34;</span><span class="p">])</span>
-    <span class="n">workspaces</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">workspaces</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;focused&#34;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;num&#34;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="s2">&#34;&#34;</span>
-
-<span class="n">name</span> <span class="o">=</span> <span class="n">ui_input</span><span class="p">(</span><span class="s2">&#34;rename workspace&#34;</span><span class="p">)</span>
-<span class="n">num</span> <span class="o">=</span> <span class="n">focused_workspace_num</span><span class="p">()</span>
-
-<span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&#34;{num}:{name}&#34;</span><span class="p">])</span>
-</code></pre></div><p>It prompts for a name using <a href="https://tools.suckless.org/dmenu/">dmenu</a>. Perhaps dmenu is not the most precise choice,
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/python3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Prompts for a name and renames the current workspace to it, ESC cancels.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># It preserves the number of the workspace - therefore the ordering.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">subprocess</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">ui_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">s</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/dmenu&#34;</span><span class="p">,</span> <span class="s2">&#34;-b&#34;</span><span class="p">,</span> <span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">],</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;ascii&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">focused_workspace_num</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">workspaces</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;-r&#34;</span><span class="p">,</span> <span class="s2">&#34;-t&#34;</span><span class="p">,</span> <span class="s2">&#34;get_workspaces&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">workspaces</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">workspaces</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;focused&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;num&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">name</span> <span class="o">=</span> <span class="n">ui_input</span><span class="p">(</span><span class="s2">&#34;rename workspace&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">num</span> <span class="o">=</span> <span class="n">focused_workspace_num</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">])</span>
+</span></span></code></pre></div><p>It prompts for a name using <a href="https://tools.suckless.org/dmenu/">dmenu</a>. Perhaps dmenu is not the most precise choice,
 being an <a href="https://www.x.org/wiki/">X</a> application, but it was already installed and perfectly matches my use-case.</p>
 <p>Second, there&rsquo;s <code>sway_select_session.py</code>, slightly more than a one-liner:</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python3</span>
-
-<span class="c1"># Prompts for a workspace name, ESC cancels.</span>
-<span class="c1"># If a name is given, it looks for the selected workspace.</span>
-<span class="c1"># If a workspace is found, it moves that workspace, and every</span>
-<span class="c1"># workspace to the right -- until a different named-workspace is found --</span>
-<span class="c1"># to the beginning, and moves every other workspace to the end,</span>
-<span class="c1"># starting at workspace number 10.</span>
-<span class="c1"># If no workspace matches the given name, it will be created,</span>
-<span class="c1"># and every other workspace will be moved to the end.</span>
-<span class="c1"># It does not touch workspaces given in `protected_workspaces`.</span>
-
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-
-<span class="c1"># do not move these workspaces</span>
-<span class="n">protected_workspaces</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
-
-<span class="k">def</span> <span class="nf">ui_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/dmenu&#34;</span><span class="p">,</span> <span class="s2">&#34;-b&#34;</span><span class="p">,</span> <span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">],</span> <span class="nb">input</span><span class="o">=</span><span class="n">selection</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;ascii&#34;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">strip_before</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-    <span class="n">a</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">b</span> <span class="ow">or</span> <span class="n">a</span>
-
-<span class="k">def</span> <span class="nf">selected_range</span><span class="p">(</span><span class="n">workspaces</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-    <span class="n">first</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="n">first</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">last</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">[</span><span class="n">last</span><span class="p">:]:</span>
-        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]:</span>
-            <span class="k">break</span>
-        <span class="n">last</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span>
-
-<span class="k">def</span> <span class="nf">renumber</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ws</span><span class="p">):</span>
-    <span class="n">tag</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&#34;:&#34;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">f</span><span class="s2">&#34;{i}:{tag}&#34;</span> <span class="k">if</span> <span class="n">tag</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-
-<span class="c1"># select a session, find the range of workspaces that belongs to it</span>
-<span class="n">workspaces</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;-r&#34;</span><span class="p">,</span> <span class="s2">&#34;-t&#34;</span><span class="p">,</span> <span class="s2">&#34;get_workspaces&#34;</span><span class="p">])</span>
-<span class="n">workspaces</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">workspaces</span><span class="p">)</span>
-
-<span class="n">sessions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
-    <span class="n">session</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&#34;:&#34;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">session</span><span class="p">:</span>
-        <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">])</span>
-
-<span class="n">selected_session</span> <span class="o">=</span> <span class="n">ui_input</span><span class="p">(</span><span class="s2">&#34;select session&#34;</span><span class="p">,</span> <span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sessions</span><span class="p">))</span>
-<span class="n">first</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="n">selected_range</span><span class="p">(</span><span class="n">workspaces</span><span class="p">,</span> <span class="n">selected_session</span><span class="p">)</span>
-
-<span class="c1"># move selected worspaces to si..., deselected workspaces to di...</span>
-<span class="n">si</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">di</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">last</span><span class="o">-</span><span class="n">first</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-
-<span class="n">renames</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">workspaces</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;num&#34;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
-        <span class="k">continue</span>
-    <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">last</span><span class="p">:</span>
-        <span class="k">while</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
-            <span class="n">si</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="n">renumber</span><span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="n">ws</span><span class="p">)))</span>
-        <span class="n">si</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">while</span> <span class="n">di</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
-            <span class="n">di</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">renames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="s2">&#34;:&#34;</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]:</span>
-            <span class="c1"># first deselected workspace is unnamed, name it &#34;main&#34; to avoid</span>
-            <span class="c1"># merging it with the selected session</span>
-            <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">di</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;:main&#34;</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="n">renumber</span><span class="p">(</span><span class="n">di</span><span class="p">,</span> <span class="n">ws</span><span class="p">)))</span>
-        <span class="n">di</span> <span class="o">+=</span> <span class="mi">1</span>
-
-<span class="c1"># move them to tmp names to avoid clashes</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span> <span class="ow">in</span> <span class="n">renames</span><span class="p">:</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&#34;_{dst}&#34;</span><span class="p">])</span>
-
-<span class="c1"># move them back</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span> <span class="ow">in</span> <span class="n">renames</span><span class="p">:</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&#34;_{dst}&#34;</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="n">dst</span><span class="p">])</span>
-
-<span class="c1"># finally, jump to the leading workspace if the selected session</span>
-<span class="c1"># (this also creates the session if it is a new one)</span>
-<span class="n">tag</span> <span class="o">=</span> <span class="n">strip_before</span><span class="p">(</span><span class="n">selected_session</span><span class="p">,</span> <span class="s2">&#34;:&#34;</span><span class="p">)</span>
-<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="k">while</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
-    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-
-<span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;--&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="s2">&#34;--no-auto-back-and-forth&#34;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&#34;{i}:{tag}&#34;</span><span class="p">])</span>
-</code></pre></div><p>So it prompts for a name (a session name), identifies the workspaces that belong to that session,
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/python3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Prompts for a workspace name, ESC cancels.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># If a name is given, it looks for the selected workspace.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># If a workspace is found, it moves that workspace, and every</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># workspace to the right -- until a different named-workspace is found --</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># to the beginning, and moves every other workspace to the end,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># starting at workspace number 10.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># If no workspace matches the given name, it will be created,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># and every other workspace will be moved to the end.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># It does not touch workspaces given in `protected_workspaces`.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">subprocess</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># do not move these workspaces</span>
+</span></span><span class="line"><span class="cl"><span class="n">protected_workspaces</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">ui_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">s</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/dmenu&#34;</span><span class="p">,</span> <span class="s2">&#34;-b&#34;</span><span class="p">,</span> <span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">],</span> <span class="nb">input</span><span class="o">=</span><span class="n">selection</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;ascii&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">strip_before</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">a</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">b</span> <span class="ow">or</span> <span class="n">a</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">selected_range</span><span class="p">(</span><span class="n">workspaces</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">first</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span>
+</span></span><span class="line"><span class="cl">        <span class="n">first</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="n">last</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">[</span><span class="n">last</span><span class="p">:]:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span>
+</span></span><span class="line"><span class="cl">        <span class="n">last</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">renumber</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ws</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tag</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&#34;:&#34;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&#34;</span> <span class="k">if</span> <span class="n">tag</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># select a session, find the range of workspaces that belongs to it</span>
+</span></span><span class="line"><span class="cl"><span class="n">workspaces</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;-r&#34;</span><span class="p">,</span> <span class="s2">&#34;-t&#34;</span><span class="p">,</span> <span class="s2">&#34;get_workspaces&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">workspaces</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">workspaces</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sessions</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">session</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&#34;:&#34;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">selected_session</span> <span class="o">=</span> <span class="n">ui_input</span><span class="p">(</span><span class="s2">&#34;select session&#34;</span><span class="p">,</span> <span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sessions</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">first</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="n">selected_range</span><span class="p">(</span><span class="n">workspaces</span><span class="p">,</span> <span class="n">selected_session</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># move selected worspaces to si..., deselected workspaces to di...</span>
+</span></span><span class="line"><span class="cl"><span class="n">si</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">di</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">last</span><span class="o">-</span><span class="n">first</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">renames</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">workspaces</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;num&#34;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">last</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">si</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="n">renumber</span><span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="n">ws</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">si</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="n">di</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">di</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">renames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="s2">&#34;:&#34;</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># first deselected workspace is unnamed, name it &#34;main&#34; to avoid</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># merging it with the selected session</span>
+</span></span><span class="line"><span class="cl">            <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">di</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;:main&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="n">renumber</span><span class="p">(</span><span class="n">di</span><span class="p">,</span> <span class="n">ws</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">di</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># move them to tmp names to avoid clashes</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span> <span class="ow">in</span> <span class="n">renames</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;_</span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># move them back</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span> <span class="ow">in</span> <span class="n">renames</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;_</span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="n">dst</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># finally, jump to the leading workspace if the selected session</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># (this also creates the session if it is a new one)</span>
+</span></span><span class="line"><span class="cl"><span class="n">tag</span> <span class="o">=</span> <span class="n">strip_before</span><span class="p">(</span><span class="n">selected_session</span><span class="p">,</span> <span class="s2">&#34;:&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;--&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="s2">&#34;--no-auto-back-and-forth&#34;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">])</span>
+</span></span></code></pre></div><p>So it prompts for a name (a session name), identifies the workspaces that belong to that session,
 moves them to the beginning, and moves the others to the end. Let&rsquo;s see an example. We start with:</p>
-<pre><code>[1:foo] [2] [3] [4:bar] [5] [6]
+<pre tabindex="0"><code>[1:foo] [2] [3] [4:bar] [5] [6]
 </code></pre><p>Then when we select &ldquo;4:bar&rdquo;, we&rsquo;ll end up with:</p>
-<pre><code>[1:bar] [2] [3] [10:foo] [11] [12]
+<pre tabindex="0"><code>[1:bar] [2] [3] [10:foo] [11] [12]
 </code></pre><p>&hellip;where &ldquo;1:bar&rdquo; was &ldquo;4:bar&rdquo;, &ldquo;2&rdquo; was &ldquo;5&rdquo;, &ldquo;3&rdquo; was &ldquo;6&rdquo;, &ldquo;10:foo&rdquo; was &ldquo;1:foo&rdquo;, &ldquo;11&rdquo; was &ldquo;2&rdquo; and &ldquo;12&rdquo; was &ldquo;3&rdquo;.
 This new layout allows muscle memory to kick in, keeps frequently used workspace numbers small,
 and also adds a gap between the first and the other sessions: if needed, workspace 4 can be quickly added to
@@ -196,46 +196,46 @@ the <em>bar</em> session.</p>
 of every every session &ndash; I never want to move them. I keep there communication tools,
 a journal, a music player, etc.</p>
 <p>Finally, if you want to stop <em>sessioning</em>, there&rsquo;s <code>sway_flatten_sessions.py</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python3</span>
-
-<span class="c1"># Assign each workspace the lowest number still available.</span>
-
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-
-<span class="c1"># do not move these workspaces</span>
-<span class="n">protected_workspaces</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="mi">9</span><span class="p">])</span>
-
-<span class="n">renames</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">index</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="n">workspaces</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;-r&#34;</span><span class="p">,</span> <span class="s2">&#34;-t&#34;</span><span class="p">,</span> <span class="s2">&#34;get_workspaces&#34;</span><span class="p">])</span>
-<span class="n">workspaces</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">workspaces</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;num&#34;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
-        <span class="k">continue</span>
-    <span class="n">session</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&#34;:&#34;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">session</span><span class="p">:</span>
-        <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="n">f</span><span class="s2">&#34;{index}:{session}&#34;</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="n">f</span><span class="s2">&#34;{index}&#34;</span><span class="p">))</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="k">while</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
-
-<span class="k">for</span> <span class="n">rn</span> <span class="ow">in</span> <span class="n">renames</span><span class="p">:</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="n">rn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="n">rn</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-</code></pre></div><p>This simply renumbers the workspaces in order, putting them next to each other, removing any gap.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/python3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Assign each workspace the lowest number still available.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">subprocess</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># do not move these workspaces</span>
+</span></span><span class="line"><span class="cl"><span class="n">protected_workspaces</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="mi">9</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">renames</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="n">index</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">workspaces</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;-r&#34;</span><span class="p">,</span> <span class="s2">&#34;-t&#34;</span><span class="p">,</span> <span class="s2">&#34;get_workspaces&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">workspaces</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">workspaces</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;num&#34;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="n">session</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&#34;:&#34;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="s2">&#34;name&#34;</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">protected_workspaces</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">rn</span> <span class="ow">in</span> <span class="n">renames</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&#34;/usr/bin/swaymsg&#34;</span><span class="p">,</span> <span class="s2">&#34;rename&#34;</span><span class="p">,</span> <span class="s2">&#34;workspace&#34;</span><span class="p">,</span> <span class="n">rn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="n">rn</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+</span></span></code></pre></div><p>This simply renumbers the workspaces in order, putting them next to each other, removing any gap.
 To tie them together, I&rsquo;m using the following sway piece of config:</p>
-<pre><code>set $mode_session session [s]elect [r]ename [f]latten
-bindsym $mod+s mode &quot;$mode_session&quot;
-mode &quot;$mode_session&quot; {
-    bindsym s exec --no-startup-id ~/bin/way_select_session.py, mode &quot;default&quot;
-    bindsym r exec --no-startup-id ~/bin/way_rename_workspace.py, mode &quot;default&quot;
-    bindsym f exec --no-startup-id ~/bin/way_flatten_sessions.py, mode &quot;default&quot;
+<pre tabindex="0"><code>set $mode_session session [s]elect [r]ename [f]latten
+bindsym $mod+s mode &#34;$mode_session&#34;
+mode &#34;$mode_session&#34; {
+    bindsym s exec --no-startup-id ~/bin/way_select_session.py, mode &#34;default&#34;
+    bindsym r exec --no-startup-id ~/bin/way_rename_workspace.py, mode &#34;default&#34;
+    bindsym f exec --no-startup-id ~/bin/way_flatten_sessions.py, mode &#34;default&#34;
 
-    bindsym Escape mode &quot;default&quot;
-    bindsym Return mode &quot;default&quot;
+    bindsym Escape mode &#34;default&#34;
+    bindsym Return mode &#34;default&#34;
 }
 </code></pre><p>This allows very quick session renaming (<kbd>Mod</kbd>+<kbd>s</kbd><kbd>r</kbd>) and selection (<kbd>Mod</kbd>+<kbd>s</kbd><kbd>s</kbd>).
 The presented code is also available on <a href="https://gist.github.com/erenon/024679fecf849454f54d245537f3a783">GitHub</a>.</p>

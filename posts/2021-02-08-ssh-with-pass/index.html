@@ -32,15 +32,15 @@ if the selected key is password protected.</p>
 <p>The <a href="https://www.passwordstore.org/">pass</a> program is a password manager that follows the Unix philosophy.
 If you want to use <code>pass</code> together with ssh-add, first add the private key
 password to it:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ pass insert ssh/identityname_rsa
-</code></pre></div><p>Then create this wrapper program <code>/home/user/bin/askpass.sh</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="cp">#!/bin/sh
-</span><span class="cp"></span><span class="c1"># $1 ~= Enter passphrase for &#39;.ssh/$KEYNAME&#39;:</span>
-<span class="nb">exec</span> /usr/bin/pass <span class="k">$(</span>grep -o <span class="s2">&#34;ssh/[^:&#39;]\+&#34;</span> <span class="o">&lt;&lt;&lt;</span> <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span><span class="k">)</span>
-</code></pre></div><p>Export the following variables, e.g: by adding them to you shell rc:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">SSH_ASKPASS_REQUIRE</span><span class="o">=</span>force
-<span class="nb">export</span> <span class="nv">SSH_ASKPASS</span><span class="o">=</span><span class="s2">&#34;/home/user/bin/askpass.sh&#34;</span>
-</code></pre></div><p>Now whenever an SSH key is needed (e.g: for <code>git</code> or <code>ssh</code> client),
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ pass insert ssh/identityname_rsa
+</span></span></code></pre></div><p>Then create this wrapper program <code>/home/user/bin/askpass.sh</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/bin/sh
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1"># $1 ~= Enter passphrase for &#39;.ssh/$KEYNAME&#39;:</span>
+</span></span><span class="line"><span class="cl"><span class="nb">exec</span> /usr/bin/pass <span class="k">$(</span>grep -o <span class="s2">&#34;ssh/[^:&#39;]\+&#34;</span> <span class="o">&lt;&lt;&lt;</span> <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span><span class="k">)</span>
+</span></span></code></pre></div><p>Export the following variables, e.g: by adding them to you shell rc:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">SSH_ASKPASS_REQUIRE</span><span class="o">=</span>force
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">SSH_ASKPASS</span><span class="o">=</span><span class="s2">&#34;/home/user/bin/askpass.sh&#34;</span>
+</span></span></code></pre></div><p>Now whenever an SSH key is needed (e.g: for <code>git</code> or <code>ssh</code> client),
 <code>ssh-add</code> will turn to <code>pass</code>, giving it the key name to be unlocked,
 and in case the gpg key is not unlocked at the moment, <code>pass</code> will
 prompt you to enter your password, then safely transmit the key
@@ -48,11 +48,11 @@ passphrase to <code>ssh-add</code>, that will add the key to the running <code>s
 <p>If git does pop up the gpg unlock dialog, but prints
 &ldquo;gpg: decryption failed: No secret key&rdquo; instead,
 make sure the <a href="https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html">GPG_TTY environment variable</a> is exported:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">GPG_TTY</span><span class="o">=</span><span class="nv">$TTY</span>
-</code></pre></div><p>If git still does not ask for a password, and no such error is printed:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">GPG_TTY</span><span class="o">=</span><span class="nv">$TTY</span>
+</span></span></code></pre></div><p>If git still does not ask for a password, and no such error is printed:
 If the private key is not the default one (e.g: <code>.ssh/id_*</code>), the host-key association
 must be configured in <code>.ssh/config</code>, e.g:</p>
-<pre><code>Host github.com
+<pre tabindex="0"><code>Host github.com
   IdentityFile ~/.ssh/your_nondefault_key
 </code></pre>
   </div>

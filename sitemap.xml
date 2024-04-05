@@ -1,204 +1,124 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>http://erenon.hu/</loc>
     <lastmod>2024-04-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2024-04-04-no-miracles/</loc>
     <lastmod>2024-04-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/</loc>
     <lastmod>2024-04-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-10-20-summary-of-readings/</loc>
     <lastmod>2023-10-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-08-01-selfhosted-rss/</loc>
     <lastmod>2023-08-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-07-18-why-bazel/</loc>
     <lastmod>2023-07-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-04-10-summary-of-readings/</loc>
     <lastmod>2023-04-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-03-09-ledger-split-vim/</loc>
     <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-03-09-javascript-binary-ws/</loc>
     <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2023-01-20-sway-sessions-a-la-tmux/</loc>
     <lastmod>2023-01-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2022-12-27-summary-of-readings/</loc>
     <lastmod>2022-12-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2022-09-08-summary-of-readings/</loc>
     <lastmod>2022-09-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2022-08-08-the-unreasonable-effectiveness/</loc>
     <lastmod>2022-09-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2022-03-30-shared-static-storage/</loc>
     <lastmod>2022-03-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2022-03-07-preprocessor_foreach_compile_time/</loc>
     <lastmod>2022-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2022-02-21-snapcast-on-demand/</loc>
     <lastmod>2022-02-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/cpp_hopl_comments/</loc>
     <lastmod>2022-01-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2021-10-12-nextcloud-on-rpi/</loc>
     <lastmod>2021-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2021-10-11-input-latency/</loc>
     <lastmod>2021-10-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2021-03-21-aarch64-image-on-x86/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/encrypted_backup_rclone/</loc>
     <lastmod>2021-03-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2021-02-08-ssh-with-pass/</loc>
     <lastmod>2021-02-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2021-01-25-freerdp/</loc>
     <lastmod>2021-01-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2021-01-14-concept-overloading-2/</loc>
     <lastmod>2021-01-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/c&#43;&#43;/</loc>
     <lastmod>2019-09-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2019-09-12-concept-overloading/</loc>
     <lastmod>2019-09-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/</loc>
     <lastmod>2019-09-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2019-04-28-applied-ephemeralization/</loc>
     <lastmod>2019-04-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2018-05-30-how-to-share-a-calendar-entry/</loc>
     <lastmod>2018-05-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/javascript/</loc>
     <lastmod>2018-05-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/www/</loc>
     <lastmod>2018-05-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/celestial-revelations/</loc>
     <lastmod>2014-03-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2014-03-29-the-sorcerers-frog/</loc>
     <lastmod>2014-03-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/bootstrap/</loc>
     <lastmod>2013-03-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2013-03-02-bootstrap-typeahead-submit-on-select/</loc>
     <lastmod>2013-03-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/cg/</loc>
     <lastmod>2012-11-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/cuda/</loc>
     <lastmod>2012-11-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/posts/2012-11-25-imprisoned-toroid-raytrace-on-cuda/</loc>
     <lastmod>2012-11-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/tags/raytrace/</loc>
     <lastmod>2012-11-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://erenon.hu/categories/</loc>
   </url>
-  
 </urlset>
