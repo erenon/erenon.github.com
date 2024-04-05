@@ -34,7 +34,7 @@ I can confirm that, in accordance with the original research:
 
 In addition, we found that:
 
- - Collectibe flowers can be added to the map, and a mini inventory (separate flat piece),
+ - Collectible flowers can be added to the map, and a mini inventory (separate flat piece),
    so the daughter can find and properly greet mama
  - Introducing windows that can be opened and climbed through works
  - Only listening to the xylophone without looking at the colors doesn't work
