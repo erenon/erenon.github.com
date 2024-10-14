@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Restore file from editor memory</h1><time class="post-meta" datetime="2024-10-14">2024-10-14</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>I was editing a large text file over <a href="https://github.com/libfuse/sshfs">sshfs</a> using <code>nvim</code>.
+Probably due to a lose network cable, during save, the connection broke,
+and only half of the data reached the remote computer, the other
+half remained in the send buffers of the kernel.</p>
+<p>The editor was configured to use no swapfiles, therefore it wrote
+the target file directly: at this point the second half of the file
+was <em>lost</em>, and the editor stuck in disk sleep.</p>
+<p>The situation did not improve after the network connection was restored
+and the share re-mounted (after it was forcefully unmounted&hellip;).
+The last backup was too old, and I needed the data.</p>
+<h2 id="solution">Solution</h2>
+<p>Get the PIDs of the currently running editors:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ps -A <span class="p">|</span> grep nvim
+</span></span><span class="line"><span class="cl">&lt;PID&gt;s
+</span></span></code></pre></div><p>Let&rsquo;s find which editor instance was writing the file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ls -l /proc/&lt;PID&gt;/fd/
+</span></span><span class="line"><span class="cl"><span class="m">13</span> -&gt; path/to/our/file
+</span></span></code></pre></div><p>We can check that this editor is indeed stuck, waiting for the
+kernel to complete a write operation, that&rsquo;ll never happen:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cat /proc/&lt;PID&gt;/status <span class="p">|</span> grep State
+</span></span><span class="line"><span class="cl">State: D <span class="o">(</span>disk sleep<span class="o">)</span>
+</span></span></code></pre></div><p>In this state, the process cannot be attached to,
+<code>gdb</code> or <code>gcore</code> will hang if tried. Fortunately, <a href="https://man7.org/linux/man-pages/man5/proc_pid_mem.5.html"><code>/proc/&lt;PID&gt;/mem</code></a>
+is still readable. The file is sparse, only offsets mapped
+by that process are readable. <a href="https://man7.org/linux/man-pages/man5/proc_pid_maps.5.html"><code>/proc/&lt;PID&gt;/maps</code></a> gives
+the valid offsets. A <a href="https://unix.stackexchange.com/questions/6301/how-do-i-read-from-proc-pid-mem-under-linux/6302#6302">python script from StackExchange</a> will save
+the readable sections into a file. Slightly improved:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Original https://unix.stackexchange.com/questions/6301/how-do-i-read-from-proc-pid-mem-under-linux/6302#6302</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pid</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span> <span class="c1"># change this</span>
+</span></span><span class="line"><span class="cl"><span class="n">maps_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;/proc/</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2">/maps&#34;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mem_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;/proc/</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2">/mem&#34;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">output_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;self.dump&#34;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">maps_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>  <span class="c1"># for each mapped region</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="k">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([0-9A-Fa-f]+)-([0-9A-Fa-f]+) ([-r])&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>  <span class="c1"># if this is a readable region</span>
+</span></span><span class="line"><span class="cl">        <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mem_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>  <span class="c1"># seek to region start</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">chunk</span> <span class="o">=</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>  <span class="c1"># read region contents</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>  <span class="c1"># dump contents to standard output</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;failed to read from &#34;</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">maps_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">mem_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span></code></pre></div><p>Running this script will save the memory of the editor,
+that contains the complete file &ndash; in chunks.
+Fortunately, the internal structure is line-oriented, and tends to follow the
+time of insertions. The lines in each chunk are in reverse order, use <code>tac</code> to
+fix that:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">strings nvim.dump <span class="p">|</span> tac &gt; nvim.strings
+</span></span></code></pre></div><h2 id="takeaway">Takeaway</h2>
+<ul>
+<li><code>set swapfile</code>, when editing over sshfs</li>
+<li>More frequent backups</li>
+<li>Don&rsquo;t panic.</li>
+</ul>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2024-04-04-no-miracles/">No Miracles</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
