@@ -31,3 +31,11 @@ by the [similar posts][] of [Eli Bendersky][].
     The second part (after Penn) felt rushed, the development mostly unclear to me.
     I suppose _Kati_ had some reading due...
     The writing is not great - it is clearly written by a scientist.
+
+## Finance
+
+  - [Straight to Hell](https://www.goodreads.com/book/show/21535674-straight-to-hell) by John LeFevre.
+    Terrific stories about terrible people, written by someone who portrays himself as a similarly terrible
+    person, with a value system completely foreign to me. The (supposedly true) stories are entertaining
+    in a cringe way. Going through this book was the reading equivalent of the guilty pleasure inducing
+    overeating of chocolate cookies.
