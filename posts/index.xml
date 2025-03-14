@@ -6,8 +6,47 @@
     <description>Recent blogposts on erenon.hu</description>
     <generator>Hugo -- gohugo.io</generator>
     
-    <lastBuildDate>Mon, 14 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://erenon.hu/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>To hang an Icon</title>
+      <link>http://erenon.hu/posts/2025-03-14-to-hang-an-icon/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://erenon.hu/posts/2025-03-14-to-hang-an-icon/</guid>
+      <description>&lt;p&gt;I wanted to hang a picture, in a way that it doesn&amp;rsquo;t touch the wall directly,
+using a protruding hanger. If the hanger is difficult to observe, it makes
+a nice floating effect.&lt;/p&gt;
+&lt;p&gt;I couldn&amp;rsquo;t find a &amp;ldquo;µ&amp;rdquo; shaped piece of metal, and I don&amp;rsquo;t have right drills for metal either,
+so I decided to 3D-print the appropriate hanger. This would have been my first time doing this.&lt;/p&gt;
+&lt;p&gt;First, I needed a 3D modelling software, that is free and Linux compatible.
+From the &lt;a href=&#34;https://wiki.archlinux.org/title/List_of_applications/Science#Computer-aided_design&#34;&gt;Arch Linux offering&lt;/a&gt;,
+I quickly selected &lt;a href=&#34;https://openscad.org/&#34;&gt;OpenSCAD&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;OpenSCAD is a wonderful software - instead of moving the model elements with a mouse,
+it lets you describe the model using code, something I&amp;rsquo;m familiar with.
+It is lightweight, with a clear, responsive UI.
+By skimming the &lt;a href=&#34;https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#cube&#34;&gt;wiki&lt;/a&gt; and looking at examples,
+I was able to create a simple model in less than 50 minutes.
+A testament of a great piece of software indeed.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src=&#34;http://erenon.hu/img/openscad.png&#34; alt=&#34;Screenshot of OpenSCAD, showing the editor, the rendered model, and the render status&#34;&gt;
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The &lt;a href=&#34;https://gist.github.com/erenon/9788cdbe3c79128a117406eb3c7af36f&#34;&gt;code producing this model&lt;/a&gt; is short and simple.
+The parametric nature allows quick changes, e.g: of thickness or depth.
+After exporting the model to &lt;a href=&#34;https://en.wikipedia.org/wiki/STL_(file_format)&#34;&gt;.stl&lt;/a&gt;,
+I asked a friend to print it (thanks!). The Prusa machine did a beautiful job:&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src=&#34;http://erenon.hu/img/icon-pin.jpg&#34; alt=&#34;The 3D-printed icon hanger, with a lego figure to scale&#34;&gt;
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Finally, after a bit of measuring and drilling, the final composition:
+modern and antique co-existing in perfect harmony.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src=&#34;http://erenon.hu/img/icon-and-screen.jpg&#34; alt=&#34;A monitor and the Trinity icon by Andrei Rublev side by side&#34;&gt;
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+</description>
+    </item>
     <item>
       <title>Restore file from editor memory</title>
       <link>http://erenon.hu/posts/2024-10-14-restore-from-memory/</link>
