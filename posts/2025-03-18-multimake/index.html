@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>erenon.hu</title>
+  <meta name="description" content="Short thoughts on C++, Unix and in general, technology">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://erenon.hu/">
+  <link rel="alternate" type="application/rss+xml" title="erenon.hu" href="http://erenon.hu/posts/index.xml">
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" href="/">erenon.hu</a>
+  </div>
+  </header>
+
+  <div class="page-content">
+    <div class="wrapper">
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Multidimensional Make Targets</h1><time class="post-meta" datetime="2025-03-18">2025-03-18</time>
+  </header>
+  <div class="post-content" itemprop="articleBody"><p>This is about describing targets in <a href="https://www.gnu.org/software/make/manual/html_node/">GNU Make</a> that depend
+on many parameters that need to be sampled.</p>
+<p><strong>Example use-case 1</strong>: There&rsquo;s a simulation with many input parameters,
+e.g: weather simulation, with current temperature, humidity, date,
+duration parameters. You want to run the simulation for some
+combinations of these parameters.</p>
+<p><strong>Example use-case 2</strong>: There&rsquo;s a remote database the can be queried.
+You want to sample larger batches, and apply a pipeline
+of transformations on them, iteratively, as you figure out
+what&rsquo;s really needed.</p>
+<p>Describing these tasks in a <code>Makefile</code> is helpful because:</p>
+<ul>
+<li>It makes dependencies and data-flow explicit (vs. manual changes and ad-hoc intermediate files)</li>
+<li>Slow steps can be cached (simulation, database download)</li>
+<li><code>make</code> can execute independent steps parallel, greatly reducing execution time.</li>
+</ul>
+<p>This post is about handling intermediate outputs, that depend on many parameters.
+Consider this motivating example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-make" data-lang="make"><span class="line"><span class="cl"><span class="nv">DATE</span> <span class="o">?=</span> 2025-03-15
+</span></span><span class="line"><span class="cl"><span class="nv">LONGITUDE</span> <span class="o">?=</span> 19.0527693
+</span></span><span class="line"><span class="cl"><span class="nv">LATITUDE</span> <span class="o">?=</span> 47.4943593
+</span></span><span class="line"><span class="cl"><span class="nv">RESOLUTION</span> <span class="o">?=</span> min
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">temperature</span><span class="o">:</span> <span class="n">download_temperature</span>.<span class="n">py</span>
+</span></span><span class="line"><span class="cl">  ./$&lt; --date <span class="k">$(</span>DATE<span class="k">)</span> --longitude <span class="k">$(</span>LONGITUDE<span class="k">)</span> --latitude <span class="k">$(</span>LATIDUTE<span class="k">)</span> --resolution <span class="k">$(</span>RESOLUTION<span class="k">)</span> &gt; <span class="nv">$@</span>
+</span></span></code></pre></div><p>In this case, by default, <code>make temperature</code> downloads the measurements for a pre-defined location and day.
+The user can override the default using environment variables, e.g: <code>DATE=2025-03-16 make temperature</code>
+will download it for the next day. However, there are multiple problems here, including:</p>
+<ul>
+<li>
+<p>After a successful download, changing the variables will not prompt <code>make</code> to re-execute the download.
+It doesn&rsquo;t know that the target depends on those variables, and it will consider it up-to-date.</p>
+</li>
+<li>
+<p>We can&rsquo;t have multiple measurements (with different parameters) in our tree at the same time,
+e.g: to compare them.</p>
+</li>
+<li>
+<p>If we have a similar &ldquo;humidity&rdquo; target, it gets easy to accidentally combine different measurements
+that are otherwise unrelated.</p>
+</li>
+</ul>
+<p>To fix these, we need to make the dependency of the target on the variables explicit.
+The key idea is that we need to encode the variables in the target name.
+For example, instead of simply having &ldquo;temperature&rdquo;, we&rsquo;ll have &ldquo;o/2025-03-15/19.0527693/47.4943593/min/temperature&rdquo;.
+This immediately solves all of the above.</p>
+<p>But how do we describe this in a Makefile? We can&rsquo;t enumerate all the possible combinations.
+Ideally, make <a href="https://www.gnu.org/software/make/manual/html_node/Pattern-Intro.html">pattern rules</a> could support something like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-make" data-lang="make"><span class="line"><span class="cl"><span class="c"># not actual make syntax
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nf">o/%DATE%/%LONGITUDE%/%LATITUDE%/%RESOLUTION%/temperature</span><span class="o">:</span> <span class="n">download_temperature</span>.<span class="n">py</span>
+</span></span><span class="line"><span class="cl">  ./$&lt; --date <span class="k">$(</span>DATE<span class="k">)</span> --longitude <span class="k">$(</span>LONGITUDE<span class="k">)</span> --latitude <span class="k">$(</span>LATIDUTE<span class="k">)</span> --resolution <span class="k">$(</span>RESOLUTION<span class="k">)</span> &gt; <span class="nv">$@</span>
+</span></span></code></pre></div><p>but it doesn&rsquo;t:</p>
+<blockquote>
+<p>A pattern rule contains the character ‘%’ (exactly one of them) in the target.</p>
+</blockquote>
+<p>Instead, we&rsquo;ll emulate this, using <a href="https://www.gnu.org/software/make/manual/html_node/Pattern_002dspecific.html">Pattern-specific Variable Values</a>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-make" data-lang="make"><span class="line"><span class="cl"><span class="c"># when requesting &#34;o/2025-03-15/19.0527693/47.4943593/min/temperature&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="c"># split the target name ($@) into a list, and set the variables using the directory names.
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nf">o/%</span><span class="o">:</span> <span class="n">override</span> <span class="n">DATE</span> = <span class="k">$(</span><span class="nv">word</span> 2,<span class="k">$(</span><span class="nv">subst</span> /, ,<span class="k">$</span>@<span class="k">))</span>
+</span></span><span class="line"><span class="cl"><span class="nf">o/%</span><span class="o">:</span> <span class="n">override</span> <span class="n">LONGITUDE</span> = <span class="k">$(</span><span class="nv">word</span> 3,<span class="k">$(</span><span class="nv">subst</span> /, ,<span class="k">$</span>@<span class="k">))</span>
+</span></span><span class="line"><span class="cl"><span class="nf">o/%</span><span class="o">:</span> <span class="n">override</span> <span class="n">LATITUDE</span> = <span class="k">$(</span><span class="nv">word</span> 4,<span class="k">$(</span><span class="nv">subst</span> /, ,<span class="k">$</span>@<span class="k">))</span>
+</span></span><span class="line"><span class="cl"><span class="nf">o/%</span><span class="o">:</span> <span class="n">override</span> <span class="n">RESOLUTION</span> = <span class="k">$(</span><span class="nv">word</span> 5,<span class="k">$(</span><span class="nv">subst</span> /, ,<span class="k">$</span>@<span class="k">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">o/%/temperature</span><span class="o">:</span> <span class="n">download_temperature</span>.<span class="n">py</span>
+</span></span><span class="line"><span class="cl">  ./$&lt; --date <span class="k">$(</span>DATE<span class="k">)</span> --longitude <span class="k">$(</span>LONGITUDE<span class="k">)</span> --latitude <span class="k">$(</span>LATIDUTE<span class="k">)</span> --resolution <span class="k">$(</span>RESOLUTION<span class="k">)</span> &gt; <span class="nv">$@</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">o/%/humidity</span><span class="o">:</span> <span class="n">download_humidity</span>.<span class="n">py</span>
+</span></span><span class="line"><span class="cl">  ./$&lt; --date <span class="k">$(</span>DATE<span class="k">)</span> --longitude <span class="k">$(</span>LONGITUDE<span class="k">)</span> --latitude <span class="k">$(</span>LATIDUTE<span class="k">)</span> --resolution <span class="k">$(</span>RESOLUTION<span class="k">)</span> &gt; <span class="nv">$@</span>
+</span></span></code></pre></div><h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="https://justine.lol/make/">Using Landlock to Sandbox GNU Make</a></li>
+<li><a href="https://tech.davis-hansson.com/p/make/">Your Makefiles are wrong</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      
+      <div class="footer-col footer-col-3">
+        <ul class="social-media-list">
+          
+          <li>
+            Previous post: <a class="prev" href="http://erenon.hu/posts/2025-03-14-to-hang-an-icon/">To hang an Icon</a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <div class="footer-col footer-col-1">
+        <ul class="social-media-list">
+          <li>
+            <a href="/posts/index.xml">RSS</a>
+          </li>
+          <li>
+            <a href="https://github.com/erenon" class="username">GitHub</a>
+          </li>
+          <li>
+            <a href="https://stackoverflow.com/users/116273" class="username">StackOverflow</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+</body>
+</html>
